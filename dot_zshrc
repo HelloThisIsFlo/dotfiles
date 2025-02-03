@@ -1,0 +1,702 @@
+# vim: foldmethod=marker
+
+# ----- Init --------------------------------------------------------------- {{{
+### Antigen ########################################################################
+### For Antigen setup: See at the very bottom ######################################
+####################################################################################
+
+# Load `zsh` functions
+autoload -Uz throw
+autoload -Uz compinit && compinit
+autoload -Uz bashcompinit && bashcompinit
+
+# Load secrets
+source ~/.secrets.env
+
+#  ----- Utility functions ---------------------------------------------- {{{
+function _display_and_exec {
+  echo
+  echo "Executing: \`$1\`"
+  echo
+  $(echo $1)
+}
+
+function _ensure_argument_present {
+  # This function needs to be called like this:
+  #
+  #    _ensure_argument_present "$1" "CLI_NAME" "ARG_NAME"
+  #
+  # /!\ DO NOT FORGET THE "" AROUND $1 ==> "$1" /!\
+  # /!\ No commas /!\
+	argument=$1
+	cli=$2
+	arg_name=$3
+  if [ -z "$argument" ]; then
+    echo "Please supply a $arg_name when using this cli:"
+    echo ""
+    echo "    \`$cli $arg_name\`"
+    echo ""
+    throw "IllegalArgument"
+  fi
+}
+#  ----- Utility functions ---------------------------------------------- }}}
+
+#  ----- Fixes ---------------------------------------------------------- {{{
+# Fix locale
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# Fix for commits from command line
+export ALTERNATE_EDITOR=""
+export TERM=xterm-256color
+#  ----- Fixes ---------------------------------------------------------- }}}
+# ----- Init --------------------------------------------------------------- }}}
+
+
+
+# ----- AWS ---------------------------------------------------------------- {{{
+export AWS_PROFILE=flokempenich-admin--not-root
+# ----- AWS ---------------------------------------------------------------- }}}
+
+
+# ----- Home Assistant ----------------------------------------------------- {{{
+#  ----- Configure 'hass-cli' ------------------------------------------- {{{
+export HASS_SERVER="http://thehome-haos.neko-hoki.ts.net:8123"
+export HASS_TOKEN="$HASS_TOKEN_THEHOME" # Also available: export HASS_TOKEN="$HASS_TOKEN_DADHOME"
+#  ----- Configure 'hass-cli' ------------------------------------------- }}}
+# ----- Home Assistant ----------------------------------------------------- }}}
+
+
+# ----- Aliases / Functions ------------------------------------------------ {{{
+#  ----- Simple Aliases / Functions ------------------------------------- {{{
+#   ----- One-click Update ------------------------------------------- {{{
+function updateall {
+    if [ "$(uname)" '==' Linux ]; then
+        sudo apt update \
+            && sudo apt upgrade -y \
+            && sudo apt autoremove -y
+    else
+        brew update \
+            && brew upgrade \
+            && brew cleanup
+    fi
+}
+function updateall_and_reboot {
+    if [ "$(uname)" '==' Darwin ]; then
+        echo "Automatic reboot not supported on Mac OS"
+        echo "=> To prevent un-intentional reboot of Mac Work Machine"
+        return 1
+    fi
+    updateall
+    sudo reboot now
+}
+#   ----- One-click Update ------------------------------------------- }}}
+
+#   ----- Spacemacs -------------------------------------------------- {{{
+# alias MACRO='emacsclient -t' # Uncomment if needed macro for emacs in terminal (it's buggy):
+function e { nohup emacsclient -c $1 </dev/null >/dev/null 2>&1 & }
+alias vi=vim
+#   ----- Spacemacs -------------------------------------------------- }}}
+
+#   ----- Floating Todo-list ----------------------------------------- {{{
+function todo { open helium://en.todoist.com/app }
+#   ----- Floating Todo-list ----------------------------------------- }}}
+
+#   ----- Transmission remote interface ubuntu fix ------------------- {{{
+alias transmission="XDG_CURRENT_DESKTOP=unity nohup transgui >/dev/null 2>&1 &"
+#   ----- Transmission remote interface ubuntu fix ------------------- }}}
+
+#   ----- transfer.sh ------------------------------------------------ {{{
+TRANSFER_SH_URL="https://transfersh.floriankempenich.com/"
+transfer() {
+    # check arguments
+    if [ $# -eq 0 ];
+    then
+        echo "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md"
+        return 1
+    fi
+
+    tmpfile=$( mktemp -t transferXXX )
+    file=$1
+    if tty -s;
+    then
+        basefile=$(basename "$file" | sed -e 's/[^a-zA-Z0-9._-]/-/g')
+        if [ ! -e $file ];
+        then
+            echo "File $file doesn't exists."
+            return 1
+        fi
+        if [ -d $file ];
+        then
+            # zip directory and transfer
+            zipfile=$( mktemp -t transferXXX.zip )
+            cd $(dirname $file) && zip -r -q - $(basename $file) >> $zipfile
+            curl --progress-bar --upload-file "$zipfile" "$TRANSFER_SH_URL$basefile.zip" >> $tmpfile
+            rm -f $zipfile
+        else
+            # transfer file
+            curl --progress-bar --upload-file "$file" "$TRANSFER_SH_URL$basefile" >> $tmpfile
+        fi
+    else
+        # transfer pipe
+        curl --progress-bar --upload-file "-" "$TRANSFER_SH_URL$file" >> $tmpfile
+    fi
+
+    cat $tmpfile
+    echo ""
+    rm -f $tmpfile
+}
+#   ----- transfer.sh ------------------------------------------------ }}}
+
+#   ----- pbcopy / pbpaste on Ubuntu --------------------------------- {{{
+if [ "$(uname)" '==' Linux ]; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+fi
+#   ----- pbcopy / pbpaste on Ubuntu --------------------------------- }}}
+
+#   ----- Watch and Run ---------------------------------------------- {{{
+function watchandrun {
+    clear
+    fswatch $1 | xargs -I {} sh -c 'clear && exec {}'
+}
+#   ----- Watch and Run ---------------------------------------------- }}}
+
+#   ----- Ubuntu-like commands --------------------------------------- {{{
+# Make executable the file that was JUST created - Credits: Jessica Kerr
+alias x='chmod u+x $(ls -tr | tail -1)'
+function vix {
+  echo '#!/bin/bash\nset -euo pipefail\nDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"\n\ncd "$DIR"\n\n\n\ncd - >/dev/null' > $1 \
+      && x \
+      && vim -c 'startinsert' +7 $1
+}
+function mkcd { # Credits: Edu Saborit ;)
+  dir_name=$1
+  mkdir $dir_name && cd $dir_name
+}
+#   ----- Ubuntu-like commands --------------------------------------- }}}
+
+#   ----- CliTools --------------------------------------------------- {{{
+function clitool-cat {
+    # Display content of cli tool.
+    # Useful to check on which version of python/node/etc... the bin is
+    # available => It'll be written as:
+    # ```
+    # # asdf-plugin: python
+    # # asdf-plugin-version: 2.6.6
+    # # asdf-plugin-version: 3.7.0
+    # ```
+    clitool=$1
+    if command -v $clitool 1>/dev/null 2>&1; then
+        cat $(which $clitool)
+    else
+        echo "'$clitool' doesn't seem to be installed!"
+        echo ""
+        echo "If you just installed it, don't forget to run 'asdf reshim PLUGIN'"
+        echo "ex: 'asdf reshim python' after installing a PYTHON cli tool"
+    fi
+}
+#   ----- CliTools --------------------------------------------------- }}}
+
+#   ----- TADL ------------------------------------------------------- {{{
+function tadl {
+  TADL_PASS=$(cat $HOME/.tadl-pass)
+  ENDPOINT="https://tadl.floriankempenich.com"
+
+  # Extract all arguments except the last one for categories
+  categories=${@:1:-1}
+
+  # Get the last argument for torrent
+  torrent=${@: -1}
+
+  csv_categories=$(echo ${categories[@]} | tr ' ' ,)
+
+  http --body -f POST "$ENDPOINT/auto_dl" X-Tadl-Pass:"$TADL_PASS" torrent_file@$torrent categories=$csv_categories
+}
+
+
+
+
+
+#   ----- TADL ------------------------------------------------------- }}}
+
+#   ----- Serve Current Dir ------------------------------------------ {{{
+function serve-current-dir {
+	_ensure_argument_present "$1" "serve-current-dir" "PORT"
+    PORT=$1
+    echo "Serving current dir on port '${PORT}'"
+    echo "Press 'CTRL-C' to exit"
+    docker run --rm -it -p ${PORT}:80 -v $(pwd):/usr/share/nginx/html:ro jorgeandrada/nginx-autoindex
+}
+#   ----- Serve Current Dir ------------------------------------------ }}}
+
+#   ----- Git Copy Push Remote --------------------------------------- {{{
+function git-copy-push-remote {
+    git remote -v | tail -n1 | awk '{print $2}' | pbcopy
+}
+#   ----- Git Copy Push Remote --------------------------------------- }}}
+
+#   ----- Scratch ---------------------------------------------------- {{{
+SCRATCH_FOLDER="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Main/Scratch"
+function scratch {
+    scratch_file=$1
+    mvim "${SCRATCH_FOLDER}/${scratch_file}.md"
+}
+function scratch-list {
+    cd $SCRATCH_FOLDER
+    for f in *; do
+        echo "$f"
+    done
+    cd - > /dev/null
+}
+#   ----- Scratch ---------------------------------------------------- }}}
+
+#   ----- Java ------------------------------------------------------- {{{
+function list-all-java-versions {
+    for version in $(asdf list java)
+    do
+        echo "$version: $(file -b ~/.asdf/installs/java/$version/bin/java)"
+    done
+}
+#   ----- Java ------------------------------------------------------- }}}
+
+#   ----- Unify Ubuntu & Mac Tools ----------------------------------- {{{
+function bat() {
+  if [ "$(uname)" '==' Linux ]; then
+    batcat $@
+  else
+    /opt/homebrew/bin/bat $@
+  fi
+}
+function fd() {
+  if [ "$(uname)" '==' Linux ]; then
+    fdfind $@
+  else
+    /opt/homebrew/bin/fd $@
+  fi
+}
+#   ----- Unify Ubuntu & Mac Tools ----------------------------------- }}}
+#  ----- Simple Aliases / Functions ------------------------------------- }}}
+
+#  ----- Network -------------------------------------------------------- {{{
+function local-ip {
+    ifconfig | awk '/192\.168\..*/ {print $2}'
+}
+function find-devices-on-local-network {
+    ip=$(local-ip)
+    class_c_network=${ip%.*}.0/24
+
+    echo "Local IP: ${ip}"
+    echo "Class C Network: ${class_c_network}"
+    echo ""
+    nmap -sP ${class_c_network}
+}
+alias show-all-ports-in-use="sudo lsof -PiTCP -sTCP:LISTEN"
+#  ----- Network -------------------------------------------------------- }}}
+
+#  ----- Custom MyFitnessPal cli ---------------------------------------- {{{
+# Before using, store password in keyring with:
+#   `myfitnesspal store-password Shock_N745`
+#
+# Getting sync. Async was too complex.
+# The problem was that when getting async it was **impossible** (understand I didn't manage in a reasonable time)
+# to prepend an empty line . . . just before printing the result.
+# And without that . . . the result looks a bit fucked up when using the async version
+#
+# Another solution could be to add a python wrapper . . . that would add the damn space -_-
+# But anyway, let's see this some other day. And really maybe the sync version is enough.
+alias mfp="myfitnesspal remainings Shock_N745"
+alias mfpall="myfitnesspal day Shock_N745"
+#  ----- Custom MyFitnessPal cli ---------------------------------------- }}}
+
+#  ----- termbin -------------------------------------------------------- {{{
+alias tb="nc termbin.com 9999"
+tbrun() { bash -c "$(curl $1)" }
+# USE:
+#
+# Upload:
+# > echo "something" | termbin
+# > cat FILE | termbin
+#
+# Download / Execute script:
+# > curl TERMBIN_URL
+# > bash -c "$(curl TERMBIN_URL)"
+#  ----- termbin -------------------------------------------------------- }}}
+
+#  ----- Docker related ------------------------------------------------- {{{
+
+#   ----- Docker utilities -------------------------------------------
+function docker-kill-and-remove-all-containers {
+    docker kill $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+}
+
+function docker-watch-psa {
+    watch -n0.5 docker ps -a
+}
+
+#   ----- Docker compose aliases -------------------------------------
+function dcreload {
+  _display_and_exec "docker compose up --build --timeout 0 -d"
+}
+function dcdown {
+  #_display_and_exec "docker compose kill ; docker compose down"
+  _display_and_exec "docker compose kill"
+  _display_and_exec "docker compose down"
+}
+
+#   ----- Docker based utilities -------------------------------------
+function hello-world {
+	_ensure_argument_present "$1" "hello-world" "PORT"
+  docker run --rm --name=hello-world -eWORLD=Debug -p"$1:80" -d floriankempenich/hello-world
+}
+function raspberry-pi {
+  # Start a raspberry-pi environment in the current directory.
+  # C compilation tools are installed.
+  docker run --rm -it -v"$(pwd):/workdir" floriankempenich/raspberry-pi sh
+}
+
+#   ----- Docker Droplets --------------------------------------------
+function activate-awesometeam {
+  _activate_droplet "$HOME/config-in-the-cloud/secrets/tlscertificates-awesometeam"
+}
+function activate-thesandbox {
+  _activate_droplet "$HOME/config-in-the-cloud/secrets/tlscertificates-thesandbox"
+}
+function activate-floriankempenich {
+  _activate_droplet "$HOME/config-in-the-cloud/secrets/tlscertificates-floriankempenich"
+}
+function activate-thehome {
+  _activate_droplet "$HOME/config-in-the-cloud/secrets/tlscertificates-thehome"
+}
+function activate-dadhome {
+  _activate_droplet "$HOME/config-in-the-cloud/secrets/tlscertificates-dadhome"
+}
+function _activate_droplet {
+	_ensure_argument_present "$1" "_activate_droplet" "SECRET_REPO_PATH"
+  eval $(${1}/activate.sh)
+  echo "Docker droplet activated: $(basename ${1})"
+}
+function deactivate-droplet {
+  unset DOCKER_TLS_VERIFY
+  unset DOCKER_HOST
+  unset DOCKER_CERT_PATH
+  echo "Docker droplet deactivated"
+}
+
+#  ----- Docker related ------------------------------------------------- }}}
+
+#  ----- Tree - Custom version ------------------------------------------ {{{
+function custom-tree {
+	_ensure_argument_present "$1" "custom-tree" "LEVEL"
+    LEVEL=$1
+    ARGS=${@:2}
+    TO_IGNORE='node_modules|lib'
+
+    tree -L $LEVEL \
+        -I $TO_IGNORE \
+        --noreport \
+        $ARGS
+}
+alias  t=t2
+alias t1="custom-tree 1"
+alias t2="custom-tree 2"
+alias t3="custom-tree 3"
+alias t4="custom-tree 4"
+#  ----- Tree - Custom version ------------------------------------------ }}}
+
+#  ----- Tmux ----------------------------------------------------------- {{{
+# Force use of iTerm2 integration w/ Tmux and set some aliases
+# See cheatsheet: `zshtmux`
+function ta {
+  session_name=$1
+  if [ -z "$session_name" ]; then
+      tmux -CC attach
+  else
+      tmux -CC attach -t $session_name
+  fi
+}
+function ts {
+  session_name=$1
+  if [ -z "$session_name" ]; then
+      tmux -CC new-session
+  else
+      tmux -CC new-session -s $session_name
+  fi
+}
+alias td='tmux detach'
+alias tl='tmux list-sessions'
+function tk {
+  session_name=$1
+  _ensure_argument_present "$session_name" "tk" "SESSION_NAME"
+  tmux kill-session -t $session_name
+}
+
+# Completion
+function __tmux-sessions () {
+  local -a sessions
+  sessions=(${${(f)"$(command tmux 2> /dev/null list-sessions)"}/:[ $'\t']##/:})
+  _describe -t sessions 'sessions' sessions "$@"
+}
+function _ta {
+  _arguments '::sessions:__tmux-sessions'
+}
+function _tk {
+  _arguments ':sessions:__tmux-sessions'
+}
+compdef _ta ta
+compdef _tk tk
+#  ----- Tmux ----------------------------------------------------------- }}}
+
+#  ----- Serveo --------------------------------------------------------- {{{
+function serveo {
+  _ensure_argument_present "$1" "serveo" "PORT"
+  port=$1
+  domain="serveo.floriankempenich.com"
+
+  echo "If serveo forwarding is not working, ensure the correct SSH key/fingerprint"
+  echo "is being used"
+  echo "More info: 'Custom Domain' -> https://serveo.net/"
+  echo ""
+
+  ssh -R $domain:80:localhost:$port serveo.net
+}
+#  ----- Serveo --------------------------------------------------------- }}}
+
+#  ----- Clear Mind ----------------------------------------------------- {{{
+function mind-down {
+    cd /Users/floriankempenich/Work/Private/Dev/Services/clear-mind
+    activate-floriankempenich
+    dcdown
+    deactivate-droplet
+    cd -
+}
+function mind-up {
+    cd /Users/floriankempenich/Work/Private/Dev/Services/clear-mind
+    activate-floriankempenich
+    dcreload
+    deactivate-droplet
+    cd -
+}
+function mind-reset {
+    cd /Users/floriankempenich/Work/Private/Dev/Services/clear-mind
+    mix reset_daily
+    cd -
+}
+function mind-refresh {
+    http http://floriankempenich.com:5555
+}
+#  ----- Clear Mind ----------------------------------------------------- }}}
+
+#  ----- DnD ------------------------------------------------------------ {{{
+function dnd-on {
+    defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturb -boolean true
+    defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturbDate -date "`date -u +\"%Y-%m-%d %H:%M:%S +0000\"`"
+    killall NotificationCenter
+}
+
+function dnd-off {
+    defaults -currentHost write ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturb -boolean false
+    killall NotificationCenter
+}
+#  ----- DnD ------------------------------------------------------------ }}}
+
+#  ----- RemarkableStreaming -------------------------------------------- {{{
+alias rmstream=$HOME/Work/Private/Dev/Misc/RemarkableStreaming/start.sh
+#  ----- RemarkableStreaming -------------------------------------------- }}}
+
+#  ----- GPT.sh --------------------------------------------------------- {{{
+export OPENAI_ENGINE_ID=davinci
+#  ----- GPT.sh --------------------------------------------------------- }}}
+
+#  ----- Mac M1 Architecture Switch ------------------------------------- {{{
+#  Source: https://korben.info/architecture-intel-arm-macos-terminal.html
+alias arm="env /usr/bin/arch -arm64 /bin/zsh --login"
+alias intel="env /usr/bin/arch -x86_64 /bin/zsh --login"
+#  ----- Mac M1 Architecture Switch ------------------------------------- }}}
+# ----- Aliases / Functions ------------------------------------------------ }}}
+
+
+# ----- Language Specific -------------------------------------------------- {{{
+#  ----- Python --------------------------------------------------------- {{{
+export PYTHONSTARTUP=~/.pythonrc
+
+#   ----- Pipenv -----------------------------------------------------
+export PIPENV_SHELL_FANCY=1
+export PIPENV_DEFAULT_PYTHON_VERSION=$PYTHON3_VERSION
+
+#  ----- Python --------------------------------------------------------- }}}
+
+#  ----- Java ----------------------------------------------------------- {{{
+#  ----- Java ----------------------------------------------------------- }}}
+
+#  ----- Javascript ----------------------------------------------------- {{{
+#  ----- Javascript ----------------------------------------------------- }}}
+
+#  ----- Go ------------------------------------------------------------- {{{
+export GOPATH="$HOME/.go"
+#  ----- Go ------------------------------------------------------------- }}}
+# ----- Language Specific -------------------------------------------------- }}}
+
+
+# ----- Extra Completion --------------------------------------------------- {{{
+# See: '~/.zlogin'
+# ----- Extra Completion --------------------------------------------------- }}}
+
+
+# ----- Experimentations --------------------------------------------------- {{{
+### Docker DEV Container daemon ###################################################
+# Disabled for now
+#source ~/.dockerrc
+### END - Docker DEV Container daemon ###################################################
+# ----- Experimentations  -------------------------------------------------- }}}
+
+
+# ----- Other -------------------------------------------------------------- {{{
+
+#  ----- Travis cli -----------------------------------------------------
+[ -f $HOME/.travis/travis.sh ] && source $HOME/.travis/travis.sh
+
+# ----- Other -------------------------------------------------------------- }}}
+
+
+# ----- Export PATH -------------------------------------------------------- {{{
+export PATH="$PATH:/usr/local/sbin" # TODO: See if can remove
+export PATH="$PATH:$HOME/.bin" # For all my custom scripts - TODO: Backup in mackup
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+export PATH="$PATH:$HOME/Dev/Scripts:/usr/local/sbin"
+
+export PATH="$PATH:$HOME/.local/bin"                          # Python     - Unix # TODO: See if can remove
+
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin" # VS Code
+export PATH="$PATH:$HOME/Dev/SDK/Garmin/connectiq-sdk-mac-2.3.2/bin" # Garmin SDK
+export PATH="$PATH:$HOME/Dev/SDK/android-platform-tools" # Android tools (adb, fastboot, etc)
+
+export PATH="$PATH:${GOPATH//://bin:}/bin" # Go
+export PATH="$HOME/.jenv/bin:$PATH"        # Java - Jenv
+
+export PATH="$ASDF_DATA_DIR/installs/rust/stable/bin:$PATH" # asdf - Rust
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" # asdf - krew
+# ----- Export PATH -------------------------------------------------------- }}}
+
+# ----- Configure CLI ENVVARS ---------------------------------------------- {{{
+export QMK_HOME=~/Work/Private/Dev/Keyboards/The-QMK-Config
+# ----- Configure CLI ENVVARS ---------------------------------------------- }}}
+
+# ----- Antigen & Shell customization -------------------------------------- {{{
+#  ----- Antigen -------------------------------------------------------- {{{
+source ~/.antigen/antigen.zsh
+
+antigen use oh-my-zsh
+
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+#antigen bundle robbyrussell/oh-my-zsh plugins/aws            # Cmd: TODO - (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aws)
+antigen bundle robbyrussell/oh-my-zsh plugins/git            # Cmd: See `zshgit` cheatsheet | Credits: Alvaro Castellanos
+antigen bundle robbyrussell/oh-my-zsh plugins/asdf
+antigen bundle robbyrussell/oh-my-zsh plugins/kubectl        # Cmd: See `zshk` cheatsheet
+antigen bundle robbyrussell/oh-my-zsh plugins/python         # Cmd: `pyclean`/`pyfind`/`pygrep`
+antigen bundle robbyrussell/oh-my-zsh plugins/battery
+antigen bundle robbyrussell/oh-my-zsh plugins/brew           # Cmd: `bubu`/`brews` & many other
+# DOESN'T WORK DUE TO VI PLUGIN
+# antigen bundle robbyrussell/oh-my-zsh plugins/copybuffer   # Shortcut: Ctrl+o
+antigen bundle robbyrussell/oh-my-zsh plugins/encode64
+antigen bundle robbyrussell/oh-my-zsh plugins/extract        # Cmd: `extract`
+antigen bundle robbyrussell/oh-my-zsh plugins/gitignore      # Cmd: `gi`
+antigen bundle robbyrussell/oh-my-zsh plugins/httpie         # Completion
+antigen bundle robbyrussell/oh-my-zsh plugins/mvn            # Completion
+antigen bundle robbyrussell/oh-my-zsh plugins/pep8           # Completion
+antigen bundle robbyrussell/oh-my-zsh plugins/perms          # Cmd: `set755`/`set644`/`fixperms`
+antigen bundle robbyrussell/oh-my-zsh plugins/z              # Cmd: See `z` cheatsheet
+antigen bundle robbyrussell/oh-my-zsh plugins/sudo           # Shortcut: Esc x2 -> Prefix previous cmd w/ `sudo`
+antigen bundle robbyrussell/oh-my-zsh plugins/systemadmin    # Cmd: See `zshsystemadmin` cheatsheet
+# WAS INTERFERING WITH 'AG'
+# antigen bundle robbyrussell/oh-my-zsh plugins/ubuntu         # Cmd: See `zshubuntu` cheatsheet
+antigen bundle robbyrussell/oh-my-zsh plugins/urltools       # Cmd: `urlencode`/`urldecode`
+antigen bundle robbyrussell/oh-my-zsh plugins/singlechar     # Cmd: See `zshsinglechar` cheatsheet
+antigen bundle robbyrussell/oh-my-zsh plugins/yarn           # Cmd: See `zshyarn` cheatsheet
+antigen bundle robbyrussell/oh-my-zsh plugins/yum            # Cmd: See `zshyum` cheatsheet
+
+antigen bundle robbyrussell/oh-my-zsh plugins/vi-mode        # Shortcut: Esc -> Enter Vim Mode
+antigen bundle robbyrussell/oh-my-zsh plugins/history-substring-search # Cleaner implementation of substring search | Required by 'vi-mode'
+# TODO: Investigate plugins:
+# * `github`          when setting up Ruby (it depends on the 'hub' ruby gem)
+# * `go`(or `golang`) when setting up Go
+# * `gradle`          when setting up Java
+# * `jenv`            when setting up Java
+# * `spring`          when setting up Java (Spring Boot)
+# * `perl`            when setting up Perl(& PerlBrew(?))
+# * `sbt`             when setting up Scala
+# * `swiftpm`         when setting up Swift
+
+
+# Can regen completion with:
+#     poetry completions zsh > ~/.zsh/poetry/_poetry
+antigen bundle ~/.zsh/poetry
+# Can update completion with:
+#     etc=/Applications/Docker.app/Contents/Resources/etc
+#     plugin_folder=~/.zsh/docker-completion
+#     ln -s $etc/docker.zsh-completion $plugin_folder/_docker
+#     ln -s $etc/docker-compose.zsh-completion $plugin_folder/_docker-compose
+# Source: https://docs.docker.com/desktop/faqs/macfaqs/ (tweaked for my antigen setup: link to a custom folder to use as a plugin)
+antigen bundle ~/.zsh/docker-completion
+
+antigen theme FlorianKempenich/zsh-theme
+
+antigen apply
+
+#   ----- Post-activation Plugin Configuration ----------------------- {{{
+#    ----- SingleChar --------------------------------------------- {{{
+export GREP=grep
+export ROOT=sudo
+export WGET=wget
+export CURL=http # httpie
+#    ----- SingleChar --------------------------------------------- }}}
+
+#    ----- History Substring Search ------------------------------- {{{
+# bind UP and DOWN arrow keys
+zmodload zsh/terminfo
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+
+# bind UP and DOWN arrow keys (compatibility fallback
+# for Ubuntu 12.04, Fedora 21, and MacOSX 10.9 users)
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# bind k and j for VI mode
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+#    ----- History Substring Search ------------------------------- }}}
+#   ----- Post-activation Plugin Configuration ----------------------- }}}
+#  ----- Antigen -------------------------------------------------------- }}}
+
+#  ----- Homebrew ------------------------------------------------------- {{{
+export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
+#  ----- Homebrew ------------------------------------------------------- }}}
+
+#  ----- Completion ----------------------------------------------------- {{{
+# Important note
+# --------------
+# If problems, `rm -rf .zcompdump* && rm -rf .antigen/.zcompdump*`
+# https://github.com/ohmyzsh/ohmyzsh/issues/6323
+
+# Init completion utilities
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+
+#  AWS CLI
+complete -C aws_completer aws
+
+#  ----- Completion ----------------------------------------------------- }}}
+
+#  ----- iTerm2 Shell integration --------------------------------------- {{{
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#  ----- iTerm2 Shell integration --------------------------------------- }}}
+
+#  ----- Set vim as the default editor ---------------------------------- {{{
+export EDITOR=vim
+#  ----- Set vim as the default editor ---------------------------------- }}}
+# ----- Antigen & Shell customization -------------------------------------- }}}
