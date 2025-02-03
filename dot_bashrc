@@ -1,0 +1,19 @@
+# Start zsh from bashrc
+#
+# Useful when you can't use chsh or when the same LDAP account is used both on
+# systems with zsh installed and ones without.
+#
+# In the gist they also modify `.bash_profile`. I don't think I need it, but in
+# case weird bugs happen, check the link:
+# https://gist.github.com/n-st/74f5ce07391bf8e95f5d8a6b452f6da8
+
+if [ -z "${NOZSH}" ] && [ $TERM = "xterm" -o $TERM = "xterm-256color" -o $TERM = "screen" ] && type zsh &> /dev/null
+then
+    export SHELL=$(which zsh)
+    if [[ -o login ]]
+    then
+        exec zsh -l
+    else
+        exec zsh
+    fi
+fi
