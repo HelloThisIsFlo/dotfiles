@@ -8,6 +8,15 @@ command = "plutil"
 args = ["-convert", "xml1", "-o", "-", "-"]
 
 
+[merge]
+# Use VS-Code as a diff editor
+command = "bash"
+args = [
+    "-c",
+    "cp {{ .Target }} {{ .Target }}.base && code --new-window --wait --merge {{ .Destination }} {{ .Target }} {{ .Target }}.base {{ .Source }}",
+]
+
+
 [hooks.read-source-state.pre]
     # Install bitwarden (if missing) whenever the source-state is read
     # See: https://www.chezmoi.io/user-guide/advanced/install-your-password-manager-on-init/
