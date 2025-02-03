@@ -6,3 +6,9 @@
 pattern = "**/*.plist"
 command = "plutil"
 args = ["-convert", "xml1", "-o", "-", "-"]
+
+
+[hooks.read-source-state.pre]
+    # Install bitwarden (if missing) whenever the source-state is read
+    # See: https://www.chezmoi.io/user-guide/advanced/install-your-password-manager-on-init/
+    command = ".local/share/chezmoi/.install-password-manager.sh"
