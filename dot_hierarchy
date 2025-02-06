@@ -246,6 +246,14 @@ repos:
 
   # ------- Learning ----------------------------------------------------- }}}
 
+  # ------- AI ----------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/AI
+    url: git@github.com:HelloThisIsFlo/LearningAg2.git
+
+  - path: ~/Work/Private/Dev/AI
+    url: git@github.com:HelloThisIsFlo/LearningCrewAI.git
+  # ------- AI ----------------------------------------------------------- }}}
+
   # ------- 3D Printing -------------------------------------------------- {{{
   - path: ~/Work/Private/Dev/3DPrinting
     url: git@github.com:FlorianKempenich/The-3D-Printing-Repo.git
