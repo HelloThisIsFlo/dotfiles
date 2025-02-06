@@ -1,0 +1,300 @@
+# vim: filetype=yaml
+# vim: foldmethod=marker
+
+repos:
+  # ----- Config in the Cloud ------------------------------------------------ {{{
+  - path: ~/config-in-the-cloud
+    url: git@gitlab.com:config_in_the_cloud/ansible-magic.git
+
+  - path: ~/config-in-the-cloud
+    url: git@gitlab.com:config_in_the_cloud/dotfiles.git
+
+  - path: ~/config-in-the-cloud
+    url: git@gitlab.com:config_in_the_cloud/dotfiles-binary.git
+
+  - path: ~/config-in-the-cloud
+    url: git@gitlab.com:config_in_the_cloud/dotfiles-secret.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/digitalocean.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/digitalocean-awesometeam.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/sshkeys-awesometeam.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/tlscertificates-awesometeam.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/tlscertificates-dadhome.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/tlscertificates-floriankempenich.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/tlscertificates-thehome.git
+
+  - path: ~/config-in-the-cloud/secrets
+    url: git@gitlab.com:the_secrets/tlscertificates-thesandbox.git
+  # ----- Config in the Cloud ------------------------------------------------ }}}
+
+  # ----- Planning ----------------------------------------------------------- {{{
+  - path: ~/Work/Private/Planning
+    url: git@gitlab.com:the-plans/my-technical-retreat.git
+  # ----- Planning ----------------------------------------------------------- }}}
+
+  # ----- Writing ------------------------------------------------------------ {{{
+  # ------- Blog --------------------------------------------------------- {{{
+  - path: ~/Work/Private/Writing/Blog/
+    url: git@gitlab.com:the_blog/professional-beginner-articles.git
+    name: Articles
+
+  - path: ~/Work/Private/Writing/Blog/
+    url: git@github.com:FlorianKempenich/Professional-Beginner.git
+    name: Engine
+
+  - path: ~/Work/Private/Writing/Blog/
+    url: git@github.com:FlorianKempenich/WebAppSpring.git
+    name: OldEngine
+
+  - path: ~/Work/Private/Writing/Blog/
+    url: git@gitlab.com:the_blog/professional-beginner-deploy-hack.git
+    name: Deploy
+  # ------- Blog --------------------------------------------------------- }}}
+
+  - path: ~/Work/Private/Writing/
+    url: git@github.com:FlorianKempenich/Important-Writing.git
+
+  - path: ~/Work/Private/Writing/
+    url: git@github.com:FlorianKempenich/The-Tiny-Mindblows-Log.git
+  # ----- Writing ------------------------------------------------------------ }}}
+
+  # ----- Dev ---------------------------------------------------------------- {{{
+  # ------- HomeLab ---------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@github.com:FlorianKempenich/Appdaemon-Test-Framework.git
+    name: appdaemontestframework
+
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@gitlab.com:FlorianKempenich/dadhome-public.git
+    name: dad_hass
+
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@gitlab.com:the-home-automation/dad_hass_secrets.git
+    name: dad_hass_secrets
+
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@gitlab.com:the-home-automation/porto_hass.git
+
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@github.com:HelloThisIsFlo/TheHome.git
+
+  - path: ~/Work/Private/Dev/HomeLab/
+    url: git@github.com:HelloThisIsFlo/Ubuntu-Autoinstall-ISO-Creator.git
+  # ------- HomeLab ---------------------------------------------- }}}
+
+  # ------- DevOps ------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/DevOps
+    url: git@github.com:FlorianKempenich/ansible-droplet.git
+
+  - path: ~/Work/Private/Dev/DevOps
+    url: git@gitlab.com:FlorianKempenich/debug-ansible-roles.git
+
+  - path: ~/Work/Private/Dev/DevOps
+    url: git@github.com:FlorianKempenich/OpenVpn-Docker-StepByStep.git
+
+  - path: ~/Work/Private/Dev/DevOps
+    url: git@github.com:FlorianKempenich/ansible-role-setup-secure-remote-docker-daemon.git
+
+  # ------- TOOCS ---------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/asdf.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/diffsofancy.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/docker.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/elixir.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/nodejs.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/python.git
+
+  - path: ~/Work/Private/Dev/DevOps/TOOCS
+    url: git@github.com:TOOCS/zsh.git
+  # ------- TOOCS ---------------------------------------------------- }}}
+
+  # ------- Custom Docker Images ------------------------------------- {{{
+  - path: ~/Work/Private/Dev/DevOps/CustomDockerImages
+    url: git@github.com:FlorianKempenich/Docker-with-docker-compose.git
+  # ------- Custom Docker Images ------------------------------------- }}}
+  # ------- DevOps ------------------------------------------------------- }}}
+
+  # ------- Services ----------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Services
+    url: git@gitlab.com:FlorianKempenich/clear-mind.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@gitlab.com:FlorianKempenich/tadl.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/DiscordBotToniNotifier.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/SyncDnD.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/Entangled.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/TheFinanceSystem.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/AlwaysOnTime.git
+
+  - path: ~/Work/Private/Dev/Services
+    url: git@github.com:FlorianKempenich/YNAB_SplitwiseAsCC.git
+  # ------- Services ----------------------------------------------------- }}}
+
+  # ------- CLI Tools ---------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/CliTools
+    url: git@github.com:HelloThisIsFlo/homebrew-the-tap.git
+
+  - path: ~/Work/Private/Dev/CliTools
+    url: git@github.com:FlorianKempenich/kata.git
+
+  - path: ~/Work/Private/Dev/CliTools
+    url: git@github.com:FlorianKempenich/Hierarchy.git
+    name: hierarchy
+  # ------- CLI Tools ---------------------------------------------------- }}}
+
+  # ------- Tools -------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Tools
+    url: git@github.com:HelloThisIsFlo/Things3-To-OmniFocus.git
+
+  - path: ~/Work/Private/Dev/Tools
+    url: git@github.com:HelloThisIsFlo/eBookConversionPresets.git
+  # ------- Tools -------------------------------------------------------- }}}
+
+  # ------- Misc --------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/AdventOfCode.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/CodinGame.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/OAuth-Proxy.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/My-Java-Archetype.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/zsh-theme.git
+    name: Custom-ZSH-Theme
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/RemarkableStreaming.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/RemarkableBackup.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/toolkit-for-ynab.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/Reed-Market-Analyzer.git
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/SteamDeckScripts.git
+  # ------- Misc --------------------------------------------------------- }}}
+
+  # ------- Learning ----------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/ProjectFromFreelanceGuyWhoDidntGetPaid.git
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/JavaKatas.git
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/PythonAlgo.git
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/Obey-The-Testing-Goat.git
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/Exercism.git
+
+  - path: ~/Work/Private/Dev/Learning/Nanodegree
+    url: git@github.com:FlorianKempenich/Front-End-Sandbox.git
+
+  - path: ~/Work/Private/Dev/Learning/Nanodegree
+    url: git@github.com:FlorianKempenich/Memory-Game.git
+
+  - path: ~/Work/Private/Dev/Learning/Nanodegree
+    url: git@github.com:FlorianKempenich/frontend-nanodegree-arcade-game.git
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:FlorianKempenich/TransactionsExploration.git
+
+  # ------- Learning ----------------------------------------------------- }}}
+
+  # ------- 3D Printing -------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/3DPrinting
+    url: git@github.com:FlorianKempenich/The-3D-Printing-Repo.git
+
+  - path: ~/Work/Private/Dev/3DPrinting
+    url: git@github.com:dalegaard/klipper_estimator.git
+
+  - path: ~/Work/Private/Dev/3DPrinting
+    url: git@github.com:HelloThisIsFlo/Klipper-Sovol-SV06.git
+
+  - path: ~/Library/Application Support
+    url: git@github.com:HelloThisIsFlo/PrusaSlicer-Config.git
+    name: PrusaSlicer
+  # ------- 3D Printing -------------------------------------------------- }}}
+
+  # ------- OmniFocus ---------------------------------------------------- {{{
+  - path: "~/Library/Mobile Documents/iCloud~com~omnigroup~OmniFocus/Documents"
+    url: git@github.com:HelloThisIsFlo/OmniFocus-Plugins.git
+    name: Plug-Ins
+
+  - path: ~/Work/Private/Dev/OmniFocus
+    url: git@github.com:HelloThisIsFlo/Things3-To-OmniFocus.git
+  # ------- OmniFocus ---------------------------------------------------- }}}
+
+  # ------- Productivity ------------------------------------------------- {{{
+  - path: "~/Library/Application Support/Amethyst"
+    url: git@github.com:HelloThisIsFlo/Amethyst-Layouts.git
+    name: Layouts
+
+  - path: ~/Work/Private/Dev/OmniFocus
+    url: git@github.com:HelloThisIsFlo/Things3-To-OmniFocus.git
+  # ------- Productivity ------------------------------------------------- }}}
+  # ----- Dev ---------------------------------------------------------------- }}}
+
+  # ----- Other -------------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:FlorianKempenich/eBayTemplate.git
+
+  - path: ~/Movies
+    url: git@github.com:FlorianKempenich/Motion-Templates.git
+    name: "Motion Templates.localized"
+
+  - path: "~/Library/Application Support/Final Cut Pro"
+    url: git@github.com:FlorianKempenich/Final-Cut-Workspaces.git
+    name: Workspaces
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@github.com:iamadamdev/bypass-paywalls-chrome.git    
+
+  - path: ~/Work/Private/Dev/Misc
+    url: git@gitlab.com:magnolia1234/bypass-paywalls-chrome-clean.git    
+  # ----- Other -------------------------------------------------------------- }}}
