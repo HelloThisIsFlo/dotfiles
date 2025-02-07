@@ -636,9 +636,6 @@ antigen bundle robbyrussell/oh-my-zsh plugins/history-substring-search # Cleaner
 # * `swiftpm`         when setting up Swift
 
 
-# Can regen completion with:
-#     poetry completions zsh > ~/.zsh/poetry/_poetry
-antigen bundle ~/.zsh/poetry
 # Can update completion with:
 #     etc=/Applications/Docker.app/Contents/Resources/etc
 #     plugin_folder=~/.zsh/docker-completion
@@ -687,7 +684,14 @@ export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
 # If problems, `rm -rf .zcompdump* && rm -rf .antigen/.zcompdump*`
 # https://github.com/ohmyzsh/ohmyzsh/issues/6323
 
+
+# To regen poetry completions
+#   poetry completions zsh > ~/.zfunc/_poetry
+fpath+=~/.zfunc
+
+
 # Init completion utilities
+autoload -Uz compinit && compinit
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
