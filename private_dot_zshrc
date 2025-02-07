@@ -582,6 +582,9 @@ export PATH="$HOME/.jenv/bin:$PATH"        # Java - Jenv
 
 export PATH="$ASDF_DATA_DIR/installs/rust/stable/bin:$PATH" # asdf - Rust
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" # asdf - krew
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:$HOME/.lmstudio/bin"
 # ----- Export PATH -------------------------------------------------------- }}}
 
 # ----- Configure CLI ENVVARS ---------------------------------------------- {{{
@@ -687,7 +690,8 @@ export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
 
 # To regen poetry completions
 #   poetry completions zsh > ~/.zfunc/_poetry
-fpath+=~/.zfunc
+fpath+=~/.zfunc  # For poetry
+fpath=(~/.docker/completions $fpath)  # For Docker
 
 
 # Init completion utilities
@@ -708,11 +712,3 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 export EDITOR=vim
 #  ----- Set vim as the default editor ---------------------------------- }}}
 # ----- Antigen & Shell customization -------------------------------------- }}}
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/flo/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/flo/.lmstudio/bin"
