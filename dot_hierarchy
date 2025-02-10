@@ -98,6 +98,9 @@ repos:
     url: git@github.com:HelloThisIsFlo/TheHome.git
 
   - path: ~/Work/Private/Dev/HomeLab/
+    url: git@github.com:HelloThisIsFlo/DadHome.git
+
+  - path: ~/Work/Private/Dev/HomeLab/
     url: git@github.com:HelloThisIsFlo/Ubuntu-Autoinstall-ISO-Creator.git
   # ------- HomeLab ---------------------------------------------- }}}
 
