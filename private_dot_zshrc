@@ -589,6 +589,8 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # ----- Configure CLI ENVVARS ---------------------------------------------- {{{
 export QMK_HOME=~/Work/Private/Dev/Keyboards/The-QMK-Config
+
+eval "$(direnv hook zsh)"  # Use 'direnv' to automatically load '.env' files
 # ----- Configure CLI ENVVARS ---------------------------------------------- }}}
 
 # ----- Antigen & Shell customization -------------------------------------- {{{
