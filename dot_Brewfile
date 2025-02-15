@@ -11,6 +11,7 @@ tap "ngrok/ngrok"
 tap "potatolabs/git-redate"
 tap "sidneys/homebrew"
 tap "vi4m/repo"
+ss
 brew "ack"
 brew "alexanderwillner/tap/things.sh"
 brew "aom"
