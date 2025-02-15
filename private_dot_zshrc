@@ -73,7 +73,7 @@ export HASS_TOKEN="$HASS_TOKEN_THEHOME" # Also available: export HASS_TOKEN="$HA
 
 #   ----- Chezmoi ---------------------------------------------------- {{{
 alias cm=chezmoi
-alias cm-brew="cm edit ~/.Brewfile && cm apply"
+alias cmbrew="cm edit ~/.Brewfile && cm apply"
 #   ----- Chezmoi ---------------------------------------------------- }}}
 
 #   ----- One-click Update ------------------------------------------- {{{
