@@ -1,5 +1,4 @@
 tap "alexanderwillner/tap"
-sdf
 tap "aljohri/-"
 tap "cirruslabs/cli"
 tap "d12frosted/emacs-plus"
