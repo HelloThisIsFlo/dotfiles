@@ -17,6 +17,7 @@ brew "aom"
 brew "aria2"
 brew "asdf"
 sdf
+ss
 brew "autoconf"
 brew "automake"
 brew "awscli"
