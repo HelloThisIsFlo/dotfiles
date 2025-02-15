@@ -342,7 +342,7 @@
 					<key>Menubar</key>
 					<dict>
 						<key>Enabled</key>
-						<integer>1</integer>
+						<integer>0</integer>
 						<key>Items</key>
 						<array/>
 					</dict>
