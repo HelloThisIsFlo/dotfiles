@@ -71,7 +71,10 @@ export HASS_TOKEN="$HASS_TOKEN_THEHOME" # Also available: export HASS_TOKEN="$HA
 # ----- Aliases / Functions ------------------------------------------------ {{{
 #  ----- Simple Aliases / Functions ------------------------------------- {{{
 
+#   ----- Chezmoi ---------------------------------------------------- {{{
 alias cm=chezmoi
+alias cm-brew="cm edit ~/.Brewfile && cm apply"
+#   ----- Chezmoi ---------------------------------------------------- }}}
 
 #   ----- One-click Update ------------------------------------------- {{{
 function updateall {
