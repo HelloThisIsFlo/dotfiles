@@ -1,5 +1,4 @@
 tap "alexanderwillner/tap"
-s
 sdf
 tap "aljohri/-"
 tap "cirruslabs/cli"
