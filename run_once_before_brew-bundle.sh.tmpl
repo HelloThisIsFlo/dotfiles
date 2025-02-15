@@ -1,8 +1,7 @@
 {{- if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 
-# dconf.ini hash: {{ include "dot_Brewfile" | sha256sum }}
+# Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
 
-echo 'ash: {{ include "dot_Brewfile" | sha256sum }}'
-echo "running!!! TEST asdfas"
+brew bundle --no-lock
 {{ end -}}
