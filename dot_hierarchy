@@ -295,6 +295,11 @@ repos:
   - path: ~/Work/Private/Dev/OmniFocus
     url: git@github.com:HelloThisIsFlo/Things3-To-OmniFocus.git
   # ------- Productivity ------------------------------------------------- }}}
+
+  # ------- Finance ------------------------------------------------------ {{{
+  - path: ~/Work/Private/Dev/Finance
+    url: git@github.com:HelloThisIsFlo/pf-simulations.git
+  # ------- Finance ------------------------------------------------------ }}}
   # ----- Dev ---------------------------------------------------------------- }}}
 
   # ----- Other -------------------------------------------------------------- {{{
