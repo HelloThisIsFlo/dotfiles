@@ -276,6 +276,10 @@ repos:
   - path: ~/Library/Application Support
     url: git@github.com:HelloThisIsFlo/PrusaSlicer-Config.git
     name: PrusaSlicer
+
+  - path: ~/Library/Application Support
+    url: git@github.com:HelloThisIsFlo/OrcaSlicer-Config.git
+    name: OrcaSlicer
   # ------- 3D Printing -------------------------------------------------- }}}
 
   # ------- OmniFocus ---------------------------------------------------- {{{
