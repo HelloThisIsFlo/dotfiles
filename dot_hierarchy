@@ -253,6 +253,10 @@ repos:
   - path: ~/Work/Private/Dev/Learning
     url: git@github.com:FlorianKempenich/TransactionsExploration.git
 
+
+  - path: ~/Work/Private/Dev/Learning
+    url: git@github.com:HelloThisIsFlo/Switch-to-AI-Engineering.git
+
   # ------- Learning ----------------------------------------------------- }}}
 
   # ------- AI ----------------------------------------------------------- {{{
