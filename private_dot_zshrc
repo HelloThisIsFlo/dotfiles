@@ -589,6 +589,9 @@ export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" # asdf - krew
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:$HOME/.lmstudio/bin"
+
+# Added by Windsurf
+export PATH="/Users/flo/.codeium/windsurf/bin:$PATH"
 # ----- Export PATH -------------------------------------------------------- }}}
 
 # ----- Configure CLI ENVVARS ---------------------------------------------- {{{
