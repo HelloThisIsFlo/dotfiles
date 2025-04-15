@@ -233,7 +233,7 @@ repos:
     url: git@github.com:FlorianKempenich/JavaKatas.git
 
   - path: ~/Work/Private/Dev/Learning
-    url: git@github.com:FlorianKempenich/PythonAlgo.git
+    url: git@github.com:HelloThisIsFlo/Leetcode.git
 
   - path: ~/Work/Private/Dev/Learning
     url: git@github.com:FlorianKempenich/Obey-The-Testing-Goat.git
