@@ -313,6 +313,15 @@ repos:
   - path: ~/Work/Private/Dev/Fun
     url: git@github.com:HelloThisIsFlo/BackupLLandQGT
   # ------- Fun     ------------------------------------------------------ }}}
+
+  # ------- Keyboard ----------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Keyboard
+    url: git@github.com:HelloThisIsFlo/zmk-config.git
+
+  - path: ~/Work/Private/Dev/Keyboard
+    url: git@github.com:HelloThisIsFlo/zmk.git
+  # ------- Keyboard ----------------------------------------------------- }}}
+
   # ----- Dev ---------------------------------------------------------------- }}}
 
   # ----- Other -------------------------------------------------------------- {{{
