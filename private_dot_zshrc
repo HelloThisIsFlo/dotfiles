@@ -722,3 +722,8 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 export EDITOR=vim
 #  ----- Set vim as the default editor ---------------------------------- }}}
 # ----- Antigen & Shell customization -------------------------------------- }}}
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/flo/.lmstudio/bin"
+# End of LM Studio CLI section
+
