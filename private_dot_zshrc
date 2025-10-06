@@ -289,7 +289,7 @@ function fd() {
 function pdf_black_to_deep_blue() {
     input_pdf="$1"
     output_pdf="COLOR_$input_pdf"
-    magick -density 300 "$input_pdf" +level-colors "rgb(10,10,30)",white "$output_pdf"
+    magick -density 300 "$input_pdf" +level-colors "rgb(1,1,2)",white "$output_pdf"
 }
 #   ----- Convert PDF to be printed with Color ink ------------------- }}}
 #  ----- Simple Aliases / Functions ------------------------------------- }}}
