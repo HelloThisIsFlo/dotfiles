@@ -286,10 +286,11 @@ function fd() {
 #   ----- Unify Ubuntu & Mac Tools ----------------------------------- }}}
 
 #   ----- Convert PDF to be printed with Color ink ------------------- {{{
-function pdf_black_to_deep_blue() {
+function pdf2blue() {
     input_pdf="$1"
     output_pdf="COLOR_$input_pdf"
-    magick -density 300 "$input_pdf" +level-colors "rgb(1,1,2)",white "$output_pdf"
+    # Don't go too low with the color, or the printer will use black ink anyway
+    magick -density 300 "$input_pdf" +level-colors "rgb(30,30,60)",white "$output_pdf"
 }
 #   ----- Convert PDF to be printed with Color ink ------------------- }}}
 #  ----- Simple Aliases / Functions ------------------------------------- }}}
