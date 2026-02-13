@@ -108,6 +108,8 @@
 		<key>Style</key>
 		<integer>1</integer>
 	</dict>
+	<key>MenubarCurrentApperance</key>
+	<string>Light</string>
 	<key>Migration</key>
 	<dict>
 		<key>CombinedPowerItems</key>
@@ -356,12 +358,12 @@
 		<key>Build</key>
 		<dict>
 			<key>Last</key>
-			<real>2250</real>
+			<real>2262</real>
 		</dict>
 		<key>Version</key>
 		<dict>
 			<key>Last</key>
-			<real>7.0999999046325684</real>
+			<real>7.1999998092651367</real>
 		</dict>
 	</dict>
 	<key>Weather</key>

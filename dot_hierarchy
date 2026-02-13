@@ -295,6 +295,11 @@ repos:
     url: git@github.com:HelloThisIsFlo/Things3-To-OmniFocus.git
   # ------- OmniFocus ---------------------------------------------------- }}}
 
+  # ------- Obsidian ----------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Obsidian
+    url: git@github.com:ivan-lednev/better-search-views.git
+  # ------- Obsidian ----------------------------------------------------- }}}
+
   # ------- Productivity ------------------------------------------------- {{{
   - path: "~/Library/Application Support/Amethyst"
     url: git@github.com:HelloThisIsFlo/Amethyst-Layouts.git
