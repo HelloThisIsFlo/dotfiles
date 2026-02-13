@@ -729,6 +729,7 @@ autoload -U +X bashcompinit && bashcompinit
 #  AWS CLI
 complete -C aws_completer aws
 
+
 #  ----- Completion ----------------------------------------------------- }}}
 
 #  ----- iTerm2 Shell integration --------------------------------------- {{{
