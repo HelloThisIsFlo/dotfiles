@@ -229,12 +229,12 @@ function tadl {
 #   ----- TADL ------------------------------------------------------- }}}
 
 #   ----- Serve Current Dir ------------------------------------------ {{{
-function serve-current-dir {
-	_ensure_argument_present "$1" "serve-current-dir" "PORT"
+function serve-current-dir () {
+    _ensure_argument_present "$1" "serve-current-dir" "PORT"
     PORT=$1
     echo "Serving current dir on port '${PORT}'"
     echo "Press 'CTRL-C' to exit"
-    docker run --rm -it -p ${PORT}:80 -v $(pwd):/usr/share/nginx/html:ro jorgeandrada/nginx-autoindex
+    docker run --rm -it -p "${PORT}:80" -v "$(pwd):/usr/share/nginx/html:ro" jorgeandrada/nginx-autoindex
 }
 #   ----- Serve Current Dir ------------------------------------------ }}}
 
