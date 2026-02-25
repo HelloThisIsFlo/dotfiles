@@ -6,58 +6,84 @@ Timeless reference material for chezmoi concepts, patterns, and configuration. E
 
 ## [Templates](templates.md)
 
-Go's `text/template` engine powers chezmoi's dynamic file generation. This sheet covers conditionals, whitespace control, string functions, `lookPath` for progressive enhancement, and secrets retrieval via `rbw`. Includes real-world examples for `.gitconfig` and `.ssh/config`, plus a debugging guide for when templates don't render as expected.
-
-Start here if you're adding a new managed file that needs to vary by machine.
+- **Conditionals** — `if`, `else`, `eq`, OS/hostname branching
+- **Whitespace control** — `{{-` and `-}}` trimming
+- **String functions** — `replace`, `contains`, `hasPrefix`, `join`, etc.
+- **`lookPath`** — progressive enhancement (only configure tools that exist)
+- **Secrets in templates** — `rbw` calls for passwords, tokens, API keys
+- **Real-world examples** — `.gitconfig`, `.ssh/config`
+- **Debugging** — `chezmoi execute-template`, `chezmoi cat`
 
 ## [Run Scripts](run-scripts.md)
 
-Scripts that execute during `chezmoi apply` instead of being copied to your home directory. Covers the full naming convention: frequency prefixes (`run_`, `run_once_`, `run_onchange_`), ordering prefixes (`before_`, `after_`), and every valid combination. Explains how ordering works (alphabetical sort, numeric prefixes for control), the `run_onchange_` content-hash trick for change detection, and the gotcha that `run_once` tracks by script name.
-
-Reach for this when you need to install packages, set defaults, or run any side-effect during apply.
+- **Frequency prefixes** — `run_` (always), `run_once_` (first apply), `run_onchange_` (content hash)
+- **Ordering** — `before_` / `after_`, alphabetical sort, numeric prefixes
+- **Change detection** — the `run_onchange_` content-hash trick (embed a checksum)
+- **Gotcha** — `run_once` tracks by script *name*, not content
+- **Common uses** — package installs, `defaults write`, service restarts
 
 ## [Secrets](secrets.md)
 
-The most comprehensive sheet. Covers two approaches: `rbw` (Rust Bitwarden CLI) for pulling individual secrets into templates, and `age` encryption for whole-file encryption at rest. Details rbw installation, configuration, authentication model (background agent, lock timeout, pinentry), template syntax, conditional guards, vault organisation, and troubleshooting. The age section covers setup, key management, and the bootstrap problem.
-
-Read this before adding any credential, token, or password to a managed file.
+- **rbw (Rust Bitwarden CLI)** — install, configure, auth model (background agent, lock timeout, pinentry)
+  - Template syntax — `{{ (rbw "item").data.password }}`, `{{ (rbwFields "item").field.value }}`
+  - Conditional guards — skip secrets on machines that don't need them
+  - Vault organisation & troubleshooting
+- **age encryption** — whole-file encryption at rest
+  - Setup, key management, the bootstrap problem
+- **When to use which** — rbw for field-level secrets, age for offline/unattended
 
 ## [Configuration](config.md)
 
-Everything in `chezmoi.toml`: encryption settings, git integration (`autoCommit`, `autoPush`), diff/merge tool configuration, edit settings, interpreters, and the `[data]` section that feeds template variables.
-
-A focused reference — use it when you need to change how chezmoi itself behaves rather than what it manages.
+- **Encryption** — age/GPG settings in `[encryption]`
+- **Git integration** — `autoCommit`, `autoPush`
+- **Diff/merge tools** — delta, VS Code, vimdiff
+- **Edit settings** — editor, apply-after-edit
+- **Interpreters** — per-extension script runners
+- **`[data]`** — custom template variables
 
 ## [Data Sources](data-sources.md)
 
-Where template variables come from and how they merge. Covers built-in variables (`.chezmoi.os`, `.chezmoi.hostname`, etc.), the `.chezmoi.toml.tmpl` prompt functions (`promptStringOnce`, `promptBoolOnce`, `promptChoiceOnce`), `.chezmoidata` files for structured data like package lists, and merge priority rules.
-
-Essential reading when you're designing the data model for multi-machine support.
+- **Built-in variables** — `.chezmoi.os`, `.chezmoi.hostname`, `.chezmoi.username`, etc.
+- **Prompt functions** — `promptStringOnce`, `promptBoolOnce`, `promptChoiceOnce`
+- **`.chezmoidata` files** — structured YAML/JSON/TOML for package lists, machine profiles
+- **Merge priority** — how multiple data sources combine
 
 ## [macOS Preferences](macos-preferences.md)
 
-Why you can't track plist files directly (daemon caching, binary noise) and the solution: `defaults write` commands in `run_onchange_after_` scripts. Covers the `defaults` command syntax for every type (boolean, integer, string, array), common preference domains, how to discover settings you want to manage, and handling apps that need a restart.
-
-macOS-specific — skip on Linux.
+- **Why not track plists directly** — daemon caching, binary noise, frequent churn
+- **The solution** — `defaults write` in `run_onchange_after_` scripts
+- **`defaults` syntax** — booleans, integers, strings, arrays, dicts
+- **Discovery** — how to find the domain and key for a setting
+- **App restarts** — `killall` patterns for preferences that need it
 
 ## [Naming Conventions](naming.md)
 
-The Rosetta Stone between the source directory and your filesystem. Every prefix (`dot_`, `private_`, `executable_`, `readonly_`, `encrypted_`, `exact_`, `empty_`) and special file type (`create_`, `modify_`, `symlink_`, `remove_`), how they stack, how `chezmoi add` applies them automatically, and the differences between `.chezmoiignore`, `remove_`, and `exact_` for controlling what gets deployed.
-
-Reference this when filenames in the source directory look confusing.
+- **Prefixes** — `dot_`, `private_`, `executable_`, `readonly_`, `encrypted_`, `exact_`, `empty_`
+- **Special types** — `create_`, `modify_`, `symlink_`, `remove_`
+- **Stacking** — how prefixes combine (`private_dot_config/`)
+- **`chezmoi add`** — auto-applies correct prefixes
+- **Deployment control** — `.chezmoiignore` vs `remove_` vs `exact_`
 
 ## [Externals](externals.md)
 
-`.chezmoiexternal.toml` for pulling third-party content (git repos, tarballs, zip archives) into your home directory without committing them to the dotfiles repo. Covers both `archive` and `git-repo` types, `refreshPeriod` caching, version pinning (tags, commits, shallow clones), and practical examples for zsh plugins, Nerd Fonts, and Neovim plugin managers.
-
-Use this instead of git submodules or manual downloads.
+- **`.chezmoiexternal.toml`** — declare third-party content to pull in
+- **Types** — `archive` (tarballs, zips) and `git-repo`
+- **Caching** — `refreshPeriod` for periodic re-fetch
+- **Version pinning** — tags, commits, shallow clones
+- **Examples** — zsh plugins, Nerd Fonts, Neovim plugin managers
 
 ## [Hooks](hooks.md)
 
-Lifecycle hooks configured in `chezmoi.toml` (not run scripts). Explains the key difference: hooks run before template parsing, so they can bootstrap dependencies like a password manager. Covers the four event types (`read-source-state`, command-specific, `git-auto-commit`, `git-auto-push`), the canonical use case (installing rbw before templates that reference it are parsed), and when NOT to use hooks (prefer run scripts for most tasks).
+- **Key difference from run scripts** — hooks run *before* template parsing
+- **Use case** — bootstrap a password manager before templates need it
+- **Event types** — `read-source-state`, command-specific, `git-auto-commit`, `git-auto-push`
+- **When NOT to use** — prefer run scripts for most post-apply tasks
 
 ## [Tips & Escape Hatches](tips.md)
 
-The grab bag: `chezmoi doctor` for diagnostics, `chezmoi merge` for conflict resolution, `chezmoi forget` to unmanage files, `chezmoi execute-template` for debugging, `add` vs `re-add` guidance, and complete workflow summaries for day-to-day use and new machine setup.
-
-Reach for this when something goes wrong or you need a command you don't use often.
+- **Diagnostics** — `chezmoi doctor`
+- **Conflict resolution** — `chezmoi merge`
+- **Unmanage files** — `chezmoi forget`
+- **Debug templates** — `chezmoi execute-template`
+- **`add` vs `re-add`** — when each is safe
+- **Workflow summaries** — day-to-day use, new machine bootstrap
