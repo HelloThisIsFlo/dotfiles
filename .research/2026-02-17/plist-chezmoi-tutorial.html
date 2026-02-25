@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chezmoi + Plists: Interactive Tutorial</title>
+<style>
+  :root {
+    --bg: #1a1b26;
+    --surface: #24283b;
+    --surface2: #2f3349;
+    --border: #3b4261;
+    --text: #c0caf5;
+    --text-dim: #565f89;
+    --accent: #7aa2f7;
+    --green: #9ece6a;
+    --red: #f7768e;
+    --yellow: #e0af68;
+    --orange: #ff9e64;
+    --cyan: #7dcfff;
+    --purple: #bb9af7;
+    --terminal-bg: #16161e;
+    --terminal-green: #9ece6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 2rem;
+  }
+  .progress-bar .step-dot {
+    height: 4px;
+    flex: 1;
+    border-radius: 2px;
+    background: var(--surface2);
+    transition: background 0.3s;
+  }
+  .progress-bar .step-dot.done { background: var(--green); }
+  .progress-bar .step-dot.active { background: var(--accent); }
+
+  /* Scenario tabs */
+  .scenario-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .scenario-tab {
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .scenario-tab:hover { border-color: var(--accent); color: var(--text); }
+  .scenario-tab.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Narration */
+  .narration {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+    min-height: 80px;
+    position: relative;
+  }
+  .narration .step-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+  .narration .step-text {
+    font-size: 0.95rem;
+    color: var(--text);
+  }
+  .narration .step-text code {
+    background: var(--terminal-bg);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.85em;
+    color: var(--cyan);
+  }
+  .narration .step-text .highlight {
+    color: var(--yellow);
+    font-weight: 600;
+  }
+  .narration .step-text .key-insight {
+    display: block;
+    margin-top: 0.6rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(122, 162, 247, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.88rem;
+  }
+
+  /* Panels layout */
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (max-width: 700px) {
+    .panels { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--terminal-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .panel-header .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .panel-header .dot.red { background: var(--red); }
+  .panel-header .dot.yellow { background: var(--yellow); }
+  .panel-header .dot.green { background: var(--green); }
+  .panel-body {
+    padding: 0.75rem;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 160px;
+    max-height: 320px;
+    overflow-y: auto;
+    transition: opacity 0.15s;
+  }
+
+  /* Syntax highlighting in panels */
+  .cm { color: var(--text-dim); }  /* comment */
+  .kw { color: var(--purple); }    /* keyword */
+  .fn { color: var(--accent); }    /* function/command */
+  .str { color: var(--green); }    /* string */
+  .val { color: var(--orange); }   /* value */
+  .flag { color: var(--cyan); }    /* flag */
+  .prompt { color: var(--green); } /* shell prompt */
+  .err { color: var(--red); }      /* error/removed */
+  .add { color: var(--green); }    /* added */
+  .dim { color: var(--text-dim); }
+  .bold { font-weight: 700; }
+  .hl { background: rgba(122, 162, 247, 0.15); display: inline; border-radius: 2px; padding: 0 2px; }
+
+  /* Full width panel */
+  .panel.full {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Buttons */
+  .controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+  .btn {
+    padding: 0.55rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .btn:hover { background: var(--surface2); border-color: var(--accent); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .btn.primary:disabled { filter: none; }
+  .step-counter {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* Diagram */
+  .diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .diagram svg { max-width: 100%; }
+  .diagram-caption {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 0.75rem;
+  }
+
+  /* File tree styling */
+  .file-changed { color: var(--yellow); }
+  .file-new { color: var(--green); }
+  .file-deleted { color: var(--red); text-decoration: line-through; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Chezmoi + Plists</h1>
+  <p class="subtitle">An interactive tutorial on managing macOS app preferences with <code style="color:var(--cyan)">run_onchange_</code> scripts</p>
+
+  <div class="scenario-tabs" id="scenarioTabs"></div>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="narration" id="narration">
+    <div class="step-label" id="stepLabel"></div>
+    <div class="step-text" id="stepText"></div>
+  </div>
+
+  <div id="panelsArea"></div>
+
+  <div class="controls">
+    <button class="btn" id="prevBtn" onclick="prev()">Back</button>
+    <span class="step-counter" id="stepCounter"></span>
+    <button class="btn primary" id="nextBtn" onclick="next()">Next</button>
+  </div>
+</div>
+
+<script>
+// ─── Scenario Data ──────────────────────────────────────────
+
+const scenarios = [
+  // ── Scenario 0: The Problem ──
+  {
+    title: "The Problem",
+    steps: [
+      {
+        label: "The setup",
+        text: `You have Moom (a window manager) with its preferences stored as a plist.<br>You added it to chezmoi with <code>chezmoi add</code>, and you have <code>autoCommit = true</code>.`,
+        panels: "double",
+        left: { title: "Chezmoi Source", content:
+`<span class="dim">~/.local/share/chezmoi/</span>
+  private_Library/
+    private_Preferences/
+      <span class="bold">private_com.manytricks.Moom.plist</span>  <span class="cm"># binary blob</span>`
+        },
+        right: { title: "Target (your home dir)", content:
+`<span class="dim">~/Library/Preferences/</span>
+  <span class="bold">com.manytricks.Moom.plist</span>  <span class="cm"># the live file</span>
+
+<span class="cm"># Moom reads and writes this file constantly.</span>
+<span class="cm"># It saves window positions, timestamps,</span>
+<span class="cm"># internal state, AND your config in the</span>
+<span class="cm"># same file.</span>`
+        }
+      },
+      {
+        label: "You change a setting in Moom",
+        text: `You go to Moom's preferences and change the grid spacing from 1 to 2. Moom writes to its plist. But it also updates timestamps, cached state, etc.`,
+        panels: "single",
+        single: { title: "Terminal", content:
+`<span class="prompt">$</span> <span class="fn">chezmoi</span> diff ~/Library/Preferences/com.manytricks.Moom.plist
+
+<span class="cm"># Output (via textconv, so it's readable XML):</span>
+<span class="err">-  &lt;key&gt;Grid Spacing: Gap&lt;/key&gt;</span>
+<span class="err">-  &lt;integer&gt;1&lt;/integer&gt;</span>
+<span class="add">+  &lt;key&gt;Grid Spacing: Gap&lt;/key&gt;</span>
+<span class="add">+  &lt;integer&gt;2&lt;/integer&gt;</span>           <span class="cm">&lt;-- your actual change</span>
+<span class="err">-  &lt;key&gt;Last Window Position&lt;/key&gt;</span>
+<span class="err">-  &lt;string&gt;{{412, 225}}&lt;/string&gt;</span>
+<span class="add">+  &lt;key&gt;Last Window Position&lt;/key&gt;</span>
+<span class="add">+  &lt;string&gt;{{523, 301}}&lt;/string&gt;</span>  <span class="cm">&lt;-- noise: you moved a window</span>
+<span class="err">-  &lt;key&gt;SULastCheckTime&lt;/key&gt;</span>
+<span class="err">-  &lt;date&gt;2025-02-17T10:00:00Z&lt;/date&gt;</span>
+<span class="add">+  &lt;key&gt;SULastCheckTime&lt;/key&gt;</span>
+<span class="add">+  &lt;date&gt;2025-02-17T18:30:00Z&lt;/date&gt;</span>  <span class="cm">&lt;-- noise: update check</span>
+<span class="err">-  &lt;key&gt;moveResize Count&lt;/key&gt;</span>
+<span class="err">-  &lt;integer&gt;4871&lt;/integer&gt;</span>
+<span class="add">+  &lt;key&gt;moveResize Count&lt;/key&gt;</span>
+<span class="add">+  &lt;integer&gt;4903&lt;/integer&gt;</span>         <span class="cm">&lt;-- noise: usage counter</span>`
+        }
+      },
+      {
+        label: "The noise compounds",
+        text: `You run <code>chezmoi re-add</code> to capture your grid change. Because <code>autoCommit = true</code>, it instantly creates a git commit with ALL the changes — your 1 real change + 3 noise changes. Next hour, Moom writes again. More noise. More commits.
+          <span class="key-insight">The core problem: <span class="highlight">chezmoi tracks the entire plist file as a binary blob.</span> It can't tell "your config change" apart from "app runtime noise."</span>`,
+        panels: "single",
+        single: { title: "Git Log (chezmoi source repo)", content:
+`<span class="prompt">$</span> <span class="fn">git</span> log --oneline
+
+<span class="yellow">49d707d</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="yellow">435cd46</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="yellow">e0185d3</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="yellow">0950e40</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="yellow">af0f4bb</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="yellow">9c1c876</span> Update Library/Preferences/com.manytricks.Moom.plist
+<span class="dim">        ^^^^^ all of these are mostly noise</span>
+
+<span class="cm"># And this is just ONE app. Multiply by</span>
+<span class="cm"># Bartender, iStat Menus, Raycast...</span>`
+        }
+      },
+    ]
+  },
+
+  // ── Scenario 1: The Solution ──
+  {
+    title: "The Solution",
+    steps: [
+      {
+        label: "The idea",
+        text: `Instead of tracking the whole plist file, we flip the approach:<br><br>
+          We write a <span class="highlight">script</span> that contains only the <code>defaults write</code> commands for the settings we care about.<br>
+          Chezmoi runs this script whenever its contents change. <span class="highlight">No plist file is tracked at all.</span>
+          <span class="key-insight">Think of it as: instead of saving a snapshot of Moom's 200-key plist, you save a recipe: "set grid spacing to 2, enable drawers, use dark theme."</span>`,
+        panels: "single",
+        single: { title: "The Concept", content:
+`<span class="cm">OLD APPROACH (tracking the file):</span>
+<span class="err">  chezmoi source  ──copies──>  ~/Library/Preferences/com.manytricks.Moom.plist</span>
+<span class="err">  (binary blob)                (app overwrites with runtime junk)</span>
+<span class="err">  ↑ re-add ↑                   constant drift, noisy diffs</span>
+
+<span class="cm">NEW APPROACH (run_onchange_ script):</span>
+<span class="add">  chezmoi source has a SCRIPT that runs defaults write commands</span>
+<span class="add">  (text file, clean diffs)      ──runs──>  sets only the keys you care about</span>
+<span class="add">                                           app's runtime keys are untouched</span>`
+        }
+      },
+      {
+        label: "Step 1 — Stop tracking the plist file",
+        text: `First, remove the plist from chezmoi management. This deletes it from the chezmoi source repo, but leaves the actual file on disk untouched.`,
+        panels: "double",
+        left: { title: "Terminal", content:
+`<span class="prompt">$</span> <span class="fn">chezmoi</span> forget ~/Library/Preferences/com.manytricks.Moom.plist
+
+<span class="cm"># That's it. The plist is no longer tracked.</span>
+<span class="cm"># Moom keeps running, its plist is still there.</span>
+<span class="cm"># chezmoi just doesn't care about it anymore.</span>`
+        },
+        right: { title: "Chezmoi Source (after)", content:
+`<span class="dim">~/.local/share/chezmoi/</span>
+  private_Library/
+    private_Preferences/
+      <span class="file-deleted">private_com.manytricks.Moom.plist</span>  <span class="cm"># gone from source</span>
+
+<span class="cm"># The live file at ~/Library/Preferences/</span>
+<span class="cm"># is still there, untouched.</span>`
+        }
+      },
+      {
+        label: "Step 2 — Discover the keys you care about",
+        text: `Before writing the script, you need to know the <code>defaults write</code> commands for your settings. The trick: snapshot before and after changing a setting.`,
+        panels: "single",
+        single: { title: "Terminal", content:
+`<span class="cm"># 1. Snapshot current state</span>
+<span class="prompt">$</span> <span class="fn">defaults</span> read com.manytricks.Moom > /tmp/moom-before.txt
+
+<span class="cm"># 2. Go to Moom preferences, change "Grid Spacing" from 1 to 2</span>
+
+<span class="cm"># 3. Snapshot again</span>
+<span class="prompt">$</span> <span class="fn">defaults</span> read com.manytricks.Moom > /tmp/moom-after.txt
+
+<span class="cm"># 4. Diff!</span>
+<span class="prompt">$</span> <span class="fn">diff</span> /tmp/moom-before.txt /tmp/moom-after.txt
+<span class="err">-    "Grid Spacing: Gap" = 1;</span>
+<span class="add">+    "Grid Spacing: Gap" = 2;</span>
+
+<span class="cm"># Now you know the exact key name and value type.</span>
+<span class="cm"># The defaults write command is:</span>
+<span class="cm">#   defaults write com.manytricks.Moom "Grid Spacing: Gap" -int 2</span>
+
+<span class="cm"># Repeat for each setting you care about.</span>
+<span class="cm"># Or use prefsniff to auto-detect changes:</span>
+<span class="cm">#   brew install prefsniff</span>
+<span class="cm">#   prefsniff ~/Library/Preferences/com.manytricks.Moom.plist</span>`
+        }
+      },
+      {
+        label: "Step 3 — Create the run_onchange_ script",
+        text: `Now create a script in the chezmoi source directory. The magic is in the filename: <code>run_onchange_</code> tells chezmoi to run it <span class="highlight">only when the script's contents change</span>.`,
+        panels: "single",
+        single: { title: "Terminal", content:
+`<span class="prompt">$</span> <span class="fn">chezmoi</span> cd
+<span class="cm"># Now in ~/.local/share/chezmoi/</span>
+
+<span class="prompt">$</span> <span class="fn">cat</span> run_onchange_after_configure-moom.sh
+<span class="kw">#!/bin/bash</span>
+
+<span class="cm"># Moom - Window Manager</span>
+<span class="cm"># Only the settings I've customized from defaults.</span>
+
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Grid Spacing: Gap"</span> <span class="flag">-int</span> <span class="val">2</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Allow For Drawers"</span> <span class="flag">-bool</span> <span class="val">true</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Mouse Controls Include"</span> <span class="flag">-int</span> <span class="val">1</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Stealth Mode"</span> <span class="flag">-bool</span> <span class="val">false</span>
+
+<span class="cm"># Restart Moom to pick up changes</span>
+<span class="fn">killall</span> Moom <span class="val">2>/dev/null</span>
+<span class="fn">open</span> <span class="flag">-a</span> Moom`
+        }
+      },
+      {
+        label: "Step 4 — Apply and done!",
+        text: `When you run <code>chezmoi apply</code>, chezmoi sees the new script and executes it once. The <code>defaults write</code> commands set your keys, Moom restarts, and you're done.<br><br>
+          The key insight: chezmoi tracks <span class="highlight">a hash of the script's contents</span>. It will only re-run if you edit the script.`,
+        panels: "double",
+        left: { title: "Terminal", content:
+`<span class="prompt">$</span> <span class="fn">chezmoi</span> apply
+<span class="add">Running run_onchange_after_configure-moom.sh...</span>
+
+<span class="prompt">$</span> <span class="fn">chezmoi</span> status
+<span class="cm"># Clean! Nothing to show.</span>
+
+<span class="prompt">$</span> <span class="fn">chezmoi</span> diff
+<span class="cm"># Clean! No plist noise.</span>`
+        },
+        right: { title: "What Just Happened", content:
+`<span class="add">1.</span> chezmoi saw a new <span class="fn">run_onchange_</span> script
+<span class="add">2.</span> It ran the script (first time = always runs)
+<span class="add">3.</span> <span class="fn">defaults write</span> set your 4 keys in Moom's plist
+<span class="add">4.</span> Moom restarted and loaded the new values
+<span class="add">5.</span> chezmoi saved a hash of the script contents
+
+<span class="cm">Now Moom can write whatever runtime</span>
+<span class="cm">junk it wants to its plist.</span>
+<span class="cm">chezmoi doesn't care — it's not tracking</span>
+<span class="cm">the plist file anymore!</span>`
+        }
+      }
+    ]
+  },
+
+  // ── Scenario 2: Day-to-Day Workflow ──
+  {
+    title: "Day-to-Day",
+    steps: [
+      {
+        label: "Weeks later: you want to change a setting",
+        text: `Two weeks pass. Everything is working fine. Now you want to enable Moom's "Snap to Edges" feature. Here's the workflow:`,
+        panels: "single",
+        single: { title: "Terminal", content:
+`<span class="cm"># 1. Discover the key (same diff trick as before)</span>
+<span class="prompt">$</span> <span class="fn">defaults</span> read com.manytricks.Moom > /tmp/before.txt
+<span class="cm"># (enable "Snap to Edges" in Moom's UI)</span>
+<span class="prompt">$</span> <span class="fn">defaults</span> read com.manytricks.Moom > /tmp/after.txt
+<span class="prompt">$</span> <span class="fn">diff</span> /tmp/before.txt /tmp/after.txt
+<span class="add">+    "Snap To Edges" = 1;</span>
+
+<span class="cm"># Great, now we know the key name.</span>`
+        }
+      },
+      {
+        label: "Edit the script",
+        text: `Add the new <code>defaults write</code> line to your existing script. Use <code>chezmoi edit</code> or edit the source file directly.`,
+        panels: "single",
+        single: { title: "run_onchange_after_configure-moom.sh", content:
+`<span class="kw">#!/bin/bash</span>
+
+<span class="cm"># Moom - Window Manager</span>
+
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Grid Spacing: Gap"</span> <span class="flag">-int</span> <span class="val">2</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Allow For Drawers"</span> <span class="flag">-bool</span> <span class="val">true</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Mouse Controls Include"</span> <span class="flag">-int</span> <span class="val">1</span>
+<span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Stealth Mode"</span> <span class="flag">-bool</span> <span class="val">false</span>
+<span class="hl"><span class="fn">defaults</span> write com.manytricks.Moom <span class="str">"Snap To Edges"</span> <span class="flag">-bool</span> <span class="val">true</span></span>    <span class="cm"># NEW</span>
+
+<span class="fn">killall</span> Moom <span class="val">2>/dev/null</span>
+<span class="fn">open</span> <span class="flag">-a</span> Moom`
+        }
+      },
+      {
+        label: "Apply — the script re-runs",
+        text: `Because the script contents changed (you added a line), chezmoi detects the new hash and re-runs it. The <code>defaults write</code> commands are idempotent — running them again just sets the same values.
+          <span class="key-insight">This is why <code>run_onchange_</code> is perfect: it only re-runs when YOU change the script. Moom writing runtime junk to its plist? Doesn't trigger anything.</span>`,
+        panels: "double",
+        left: { title: "Terminal", content:
+`<span class="prompt">$</span> <span class="fn">chezmoi</span> apply
+<span class="add">Running run_onchange_after_configure-moom.sh...</span>
+<span class="cm"># Script re-ran because its contents changed!</span>
+<span class="cm"># All 5 defaults write commands executed.</span>
+<span class="cm"># Moom restarted.</span>
+
+<span class="prompt">$</span> <span class="fn">chezmoi</span> status
+<span class="cm"># Clean.</span>`
+        },
+        right: { title: "Git Commit (auto)", content:
+`<span class="prompt">$</span> <span class="fn">git</span> log --oneline -3
+
+<span class="yellow">a1b2c3d</span> Update run_onchange_after_configure-moom.sh
+<span class="dim">        ^^^^^ meaningful! you added "Snap To Edges"</span>
+
+<span class="yellow">...</span> <span class="cm">(older commits)</span>
+
+<span class="cm"># Compare this to the old approach:</span>
+<span class="cm"># hundreds of "Update Moom.plist" commits</span>
+<span class="cm"># that were 99% runtime noise.</span>`
+        }
+      },
+      {
+        label: "On a new machine",
+        text: `You set up a new Mac and run <code>chezmoi init</code> + <code>chezmoi apply</code>. The <code>run_onchange_</code> script runs automatically (it's never been run on this machine). Moom gets all your settings instantly.`,
+        panels: "single",
+        single: { title: "New Machine Setup", content:
+`<span class="prompt">new-mac$</span> <span class="fn">chezmoi</span> init HelloThisIsFlo/dotfiles
+<span class="prompt">new-mac$</span> <span class="fn">chezmoi</span> apply
+
+<span class="add">Running run_onchange_after_configure-moom.sh...</span>
+<span class="add">Running run_onchange_after_configure-raycast.sh...</span>
+<span class="add">Running run_onchange_after_configure-istatmenus.sh...</span>
+<span class="add">Running run_onchange_after_brew-bundle.sh...</span>
+
+<span class="cm"># All your app preferences are set.</span>
+<span class="cm"># No need to copy plist files.</span>
+<span class="cm"># No need for Mackup restore.</span>
+<span class="cm"># No need for killall cfprefsd.</span>
+<span class="cm"># Each app just needs to be restarted</span>
+<span class="cm"># (or it reads the new defaults on next launch).</span>`
+        }
+      }
+    ]
+  },
+
+  // ── Scenario 3: Real Examples ──
+  {
+    title: "Real Examples",
+    steps: [
+      {
+        label: "Example: iStat Menus",
+        text: `iStat Menus is the worst offender — it writes GPS coordinates, ISS orbital data, and timestamps constantly. Here's how you'd handle it:`,
+        panels: "single",
+        single: { title: "run_onchange_after_configure-istatmenus.sh", content:
+`<span class="kw">#!/bin/bash</span>
+
+<span class="cm"># iStat Menus - System Monitor</span>
+<span class="cm"># Only tracking menu bar layout and display preferences.</span>
+<span class="cm"># Ignoring: GPS data, weather cache, TLE orbital data, timestamps.</span>
+
+<span class="dim">DOMAIN="com.bjango.istatmenus-setapp"</span>
+
+<span class="cm"># Which items to show in the menu bar</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"MenubarOrder"</span> <span class="flag">-array</span> \\
+  <span class="str">"CPU"</span> <span class="str">"Memory"</span> <span class="str">"Network"</span> <span class="str">"Battery"</span>
+
+<span class="cm"># CPU display style</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"CPU_MenubarMode"</span> <span class="flag">-array</span> \\
+  <span class="str">"100,2,1"</span>
+
+<span class="cm"># Network display style (show speed in menu bar)</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"Network_MenubarMode"</span> <span class="flag">-array</span> \\
+  <span class="str">"4,1,1"</span>
+
+<span class="cm"># Update interval (seconds)</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"UpdateInterval"</span> <span class="flag">-int</span> <span class="val">3</span>
+
+<span class="cm"># That's it. GPS data, weather, ISS TLE, timestamps</span>
+<span class="cm"># are all runtime state that we don't need to manage.</span>
+<span class="cm"># iStat Menus recreates them on launch.</span>`
+        }
+      },
+      {
+        label: "Example: Raycast",
+        text: `Raycast is complex but mostly configured through its own UI export. For the parts in the plist, you'd do something like:`,
+        panels: "single",
+        single: { title: "run_onchange_after_configure-raycast.sh", content:
+`<span class="kw">#!/bin/bash</span>
+
+<span class="cm"># Raycast - Launcher</span>
+<span class="cm"># Note: Raycast has its own import/export for extensions.</span>
+<span class="cm"># This script only handles the system-level preferences.</span>
+
+<span class="dim">DOMAIN="com.raycast.macos"</span>
+
+<span class="cm"># Hotkey: Cmd+Space (replaces Spotlight)</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"raycastGlobalHotkey"</span> <span class="flag">-string</span> <span class="str">"Command-49"</span>
+
+<span class="cm"># Window style</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"raycastWindowPresentationMode"</span> <span class="flag">-int</span> <span class="val">0</span>
+
+<span class="cm"># Disable analytics</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"analyticsEnabled"</span> <span class="flag">-bool</span> <span class="val">false</span>
+
+<span class="cm"># For Raycast extensions and snippets, use Raycast's</span>
+<span class="cm"># built-in export: Raycast > Settings > Advanced > Export</span>
+<span class="cm"># Store the export file in chezmoi and import on new machines.</span>`
+        }
+      },
+      {
+        label: "Example: A simple one (Mos)",
+        text: `Mos (smooth scrolling app) is a great first candidate — it has very few settings and they're all genuine config, no runtime noise.`,
+        panels: "single",
+        single: { title: "run_onchange_after_configure-mos.sh", content:
+`<span class="kw">#!/bin/bash</span>
+
+<span class="cm"># Mos - Smooth Scrolling</span>
+<span class="cm"># Simple app, all keys are real config.</span>
+
+<span class="dim">DOMAIN="com.caldis.Mos"</span>
+
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"scrollDirection"</span> <span class="flag">-int</span> <span class="val">0</span>    <span class="cm"># natural</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"smooth"</span> <span class="flag">-bool</span> <span class="val">true</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"speed"</span> <span class="flag">-float</span> <span class="val">3.3</span>
+<span class="fn">defaults</span> write <span class="val">$DOMAIN</span> <span class="str">"duration"</span> <span class="flag">-float</span> <span class="val">3.9</span>
+
+<span class="cm"># Mos is a great first app to try this pattern with!</span>
+<span class="cm"># Only ~4 keys, all meaningful config,</span>
+<span class="cm"># and you can verify by opening Mos prefs after apply.</span>`
+        }
+      },
+      {
+        label: "Your chezmoi source, after migration",
+        text: `Here's what your chezmoi source would look like after migrating all the volatile plists to <code>run_onchange_</code> scripts. Notice: no more binary plist blobs, only clean text scripts.
+          <span class="key-insight">Each script is a small, readable, diffable text file. Git history becomes meaningful. <code>chezmoi status</code> stays clean.</span>`,
+        panels: "single",
+        single: { title: "~/.local/share/chezmoi/", content:
+`<span class="dim">.</span>
+<span class="dim">+-- .chezmoi.toml.tmpl</span>
+<span class="dim">+-- dot_Brewfile</span>
+<span class="dim">+-- dot_bashrc</span>
+<span class="dim">+-- dot_config/</span>
+<span class="dim">+-- dot_vimrc</span>
+<span class="dim">+-- private_dot_zshrc</span>
+<span class="dim">+-- private_dot_zsh/</span>
+<span class="dim">+-- private_Library/</span>
+<span class="dim">|   +-- private_Preferences/</span>
+<span class="dim">|       +-- private_com.caldis.Mos.plist</span>          <span class="cm"># stable plist (no noise) - keep as file</span>
+<span class="dim">|       +-- private_org.videolan.vlc/</span>              <span class="cm"># stable - keep as file</span>
+<span class="add">+-- run_onchange_after_brew-bundle.sh.tmpl</span>        <span class="cm"># you already have this</span>
+<span class="add">+-- run_onchange_after_configure-bartender.sh</span>     <span class="cm"># NEW: replaces Bartender plist + BMPs</span>
+<span class="add">+-- run_onchange_after_configure-istatmenus.sh</span>    <span class="cm"># NEW: replaces 4 iStat plists</span>
+<span class="add">+-- run_onchange_after_configure-moom.sh</span>          <span class="cm"># NEW: replaces Moom plist</span>
+<span class="add">+-- run_onchange_after_configure-raycast.sh</span>       <span class="cm"># NEW: replaces Raycast plist</span>
+<span class="add">+-- run_onchange_after_configure-clocker.sh</span>       <span class="cm"># NEW: replaces Clocker plist</span>`
+        }
+      }
+    ]
+  },
+
+  // ── Scenario 4: When NOT to use this ──
+  {
+    title: "When Not To",
+    steps: [
+      {
+        label: "Keep some plists as regular files",
+        text: `Not every plist needs a <code>run_onchange_</code> script. If a plist is <span class="highlight">stable</span> (the app doesn't write runtime junk to it), tracking it as a regular file is simpler.
+          <span class="key-insight">Rule of thumb: run <code>chezmoi status</code> after a day of normal use. If a plist shows up as modified without you changing any settings, it's volatile and should become a <code>run_onchange_</code> script. If it stays clean, keep it as a file.</span>`,
+        panels: "double",
+        left: { title: "Keep as Files (stable)", content:
+`<span class="add">com.caldis.Mos.plist</span>
+  <span class="cm">Mos only writes when you change settings.</span>
+  <span class="cm">No runtime noise.</span>
+
+<span class="add">org.videolan.vlc/vlcrc</span>
+  <span class="cm">VLC's config is a text file, not a</span>
+  <span class="cm">binary plist. Perfect for chezmoi.</span>
+
+<span class="add">com.abhishek.Clocker.plist</span>
+  <span class="cm">Clocker is mostly stable.</span>
+  <span class="cm">Test it for a day to be sure.</span>`
+        },
+        right: { title: "Migrate to Scripts (volatile)", content:
+`<span class="err">com.bjango.istatmenus*.plist (x4)</span>
+  <span class="cm">Writes GPS, ISS TLE, timestamps</span>
+  <span class="cm">constantly. Script is the only option.</span>
+
+<span class="err">com.manytricks.Moom.plist</span>
+  <span class="cm">Writes window positions, move count.</span>
+
+<span class="err">com.raycast.macos.plist</span>
+  <span class="cm">Writes usage data, recent items.</span>
+
+<span class="err">com.surteesstudios.Bartender*.plist</span>
+  <span class="cm">Writes icon state, menu bar layout</span>
+  <span class="cm">changes from macOS itself.</span>`
+        }
+      },
+      {
+        label: "Limits of defaults write",
+        text: `Not everything can be set with <code>defaults write</code>. Some apps store complex nested data or use custom serialization. For those, you have options:`,
+        panels: "single",
+        single: { title: "Alternatives for Complex Cases", content:
+`<span class="cm">1. PlistBuddy — for nested keys:</span>
+<span class="fn">/usr/libexec/PlistBuddy</span> <span class="flag">-c</span> <span class="str">"Set :SomeDict:NestedKey value"</span> \\
+  ~/Library/Preferences/com.example.app.plist
+
+<span class="cm">2. App's own export/import — best for complex apps:</span>
+<span class="cm">   Raycast: Settings > Advanced > Export/Import</span>
+<span class="cm">   Alfred:  Preferences > Advanced > Sync folder</span>
+<span class="cm">   Karabiner: ~/.config/karabiner/karabiner.json (already text!)</span>
+
+<span class="cm">3. Accept manual setup — for rarely-changed apps:</span>
+<span class="cm">   If you set up Bartender once a year on a new Mac,</span>
+<span class="cm">   maybe 5 minutes of clicking is fine.</span>
+<span class="cm">   Don't over-engineer what doesn't need automation.</span>
+
+<span class="cm">4. Hybrid — use a script for the important bits,</span>
+<span class="cm">   accept manual setup for the rest:</span>
+<span class="kw">#!/bin/bash</span>
+<span class="cm"># The 3 Bartender settings I actually care about:</span>
+<span class="fn">defaults</span> write com.surteesstudios.Bartender <span class="str">"ShowMenuBarIcon"</span> <span class="flag">-bool</span> <span class="val">false</span>
+<span class="fn">defaults</span> write com.surteesstudios.Bartender <span class="str">"StatusItemSpacing"</span> <span class="flag">-int</span> <span class="val">4</span>
+<span class="cm"># The rest? Meh, I'll click through it. Takes 30 seconds.</span>`
+        }
+      },
+      {
+        label: "The migration doesn't have to be all-or-nothing",
+        text: `You can migrate one app at a time. Start with the simplest (Mos), get comfortable, then tackle the complex ones. Some apps might stay as tracked plists. That's fine.
+          <span class="key-insight">The goal is: <code>chezmoi status</code> is clean after a normal day of work. No noise. When it shows a diff, you know it's a real change you made.</span>`,
+        panels: "single",
+        single: { title: "Suggested Migration Order", content:
+`<span class="add">1. Mos</span>              <span class="cm">~4 keys, zero noise. Perfect first attempt.</span>
+<span class="add">2. Moom</span>             <span class="cm">~10 keys you care about. Medium complexity.</span>
+<span class="add">3. iStat Menus</span>     <span class="cm">The noisiest. Big win when done.</span>
+<span class="add">4. Raycast</span>          <span class="cm">Use Raycast's own export for extensions.</span>
+<span class="add">5. Bartender</span>        <span class="cm">Decide how much you care. Maybe just 2-3 keys.</span>
+<span class="dim">6. Clocker</span>          <span class="cm">Test if it's actually stable first.</span>
+
+<span class="cm">Timeline: no rush. Do one per session.</span>
+<span class="cm">Each migration: ~15 minutes for discovery + script writing.</span>`
+        }
+      }
+    ]
+  }
+];
+
+
+// ─── State ──────────────────────────────────────────────────
+
+let currentScenario = 0;
+let currentStep = 0;
+
+function getSteps() { return scenarios[currentScenario].steps; }
+function getStep() { return getSteps()[currentStep]; }
+
+// ─── Rendering ──────────────────────────────────────────────
+
+function renderTabs() {
+  const container = document.getElementById('scenarioTabs');
+  container.innerHTML = scenarios.map((s, i) =>
+    `<div class="scenario-tab ${i === currentScenario ? 'active' : ''}"
+          onclick="switchScenario(${i})">${s.title}</div>`
+  ).join('');
+}
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  const steps = getSteps();
+  bar.innerHTML = steps.map((_, i) => {
+    let cls = 'step-dot';
+    if (i < currentStep) cls += ' done';
+    else if (i === currentStep) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function renderNarration() {
+  const step = getStep();
+  document.getElementById('stepLabel').textContent = step.label;
+  document.getElementById('stepText').innerHTML = step.text;
+}
+
+function renderPanels() {
+  const step = getStep();
+  const area = document.getElementById('panelsArea');
+
+  if (step.panels === 'double') {
+    area.innerHTML = `
+      <div class="panels">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            ${step.left.title}
+          </div>
+          <div class="panel-body">${step.left.content}</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            ${step.right.title}
+          </div>
+          <div class="panel-body">${step.right.content}</div>
+        </div>
+      </div>`;
+  } else {
+    area.innerHTML = `
+      <div class="panel full">
+        <div class="panel-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          ${step.single.title}
+        </div>
+        <div class="panel-body">${step.single.content}</div>
+      </div>`;
+  }
+}
+
+function renderControls() {
+  const steps = getSteps();
+  document.getElementById('prevBtn').disabled = (currentStep === 0 && currentScenario === 0);
+  document.getElementById('nextBtn').textContent =
+    (currentStep === steps.length - 1 && currentScenario === scenarios.length - 1)
+      ? 'Done!' : (currentStep === steps.length - 1) ? 'Next Section' : 'Next';
+  document.getElementById('nextBtn').disabled =
+    (currentStep === steps.length - 1 && currentScenario === scenarios.length - 1);
+  document.getElementById('stepCounter').textContent =
+    `${currentStep + 1} / ${steps.length}`;
+}
+
+function render() {
+  renderTabs();
+  renderProgress();
+  renderNarration();
+  renderPanels();
+  renderControls();
+}
+
+// ─── Navigation ─────────────────────────────────────────────
+
+function next() {
+  const steps = getSteps();
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+  } else if (currentScenario < scenarios.length - 1) {
+    currentScenario++;
+    currentStep = 0;
+  }
+  render();
+}
+
+function prev() {
+  if (currentStep > 0) {
+    currentStep--;
+  } else if (currentScenario > 0) {
+    currentScenario--;
+    currentStep = scenarios[currentScenario].steps.length - 1;
+  }
+  render();
+}
+
+function switchScenario(idx) {
+  currentScenario = idx;
+  currentStep = 0;
+  render();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key >= '1' && e.key <= String(scenarios.length)) {
+    switchScenario(parseInt(e.key) - 1);
+  }
+});
+
+// ─── Init ───────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

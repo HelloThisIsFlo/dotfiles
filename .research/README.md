@@ -4,6 +4,12 @@ Reference material for the chezmoi dotfiles repo. Nothing here is deployed to th
 
 ---
 
+## Living documents
+
+- **[MIGRATION.md](MIGRATION.md)** — Mackup → chezmoi migration tracker. Current status, phase checklists, what's broken, what's next. **Start here** when returning to the repo after a break.
+
+---
+
 ## Cheatsheets
 
 Timeless reference docs for chezmoi concepts. See **[cheatsheets/INDEX.md](cheatsheets/INDEX.md)** for detailed descriptions of each sheet.
@@ -23,8 +29,15 @@ Timeless reference docs for chezmoi concepts. See **[cheatsheets/INDEX.md](cheat
 
 ## Session notes
 
+### 2026-02-17
+
+- [Migration Status](2026-02-17/migration-status.md) — Full audit: what chezmoi manages, what's still Mackup-symlinked, plist deep dive with recommendations
+- [Original CLAUDE.md](2026-02-17/ORIGINAL_CLAUDE.md) — Snapshot of CLAUDE.md before migration planning began
+- [Plist Tutorial](2026-02-17/plist-chezmoi-tutorial.html) — HTML reference on managing plists with chezmoi
+
 ### 2026-02-25
 
 - [Decisions](2026-02-25/decisions.md) — Architecture decisions: rbw-only secrets, edit→apply workflow, no age for v1
 - [Next Actions](2026-02-25/next-actions.md) — Phased plan from clean foundation through multi-machine setup
 - [Conversation Summary](2026-02-25/conversation-summary.md) — Context behind the rbw decision, options considered and eliminated
+- [Assistant Skill Rationale](2026-02-25/assistant-skill-rationale.md) — Why a Claude Code skill (not MCP), what it does, when to build it

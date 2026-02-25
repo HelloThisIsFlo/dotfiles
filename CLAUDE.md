@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A [chezmoi](https://chezmoi.io) dotfiles repository for macOS (primary) with planned Linux support. Source state lives here (`~/.local/share/chezmoi/`), target state is `~/`. Remote: `git@github.com:HelloThisIsFlo/dotfiles.git`.
 
+## Migration in progress
+
+> **Temporary section.** Once migration completes, this is replaced with maintenance-mode operating instructions and a Claude Code assistant skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
+
+This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Current state:
+
+- **Tracker:** `.research/MIGRATION.md` — the living migration document. Read it for full status, phase checklists, and what's broken.
+- **~20 files still Mackup-symlinked** — `.gitconfig`, VS Code settings, secret env files, and others. Not yet in chezmoi.
+- **Plist drift** — 5 plists show MM (modified-modified) status. Apps write runtime data into tracked files. These will be replaced by `defaults write` scripts.
+- **Config is stale** — `.chezmoi.toml.tmpl` and `.install-password-manager.sh` still reference `bw` (old Bitwarden CLI). `rbw` is installed but not wired in.
+- **Secrets not yet templated** — `rbw` is the decided tool but no templates use it yet.
+
+**For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes.
+
 ## Key commands
 
 ```bash
@@ -49,9 +63,11 @@ private_Library/                # macOS app preferences (Bartender, iStat Menus,
   Application Support/          # Bartender menu bar image configs
 
 .research/                      # reference material (not deployed by chezmoi)
+  MIGRATION.md                  # living migration tracker — start here for current status
   README.md                     # master index with quick links
   cheatsheets/                  # 10 topic cheatsheets + INDEX.md
-  2026-02-25/                   # session notes: decisions, next-actions, conversation-summary
+  2026-02-17/                   # session notes: migration assessment, original CLAUDE.md, plist tutorial
+  2026-02-25/                   # session notes: decisions, next-actions, assistant-skill-rationale
 ```
 
 ## Chezmoi naming conventions (critical for this repo)
@@ -69,6 +85,6 @@ private_Library/                # macOS app preferences (Bartender, iStat Menus,
 
 - **Never use `chezmoi re-add` on `.tmpl` files** — it replaces template logic with rendered output.
 - **Plist files use textconv** — the config converts plists to XML via `plutil` for readable diffs. When editing plists, prefer `defaults write` in run scripts over directly managing plist files.
-- **The `.research/` directory is reference material** — not deployed to target. Contains cheatsheets (`cheatsheets/`) and session notes (`2026-02-25/`). Consult `.research/2026-02-25/decisions.md` before changing secrets strategy or adding encryption.
+- **The `.research/` directory is reference material** — not deployed to target. Start with `MIGRATION.md` for current migration status. Contains cheatsheets (`cheatsheets/`) and session notes (`2026-02-17/`, `2026-02-25/`). Consult `2026-02-25/decisions.md` before changing secrets strategy or adding encryption.
 - **The `.install-password-manager.sh` hook runs on every chezmoi command** — keep it fast and idempotent.
 - **`dot_Brewfile` triggers brew bundle** — the run_onchange script includes a sha256sum of the Brewfile, so any edit causes `brew bundle` to re-run on next apply.
