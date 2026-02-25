@@ -2,7 +2,7 @@
 
 Chezmoi's configuration lives at `~/.config/chezmoi/chezmoi.toml`. This file controls both chezmoi's behaviour and your custom template data.
 
-One of the most important sections is `[data]`, where you define variables that templates consume. For a full guide on data sources — including `[data]`, `.chezmoidata` files, built-in variables, and `.chezmoi.toml.tmpl` with interactive prompts — see the [Data Sources cheat sheet](chezmoi-data-sources-cheatsheet.md).
+One of the most important sections is `[data]`, where you define variables that templates consume. For a full guide on data sources — including `[data]`, `.chezmoidata` files, built-in variables, and `.chezmoi.toml.tmpl` with interactive prompts — see the [Data Sources cheat sheet](data-sources.md).
 
 This cheat sheet covers everything *else* in the config file: the settings that control how chezmoi itself behaves.
 
@@ -20,7 +20,7 @@ You should generate this from `.chezmoi.toml.tmpl` in your source directory (see
 
 ## Encryption
 
-Configures how `chezmoi add --encrypt` and encrypted file decryption work. See the [Secrets cheat sheet](chezmoi-secrets-cheatsheet.md) for full setup details.
+Configures how `chezmoi add --encrypt` and encrypted file decryption work. See the [Secrets cheat sheet](secrets.md) for full setup details.
 
 ```toml
 encryption = "age"
@@ -179,7 +179,7 @@ Most sections are optional. The only ones you'll likely use are `[age]` (if encr
 | `[diff]` | External diff tool | Optional |
 | `[merge]` | Three-way merge tool | Rarely |
 | `[edit]` | Editor for `chezmoi edit` | Only if `$EDITOR` isn't set |
-| `[hooks]` | Commands before/after lifecycle events | Rarely — see [Hooks sheet](chezmoi-hooks-cheatsheet.md) |
+| `[hooks]` | Commands before/after lifecycle events | Rarely — see [Hooks sheet](hooks.md) |
 | `[interpreters]` | Script runtime overrides | Rarely |
 | `[cd]` | Shell for `chezmoi cd` | Almost never |
-| `[data]` | Template variables | **Always** — see [Data Sources sheet](chezmoi-data-sources-cheatsheet.md) |
+| `[data]` | Template variables | **Always** — see [Data Sources sheet](data-sources.md) |

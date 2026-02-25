@@ -20,7 +20,7 @@ Everything inside `{{ }}` is a template expression. Everything outside is litera
 
 ### Where template data comes from
 
-Templates pull values from built-in variables (like `.chezmoi.os`, `.chezmoi.hostname`) and your custom variables (like `.machine_type`, `.email`). For a full breakdown of all data sources, how they merge, and how to set up machine-specific configuration with interactive prompts, see the [Data Sources cheat sheet](chezmoi-data-sources-cheatsheet.md).
+Templates pull values from built-in variables (like `.chezmoi.os`, `.chezmoi.hostname`) and your custom variables (like `.machine_type`, `.email`). For a full breakdown of all data sources, how they merge, and how to set up machine-specific configuration with interactive prompts, see the [Data Sources cheat sheet](data-sources.md).
 
 ---
 
@@ -131,7 +131,7 @@ The rules:
 
 ## Secrets with rbw
 
-This section covers the template syntax for pulling secrets. For full setup — installing rbw, vault organisation, age encryption, and best practices — see the [Secrets cheat sheet](chezmoi-secrets-cheatsheet.md).
+This section covers the template syntax for pulling secrets. For full setup — installing rbw, vault organisation, age encryption, and best practices — see the [Secrets cheat sheet](secrets.md).
 
 ### Basic password retrieval
 
@@ -214,7 +214,7 @@ This is the cleanest way to handle "I don't want my personal SSH key on my work 
 
 ## Machine-specific configuration
 
-This is how you make one repo work across personal machines, work laptops, and headless servers. The full setup — including `.chezmoi.toml.tmpl`, interactive prompt functions (`promptChoiceOnce`, `promptBoolOnce`, `promptStringOnce`), `chezmoi init`, and data file organisation — is covered in the [Data Sources cheat sheet](chezmoi-data-sources-cheatsheet.md).
+This is how you make one repo work across personal machines, work laptops, and headless servers. The full setup — including `.chezmoi.toml.tmpl`, interactive prompt functions (`promptChoiceOnce`, `promptBoolOnce`, `promptStringOnce`), `chezmoi init`, and data file organisation — is covered in the [Data Sources cheat sheet](data-sources.md).
 
 The short version: you create a `.chezmoi.toml.tmpl` that asks questions on first run and generates your config. Every other template then uses those values:
 

@@ -40,7 +40,7 @@ When the source state, the target state, and the last-applied state all differ, 
 chezmoi merge ~/.gitconfig
 ```
 
-This opens your configured merge tool (see [Configuration cheat sheet](chezmoi-config-cheatsheet.md)) with a three-way diff: what chezmoi last applied, what's currently on disk, and what the source wants to apply.
+This opens your configured merge tool (see [Configuration cheat sheet](config.md)) with a three-way diff: what chezmoi last applied, what's currently on disk, and what the source wants to apply.
 
 In practice, this is rare if you follow the workflow of always using `chezmoi edit` instead of editing target files directly. If you do hit it, resolve the merge, and chezmoi records the result.
 
@@ -137,7 +137,7 @@ Removes the file from chezmoi's source directory (deletes the source entry) but 
 
 This is the opposite of `chezmoi add`. Use it when you decide a file doesn't belong in your dotfiles anymore. The file continues to exist on your machine — it just becomes unmanaged.
 
-Compare with `remove_` (from the [Naming cheat sheet](chezmoi-naming-cheatsheet.md)): `forget` stops managing and leaves the file. `remove_` actively deletes the target file on all machines.
+Compare with `remove_` (from the [Naming cheat sheet](naming.md)): `forget` stops managing and leaves the file. `remove_` actively deletes the target file on all machines.
 
 ---
 
@@ -208,12 +208,12 @@ That single command clones, prompts for machine config, and applies everything �
 
 ## Related cheat sheets
 
-- [Templates](chezmoi-templates-cheatsheet.md) — template syntax, conditionals, functions
-- [Run Scripts](chezmoi-run-scripts-cheatsheet.md) — scripts that run during apply
-- [Hooks](chezmoi-hooks-cheatsheet.md) — commands before/after lifecycle events
-- [Secrets](chezmoi-secrets-cheatsheet.md) — rbw and age encryption
-- [macOS Preferences](chezmoi-macos-preferences-cheatsheet.md) — managing plist settings
-- [Configuration](chezmoi-config-cheatsheet.md) — chezmoi.toml settings
-- [Data Sources](chezmoi-data-sources-cheatsheet.md) — where template data comes from
-- [Source Directory Naming](chezmoi-naming-cheatsheet.md) — prefixes, suffixes, file types
-- [External Dependencies](chezmoi-external-cheatsheet.md) — third-party repos and archives
+- [Templates](templates.md) — template syntax, conditionals, functions
+- [Run Scripts](run-scripts.md) — scripts that run during apply
+- [Hooks](hooks.md) — commands before/after lifecycle events
+- [Secrets](secrets.md) — rbw and age encryption
+- [macOS Preferences](macos-preferences.md) — managing plist settings
+- [Configuration](config.md) — chezmoi.toml settings
+- [Data Sources](data-sources.md) — where template data comes from
+- [Source Directory Naming](naming.md) — prefixes, suffixes, file types
+- [External Dependencies](externals.md) — third-party repos and archives

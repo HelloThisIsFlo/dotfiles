@@ -16,7 +16,7 @@ Two problems make raw plist management unworkable:
 
 ## The solution: `defaults write` in run scripts
 
-Instead of managing the plist *file*, you manage a *script* that sets the preferences you care about using `defaults write`. This command goes through the proper macOS API, which updates both the cache and the file atomically. (For general background on how run scripts work, see the [Run Scripts cheat sheet](chezmoi-run-scripts-cheatsheet.md).)
+Instead of managing the plist *file*, you manage a *script* that sets the preferences you care about using `defaults write`. This command goes through the proper macOS API, which updates both the cache and the file atomically. (For general background on how run scripts work, see the [Run Scripts cheat sheet](run-scripts.md).)
 
 ### A basic example
 

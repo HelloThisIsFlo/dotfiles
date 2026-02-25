@@ -84,12 +84,12 @@ If Flo ever needs unattended `chezmoi apply`, air-gapped servers, or cron automa
 ## What the other agent needs to do
 
 1. **Read the deep research report** (separate file) for full comparison context if needed.
-2. **Read the DECISIONS.md** (separate file) which documents the strategy for inclusion in the chezmoi source directory.
+2. **Read the decisions.md** (separate file) which documents the strategy for inclusion in the chezmoi source directory.
 3. **Update the migration plan** to incorporate the secrets strategy:
    - Install and configure `rbw` on Flo's Mac.
    - Convert any existing `bw` (official Bitwarden CLI) template references to `rbw` syntax.
    - Adopt `chezmoi edit` → `chezmoi apply` workflow (stop using `re-add` as primary workflow).
    - Set `rbw config set lock_timeout 43200` (12 hours).
-   - Add `DECISIONS.md` to the chezmoi source directory.
+   - Add `decisions.md` to the chezmoi source directory.
 4. **Do not set up age encryption** — this is explicitly deferred.
 5. **The existing migration report's findings still apply** — this conversation adds the secrets layer on top.

@@ -1,6 +1,6 @@
 # Chezmoi Repo — Next Actions
 
-Based on decisions from sessions on 2026-02-24 and 2026-02-25. Reference material: 10 cheat sheets, DECISIONS.md.
+Based on decisions from sessions on 2026-02-24 and 2026-02-25. Reference material: 10 cheat sheets, decisions.md.
 
 ---
 
@@ -201,18 +201,18 @@ Only add age if you hit one of the triggers from Decision #4: unattended `chezmo
 
 ## Reference material
 
-All in the outputs directory:
+All in the `../cheatsheets/` directory:
 
 | Sheet | File |
 |---|---|
-| Templates | `chezmoi-templates-cheatsheet.md` |
-| Run Scripts | `chezmoi-run-scripts-cheatsheet.md` |
-| Secrets (rbw + age) | `chezmoi-secrets-cheatsheet.md` |
-| Configuration | `chezmoi-config-cheatsheet.md` |
-| Data Sources | `chezmoi-data-sources-cheatsheet.md` |
-| macOS Preferences | `chezmoi-macos-preferences-cheatsheet.md` |
-| Naming Conventions | `chezmoi-naming-cheatsheet.md` |
-| Externals | `chezmoi-external-cheatsheet.md` |
-| Tips & Escape Hatches | `chezmoi-tips-cheatsheet.md` |
-| Hooks | `chezmoi-hooks-cheatsheet.md` |
-| Architecture Decisions | `DECISIONS.md` |
+| Templates | `templates.md` |
+| Run Scripts | `run-scripts.md` |
+| Secrets (rbw + age) | `secrets.md` |
+| Configuration | `config.md` |
+| Data Sources | `data-sources.md` |
+| macOS Preferences | `macos-preferences.md` |
+| Naming Conventions | `naming.md` |
+| Externals | `externals.md` |
+| Tips & Escape Hatches | `tips.md` |
+| Hooks | `hooks.md` |
+| Architecture Decisions | `decisions.md` |

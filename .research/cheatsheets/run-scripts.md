@@ -30,7 +30,7 @@ run_  +  [once_ | onchange_]  +  [before_ | after_]  +  name.sh
 
 > **Important:** If you don't specify `before_` or `after_`, the script doesn't run "at some magic time" — it runs **mixed in with the file operations**, sorted alphabetically by name alongside everything else. In practice, this means the execution order relative to specific files is unpredictable. If your script depends on a file already being in place, use `after_`. If files depend on your script, use `before_`. When in doubt, always pick one explicitly.
 
-> **Need something to run before templates are even parsed?** Run scripts can't do this — they all execute during `chezmoi apply`, after source state is already read. If a template calls `{{ rbw "..." }}` and `rbw` isn't installed, chezmoi fails before any run script gets a chance. For that, you need [hooks](chezmoi-hooks-cheatsheet.md).
+> **Need something to run before templates are even parsed?** Run scripts can't do this — they all execute during `chezmoi apply`, after source state is already read. If a template calls `{{ rbw "..." }}` and `rbw` isn't installed, chezmoi fails before any run script gets a chance. For that, you need [hooks](hooks.md).
 
 ### Combining them
 
@@ -276,6 +276,6 @@ In practice, bash covers nearly everything. But if you have a complex setup step
 
 ## Related
 
-- [Hooks cheat sheet](chezmoi-hooks-cheatsheet.md) — for when you need something to run *before* chezmoi reads source state (e.g., installing a password manager so templates can call it)
-- [macOS Preferences cheat sheet](chezmoi-macos-preferences-cheatsheet.md) — the main use case for `run_onchange_after_` scripts with templates
-- [Templates cheat sheet](chezmoi-templates-cheatsheet.md) — template syntax used in `.tmpl` run scripts
+- [Hooks cheat sheet](hooks.md) — for when you need something to run *before* chezmoi reads source state (e.g., installing a password manager so templates can call it)
+- [macOS Preferences cheat sheet](macos-preferences.md) — the main use case for `run_onchange_after_` scripts with templates
+- [Templates cheat sheet](templates.md) — template syntax used in `.tmpl` run scripts

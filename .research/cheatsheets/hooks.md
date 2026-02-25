@@ -61,7 +61,7 @@ The `command` is executed directly — no shell involved. If you need shell feat
 script = "post-add-hook.sh"
 ```
 
-Scripts are executed using the interpreter configured for their file extension. See the [Configuration cheat sheet](chezmoi-config-cheatsheet.md) for interpreter setup.
+Scripts are executed using the interpreter configured for their file extension. See the [Configuration cheat sheet](config.md) for interpreter setup.
 
 ---
 
@@ -114,7 +114,7 @@ Here's the execution order that makes this necessary:
 
 Without the hook, step 4 would fail because `rbw` doesn't exist yet. `run_once_before_` (step 5) is too late.
 
-See the [Secrets cheat sheet](chezmoi-secrets-cheatsheet.md) for how to use `rbw` in templates once it's installed.
+See the [Secrets cheat sheet](secrets.md) for how to use `rbw` in templates once it's installed.
 
 ---
 

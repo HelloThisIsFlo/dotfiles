@@ -71,7 +71,7 @@ encryption = "age"
   email = "flo@kempenich.ai"
 ```
 
-Everything under `[data]` becomes a template variable. The rest configures chezmoi itself — for a full guide on those settings (encryption, git, diff, merge, etc.), see the [Configuration cheat sheet](chezmoi-config-cheatsheet.md).
+Everything under `[data]` becomes a template variable. The rest configures chezmoi itself — for a full guide on those settings (encryption, git, diff, merge, etc.), see the [Configuration cheat sheet](config.md).
 
 ### Generating it with `.chezmoi.toml.tmpl`
 

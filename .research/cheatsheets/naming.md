@@ -82,7 +82,7 @@ The classic use case is `.hushlogin` — macOS checks for its *existence* to sup
 
 ### `encrypted_` — file is encrypted in source
 
-Marks a file as encrypted. Chezmoi decrypts it during `chezmoi apply` using your configured encryption (age or GPG). See the [Secrets cheat sheet](chezmoi-secrets-cheatsheet.md) for setup.
+Marks a file as encrypted. Chezmoi decrypts it during `chezmoi apply` using your configured encryption (age or GPG). See the [Secrets cheat sheet](secrets.md) for setup.
 
 ```
 encrypted_private_dot_ssh/private_encrypted_private_key  →  .ssh/private_key
@@ -224,7 +224,7 @@ create_dot_npmrc.tmpl                 →  .npmrc  (created once, rendered as te
 modify_dot_config/app/config.json.tmpl →  modify script is itself templated
 ```
 
-The `.tmpl` suffix is stripped from the target name and tells chezmoi to render `{{ }}` expressions before writing. See the [Templates cheat sheet](chezmoi-templates-cheatsheet.md).
+The `.tmpl` suffix is stripped from the target name and tells chezmoi to render `{{ }}` expressions before writing. See the [Templates cheat sheet](templates.md).
 
 ---
 
@@ -285,7 +285,7 @@ Three different ways to control what exists at the target. They solve different 
 | `remove_` / `.chezmoiremove` | Chezmoi actively deletes the target | You want to clean up a file that shouldn't exist anymore |
 | `exact_` directory | Chezmoi deletes unmanaged files in that directory | You want chezmoi to own the entire directory |
 
-`.chezmoiignore` is covered in the [Templates cheat sheet](chezmoi-templates-cheatsheet.md) (it's a template itself, so it can conditionally ignore files per machine type).
+`.chezmoiignore` is covered in the [Templates cheat sheet](templates.md) (it's a template itself, so it can conditionally ignore files per machine type).
 
 ---
 
