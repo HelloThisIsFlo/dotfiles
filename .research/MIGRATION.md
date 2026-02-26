@@ -8,20 +8,20 @@ Living document. Updated as migration progresses. Any agent or returning human s
 
 ## Current State
 
-Last verified: 2026-02-25
+Last verified: 2026-02-26
 
 ### Summary
 
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Outdated          | Still references `bw`, missing `[data]` prompts, has stale `pager` line    |
-| Install hook (`.install-password-manager.sh`) | Outdated          | Installs `bw`, needs rewrite for `rbw`                                     |
-| `rbw` on machine                              | Installed         | v1.15.0 via Homebrew, but not wired into chezmoi yet                       |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/machine_type/is_headless, rbw hook, comments    |
+| Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
+| `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
-| Mackup public dotfiles                        | Still symlinked   | ~~20 files in `~~/config-in-the-cloud/dotfiles/restored_via_mackup/`       |
-| Mackup secret dotfiles                        | Still symlinked   | ~~6 files in `~~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
+| Mackup public dotfiles                        | Still symlinked   | ~20 files in `~/config-in-the-cloud/dotfiles/restored_via_mackup/`         |
+| Mackup secret dotfiles                        | Still symlinked   | ~6 files in `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`   |
 | macOS plists                                  | Partially managed | 6 plists in chezmoi, 5 show MM (modified-modified) drift                   |
 | Ice.plist                                     | Broken            | `DA` status — deleted from source but exists on disk                       |
 | `.gitconfig`                                  | Not in chezmoi    | Still a Mackup symlink                                                     |
@@ -36,14 +36,68 @@ Last verified: 2026-02-25
 - `plutil` textconv — binary plists shown as XML in diffs
 - Brewfile workflow (`cmbrew` alias)
 - Shell config, vim, bash, direnv all managed
+- `chezmoi data` returns correct email, machine_type, is_headless values
 
 ### What's broken or degraded
 
 - **5 plists show MM drift** — apps write runtime data (GPS, timestamps, window state) into the same files chezmoi tracks. `chezmoi apply` would silently overwrite target changes.
 - **Ice.plist DA** — deleted from chezmoi source, file exists on disk. Needs `chezmoi add` or `chezmoi forget`.
-- **Install hook checks for `bw`** — should check for `rbw` instead.
-- **Config template still has `bw` references** — no `[data]` section, no machine-type prompts.
 - **Mackup symlinks are a ticking clock** — macOS 14+ (Sonoma) breaks `cfprefsd` symlinks in `~/Library/Preferences`. See [migration-status.md known issue](2026-02-17/migration-status.md#important-going-back-to-mackup-is-not-viable).
+
+---
+
+## Progress Checklist
+
+At-a-glance view of every task. Check items off as they're completed.
+
+### Phase 1: Foundation ✅
+
+- [x] Install `rbw` via Homebrew
+- [x] Configure `rbw` (email, lock timeout, pinentry-mac)
+- [x] Rewrite `.chezmoi.toml.tmpl` — `[data]` prompts, rbw references, comments
+- [x] Rename + rewrite install hook → `.ensure-password-manager-installed.sh`
+- [x] Run `chezmoi init --prompt` and verify with `chezmoi data`
+
+### Phase 2: First Templates ⬜ ← next
+
+- [ ] Replace `.gitconfig` Mackup symlink with real file
+- [ ] `chezmoi add --template ~/.gitconfig` and templatise (email, name)
+- [ ] Add `.ssh/config` as template with machine-type conditionals
+- [ ] Add `.chezmoiignore` rules for machine-specific files
+
+### Phase 3: Triage + Migrate Mackup Symlinks ⬜
+
+- [ ] Triage ~20 Mackup-symlinked files (keep/drop/migrate decisions)
+- [ ] Migrate decided files into chezmoi
+- [ ] Remove resolved Mackup symlinks
+
+### Phase 4: Wire Secrets into Templates ⬜
+
+- [ ] Identify files containing secrets
+- [ ] Organise Bitwarden vault items for chezmoi naming
+- [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
+- [ ] Verify `secrets = "error"` catches missed plaintext
+
+### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
+
+- [ ] Start with simplest app (Mos or Clocker) to learn the pattern
+- [ ] Discover keys with `prefsniff` or `defaults read` diffing
+- [ ] Create `run_onchange_after_configure-<app>.sh.tmpl` for each app
+- [ ] `chezmoi forget` raw plist files as scripts replace them
+- [ ] Apps: Moom, Raycast, Bartender, iStat Menus, Clocker, Ice
+
+### Phase 6: Multi-Machine Testing ⬜
+
+- [ ] Test `chezmoi init --apply` on a second Mac (or VM)
+- [ ] Test on headless Linux
+- [ ] Fix whatever breaks
+
+### Phase 7: Post-Migration Transition ⬜
+
+- [ ] Build Claude Code assistant skill for health checks
+- [ ] Rewrite CLAUDE.md — remove migration section
+- [ ] Archive this file
+- [ ] Clean up `~/config-in-the-cloud/*/restored_via_mackup/`
 
 ---
 
@@ -209,8 +263,9 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-02-26 | **Phase 1 complete**                     | Config template rewritten with `[data]` prompts, install hook renamed + rewritten for `rbw`, `chezmoi init --prompt` verified. |
 | 2026-02-25 | Research session: architecture decisions | Decided rbw-only, edit→apply workflow, no age for v1. Created cheatsheets, next-actions, decisions docs. |
-| 2026-02-25 | Installed `rbw`                          | v1.15.0 via Homebrew. Not yet configured for chezmoi.                                                    |
+| 2026-02-25 | Installed `rbw`                          | v1.15.0 via Homebrew. Configured: email, lock-timeout 12h, pinentry-mac.                                 |
 | 2026-02-25 | Documented assistant skill rationale     | [assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md)                                  |
 | 2026-02-17 | Research session: migration assessment   | Full audit of what chezmoi manages, what's still Mackup, plist deep dive.                                |
 | Pre-2026   | Initial chezmoi setup                    | Shell config, Brewfile, vim, direnv, mac app plists added to chezmoi.                                    |
@@ -221,7 +276,6 @@ Reverse-chronological log.
 ## Unknowns / Decisions Needed
 
 - **Triage table (Phase 3):** ~20 Mackup-symlinked files need individual migrate/drop decisions. See table above.
-- **rbw configuration:** Has `rbw` been configured (email, lock timeout, pinentry)? Needs verification.
 - **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
 - **Stale tools:** Several Mackup-managed files may be for tools no longer used (Amethyst, Spacemacs, Carbon Now, Cheat, Ansible). Need user audit.
 - **Ice.plist:** Re-add to chezmoi or forget? Depends on whether it moves to a `defaults write` script.

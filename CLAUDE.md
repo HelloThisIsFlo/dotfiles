@@ -15,10 +15,9 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 - **Tracker:** `.research/MIGRATION.md` — the living migration document. Read it for full status, phase checklists, and what's broken.
 - **~20 files still Mackup-symlinked** — `.gitconfig`, VS Code settings, secret env files, and others. Not yet in chezmoi.
 - **Plist drift** — 5 plists show MM (modified-modified) status. Apps write runtime data into tracked files. These will be replaced by `defaults write` scripts.
-- **Config is stale** — `.chezmoi.toml.tmpl` and `.install-password-manager.sh` still reference `bw` (old Bitwarden CLI). `rbw` is installed but not wired in.
 - **Secrets not yet templated** — `rbw` is the decided tool but no templates use it yet.
 
-**For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes.
+**For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes. **After completing any migration work, update the Progress Checklist in `.research/MIGRATION.md` — check off finished items, update the Current State table, and add an entry to the Completed Items log.**
 
 ## Key commands
 
@@ -46,8 +45,8 @@ Git autoCommit is enabled — every `chezmoi add`/`chezmoi apply` creates a git 
 ## Repo structure
 
 ```
-.chezmoi.toml.tmpl              # chezmoi config template (secrets=error, autoCommit, delta diff, VS Code merge, rbw hook)
-.install-password-manager.sh    # pre-hook: installs bw (being migrated to rbw) if missing
+.chezmoi.toml.tmpl              # chezmoi config template (data prompts, secrets=error, autoCommit, delta diff, VS Code merge, rbw hook)
+.ensure-password-manager-installed.sh  # pre-hook: installs rbw if missing (runs on every chezmoi command)
 run_onchange_after_brew-bundle.sh.tmpl  # re-runs `brew bundle` when dot_Brewfile changes (darwin only)
 
 dot_Brewfile                    # Homebrew bundle (taps, brews, casks)
@@ -86,5 +85,5 @@ private_Library/                # macOS app preferences (Bartender, iStat Menus,
 - **Never use `chezmoi re-add` on `.tmpl` files** — it replaces template logic with rendered output.
 - **Plist files use textconv** — the config converts plists to XML via `plutil` for readable diffs. When editing plists, prefer `defaults write` in run scripts over directly managing plist files.
 - **The `.research/` directory is reference material** — not deployed to target. Start with `MIGRATION.md` for current migration status. Contains cheatsheets (`cheatsheets/`) and session notes (`2026-02-17/`, `2026-02-25/`). Consult `2026-02-25/decisions.md` before changing secrets strategy or adding encryption.
-- **The `.install-password-manager.sh` hook runs on every chezmoi command** — keep it fast and idempotent.
+- **The `.ensure-password-manager-installed.sh` hook runs on every chezmoi command** — keep it fast and idempotent.
 - **`dot_Brewfile` triggers brew bundle** — the run_onchange script includes a sha256sum of the Brewfile, so any edit causes `brew bundle` to re-run on next apply.
