@@ -283,11 +283,20 @@ Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secret
 
 Reference: [migration-status.md §The Plist Question](2026-02-17/migration-status.md#the-plist-question-deep-dive), [next-actions.md §Phase 4](2026-02-25/next-actions.md#phase-4-macos-preferences)
 
-- Start with simplest app (Mos or Clocker) to learn the pattern
-- Use `prefsniff` or manual `defaults read` diffing to discover keys
-- Create `run_onchange_after_configure-<app>.sh.tmpl` for each app
-- `chezmoi forget` the raw plist files as each script replaces them
-- Apps to migrate: Moom, Raycast, Bartender, iStat Menus, Clocker, Ice
+**How to discover keys for each app:**
+1. Run `git log --oneline --all -- '*.plist'` in `~/config-in-the-cloud/` to see which plists have meaningful commit history (104 commits total; many are noise — see Signal vs. Noise section below)
+2. For each app, compare `defaults read <bundle-id>` before and after changing a setting, or use `prefsniff`
+3. Cross-reference with `dotfiles-binary/plist_human_readable/` for XML-readable versions of binary plists
+4. Filter out noise keys using the patterns documented below
+
+**Per-app approach:**
+- **Simple `defaults write` apps:** ShiftIt, Rocket, Bartender — small number of meaningful keys, straightforward scripts
+- **Binary file apps:** Keyboard Maestro (`Macros.plist`), SteerMouse (`Device.smsetting`) — manage as binary files in chezmoi, not `defaults write`
+- **Already in chezmoi (convert to scripts):** Moom, Clocker, iStat Menus — currently tracked as raw plists with MM drift, replace with run scripts
+- **Complex:** iTerm2 — most keys, do last
+- **Skip (noise-only):** Pock, Spotify, Telegram, WhatsApp — no user config in git history, only window positions/session data
+
+For each app: create `run_onchange_after_configure-<app>.sh.tmpl`, then `chezmoi forget` the raw plist
 
 ### Source Audit: config-in-the-cloud/
 
