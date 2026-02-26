@@ -1,30 +1,48 @@
+{{- $email := promptStringOnce . "email" "Email address" "flo@kempenich.dev" -}}
+{{- $machine_type := promptChoiceOnce . "machine_type" "Machine type" (list "personal" "work" "server") -}}
+{{- $is_headless := promptBoolOnce . "is_headless" "Is this a headless machine (no GUI)" false -}}
+
+
+[data]
+    # Prompted values — set once during `chezmoi init`, reused on every apply.
+    # To re-prompt, run `chezmoi init --prompt`.
+    email = {{ $email | quote }}
+    machine_type = {{ $machine_type | quote }}
+    is_headless = {{ $is_headless }}
+
+
 [add]
+    # Prevent accidentally committing plaintext secrets to the source repo.
     secrets = "error"
 
+
 [git]
+    # Auto-commit on every `chezmoi add` / `chezmoi apply` (push is manual).
     autoCommit = true
-    # autoPush = true
+
 
 [diff]
-command = "delta"
-pager = "delta"
+    # Use delta for side-by-side colored diffs.
+    command = "delta"
+
 
 [[textconv]]
-pattern = "**/*.plist"
-command = "plutil"
-args = ["-convert", "xml1", "-o", "-", "-"]
+    # Render binary plists as readable XML in diffs.
+    pattern = "**/*.plist"
+    command = "plutil"
+    args = ["-convert", "xml1", "-o", "-", "-"]
 
 
 [merge]
-# Use VS-Code as a diff editor
-command = "bash"
-args = [
-    "-c",
-    "cp {{ "{{ .Target }} {{ .Target }}.base && code --new-window --wait --merge {{ .Destination }} {{ .Target }} {{ .Target }}.base {{ .Source }}" }}",
-]
+    # Use VS Code as a 3-way merge editor for conflicts.
+    command = "bash"
+    args = [
+        "-c",
+        "cp {{ "{{ .Target }} {{ .Target }}.base && code --new-window --wait --merge {{ .Destination }} {{ .Target }} {{ .Target }}.base {{ .Source }}" }}",
+    ]
 
 
 [hooks.read-source-state.pre]
-    # Install bitwarden (if missing) whenever the source-state is read
-    # See: https://www.chezmoi.io/user-guide/advanced/install-your-password-manager-on-init/
-    command = ".local/share/chezmoi/.install-password-manager.sh"
+    # Runs before chezmoi reads the source state (i.e. on every chezmoi command).
+    # Installs the password manager (rbw) if it's not already on PATH.
+    command = ".local/share/chezmoi/.ensure-password-manager-installed.sh"
