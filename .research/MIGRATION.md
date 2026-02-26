@@ -4,6 +4,17 @@ Living document. Updated as migration progresses. Any agent or returning human s
 
 > **This repo is in transitionary mode.** The migration from Mackup symlinks to fully chezmoi-managed config is in progress. See [Post-Migration Transition](#post-migration-transition) for what changes when it's done.
 
+### Migration Principle: Both Sides Clean
+
+A file's migration is **not complete** until:
+
+1. The file is managed by chezmoi (added, templatized if needed, `chezmoi apply` works)
+2. The Mackup symlink in `~` is replaced with chezmoi's real file
+3. The source file is **deleted** from `~/config-in-the-cloud/dotfiles/restored_via_mackup/` (or `dotfiles-secret/`)
+4. Verified: no dangling symlink, no orphan in Mackup folder
+
+Each phase checklist includes Mackup cleanup items — a phase is not done until the old side is clean too.
+
 ---
 
 ## Current State
@@ -20,12 +31,12 @@ Last verified: 2026-02-26
 | `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
-| Mackup public dotfiles                        | Still symlinked   | ~20 files in `~/config-in-the-cloud/dotfiles/restored_via_mackup/`         |
-| Mackup secret dotfiles                        | Still symlinked   | ~6 files in `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`   |
+| Mackup public dotfiles                        | Still symlinked   | 14 symlinks in `~/` → `~/config-in-the-cloud/dotfiles/restored_via_mackup/`  |
+| Mackup secret dotfiles                        | Still symlinked   | 5 symlinks in `~/` → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
 | macOS plists                                  | Partially managed | 6 plists in chezmoi, 5 show MM (modified-modified) drift                   |
 | Ice.plist                                     | Broken            | `DA` status — deleted from source but exists on disk                       |
 | `.gitconfig`                                  | Not in chezmoi    | Still a Mackup symlink                                                     |
-| `.ssh/config`                                 | Not in chezmoi    | Not managed by either tool                                                 |
+| `.ssh/config`                                 | Not in chezmoi    | Deployed by Ansible from `ansible-magic/`; Phase 2 target                  |
 
 
 ### What works
@@ -60,9 +71,12 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 2: First Templates ⬜ ← next
 
-- [ ] Replace `.gitconfig` Mackup symlink with real file
-- [ ] `chezmoi add --template ~/.gitconfig` and templatise (email, name)
-- [ ] Add `.ssh/config` as template with machine-type conditionals
+- [ ] `.gitconfig`: break symlink (cp real file over symlink)
+- [ ] `.gitconfig`: `chezmoi add --template` and templatise (email, name, homeDir)
+- [ ] `.gitconfig`: verify with `chezmoi cat` and `chezmoi apply`
+- [ ] `.gitconfig`: delete source from `~/config-in-the-cloud/dotfiles/restored_via_mackup/.gitconfig`
+- [ ] `.gitignore_global`: break symlink, `chezmoi add`, delete from Mackup
+- [ ] `.ssh/config`: convert Ansible Jinja2 template to Go template, `chezmoi add --template`
 - [ ] Add `.chezmoiignore` rules for machine-specific files
 
 ### Phase 3: Triage + Migrate Mackup Symlinks ⬜
@@ -70,6 +84,13 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] Triage ~20 Mackup-symlinked files (keep/drop/migrate decisions)
 - [ ] Migrate decided files into chezmoi
 - [ ] Remove resolved Mackup symlinks
+- [ ] Verify `~/config-in-the-cloud/dotfiles/restored_via_mackup/` has no more symlinked files
+
+### Phase 3.5: Non-Mackup Unmanaged Config ⬜
+
+- [ ] `~/.config/karabiner/karabiner.json` — add to chezmoi
+- [ ] `~/.config/linearmouse/linearmouse.json` — add to chezmoi
+- [ ] `~/.config/cheat/` — add `conf.yml` + personal cheatsheets to chezmoi
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
@@ -80,11 +101,15 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
 
-- [ ] Start with simplest app (Mos or Clocker) to learn the pattern
-- [ ] Discover keys with `prefsniff` or `defaults read` diffing
-- [ ] Create `run_onchange_after_configure-<app>.sh.tmpl` for each app
-- [ ] `chezmoi forget` raw plist files as scripts replace them
-- [ ] Apps: Moom, Raycast, Bartender, iStat Menus, Clocker, Ice
+- [ ] ShiftIt: `defaults write` for all `*KeyCode`/`*Modifiers` keys
+- [ ] Rocket: `defaults write` for trigger char, launch-at-login, use-fuzzy-search
+- [ ] Bartender: `defaults write` for `ProfileSettings.activeProfile`, `TriggerSettings`
+- [ ] Keyboard Maestro: manage `Macros.plist` as binary file; serial via rbw template
+- [ ] SteerMouse: manage `Device.smsetting` as binary file (not a plist)
+- [ ] iTerm2: `defaults write` for `GlobalKeyMap`, `Profiles`, `TabStyle` (do last — most complex)
+- [ ] Moom, Clocker, iStat Menus: already in chezmoi as plists — convert to run scripts
+- [ ] `chezmoi forget` raw plist files as each script replaces them
+- [ ] Pock, Spotify, Telegram, WhatsApp: document decision (noise-only plists — no user config to preserve, only window positions/update timestamps/session data)
 
 ### Phase 6: Multi-Machine Testing ⬜
 
@@ -92,12 +117,45 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] Test on headless Linux
 - [ ] Fix whatever breaks
 
+### Phase 6.5: Automate Dev Environment Setup ⬜
+
+Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
+
+**Design pattern:** Tool lists live in `.chezmoi.toml.tmpl` as `[data.tools]` tables (pip, npm, cargo, go). Run scripts iterate over those lists with `{{ range }}`. This decouples *what* to install from *how* — same pattern as the existing Brewfile/brew-bundle workflow. When you add a tool to the data list, chezmoi detects the change hash and re-runs the script.
+
+```toml
+# In .chezmoi.toml.tmpl [data] section:
+[data.tools]
+    pip = ["hierarchy", "glances", "ipython", "pre-commit", "poetry", "awscli", "homeassistant-cli", "black[d]"]
+    npm = ["yarn", "pragmatic-motd"]
+    cargo = ["git-delta"]
+    go = ["github.com/cheat/cheat/cmd/cheat@latest"]
+```
+
+- [ ] Add `[data.tools]` tables to `.chezmoi.toml.tmpl`
+- [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
+- [ ] Verify asdf deps are in `dot_Brewfile` (tcl-tk, pkg-config, readline, etc.)
+- [ ] `run_onchange_after_install-asdf-tools.sh.tmpl` — reads `.tool-versions`, installs plugins + versions
+- [ ] `run_onchange_after_install-pip-tools.sh.tmpl` — iterates `{{ range .tools.pip }}`, hash includes list
+- [ ] `run_onchange_after_install-npm-tools.sh.tmpl` — iterates `{{ range .tools.npm }}`
+- [ ] `run_onchange_after_install-cargo-tools.sh.tmpl` — iterates `{{ range .tools.cargo }}`
+- [ ] `run_onchange_after_install-go-tools.sh.tmpl` — iterates `{{ range .tools.go }}`
+- [ ] `run_once_after_clone-repos.sh` — `hierarchy` command (clones all repos)
+- [ ] `run_once_after_install-antigen.sh` — `git clone` antigen
+- [ ] `run_once_after_setup-vim.sh` — trigger vim plugin install
+- [ ] Review: which Notion steps are fully automated now, which remain manual
+
 ### Phase 7: Post-Migration Transition ⬜
 
+- [ ] Clean `~/config-in-the-cloud/dotfiles/restored_via_mackup/`
+- [ ] Clean `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`
+- [ ] Clean `~/config-in-the-cloud/dotfiles-binary/restored_via_mackup/`
+- [ ] Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to rbw, archive stale contexts
+- [ ] Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
 - [ ] Build Claude Code assistant skill for health checks
 - [ ] Rewrite CLAUDE.md — remove migration section
-- [ ] Archive this file
-- [ ] Clean up `~/config-in-the-cloud/*/restored_via_mackup/`
+- [ ] Archive MIGRATION.md
+- [ ] Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
 
 ---
 
@@ -143,40 +201,70 @@ Reference: [next-actions.md §Phase 2](2026-02-25/next-actions.md#phase-2-first-
 - Add `.ssh/config` as template with machine-type conditionals
 - Add `.chezmoiignore` rules for machine-specific files
 
+> **SSH config source:** `~/.ssh/config` is currently deployed by Ansible from `~/config-in-the-cloud/ansible-magic/ansible/roles/dev-machine/templates/base_ssh_config`. It's 116 lines with one Jinja2 conditional (`{% if ansible_os_family == "Darwin" %}` for `UseKeychain`). Convert to Go template `{{ if eq .chezmoi.os "darwin" }}` — the deployed file matches the template exactly, so no content reconciliation needed.
+
 ### Phase 3: Triage + Migrate Mackup Symlinks
 
 > Goal: every Mackup symlink triaged and either migrated, dropped, or deferred.
 
 Reference: [migration-status.md §Mackup symlinks](2026-02-17/migration-status.md#whats-still-symlinked-by-mackup)
 
-**Triage table** — each file needs a user decision:
+**Triage table** — verified from live symlinks (`find ~ -maxdepth 1 -type l`, 2026-02-26).
+
+Public (`~/config-in-the-cloud/dotfiles/restored_via_mackup/`):
+
+| Symlink                  | Decision                   | Notes                                                                     |
+| ------------------------ | -------------------------- | ------------------------------------------------------------------------- |
+| `~/.gitconfig`           | Migrate (Phase 2)          | Template with email/name/homeDir                                          |
+| `~/.gitignore_global`    | Migrate (Phase 2)          | Referenced by .gitconfig                                                  |
+| `~/.tmux.conf`           | Migrate                    | Plain file, no templating needed                                          |
+| `~/.tool-versions`       | Migrate                    | asdf version pins (18 tools)                                              |
+| `~/.npmrc`               | Migrate (check for tokens) | May need rbw template if auth tokens present                              |
+| `~/.ideavimrc`           | Migrate                    | JetBrains vim bindings, plain file                                        |
+| `~/.ansible.cfg`         | Migrate                    | Sets default inventory path; low priority but real config                 |
+| `~/.asdfrc`              | Migrate                    | Plain file (`java_macos_integration_enable`)                              |
+| `~/.pythonrc`            | Migrate                    | 1 byte file                                                               |
+| `~/.amethyst.yml`        | Migrate                    | Actively used window manager (11KB, recently updated)                     |
+| `~/.carbon-now.json`     | Migrate                    | Code screenshot tool settings; low priority but real config               |
+| `~/.logseq`              | Migrate config only        | See Logseq breakdown below                                                |
+| `~/.spacemacs.d`         | Migrate                    | 437-line `init.el` + `layers/`. Not actively used but significant invested config |
+| `~/.ipython`             | Migrate config only        | `ipython_config.py` (enables autoreload). Skip `history.sqlite` (runtime) |
+
+**Logseq breakdown:**
+- **Migrate:** `preferences.json` (theme, toolbar), `config/config.edn` (keyboard shortcuts incl. vim), `config/plugins.edn` (installed plugin list), `settings/` dir (102 per-plugin config JSONs — user preferences)
+- **Skip (auto-downloadable):** `plugins/` dir (52 plugin download dirs — dist/, package.json, logos — Logseq re-downloads from plugin list)
+- **Skip (mutable runtime):** `graphs/` (graph data, managed by Logseq's own sync)
+- **Check:** `git/` dir (Logseq's git integration config — migrate if config, skip if state)
+
+Secret (`~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
+
+| Symlink                  | Decision          | Notes                                |
+| ------------------------ | ----------------- | ------------------------------------ |
+| `~/.secrets.env`         | ? — Phase 4       | Secrets — needs rbw template         |
+| `~/.tadl-pass`           | ? — Phase 4       | Secrets                              |
+| `~/.tadl-minion`         | ? — Phase 4       | Secrets                              |
+| `~/.cli_chat.json`       | ? — Phase 4       | Secrets                              |
+| `~/.aws`                 | ? — Phase 4       | Directory symlink, secrets           |
+
+Also in Mackup folder (not currently symlinked but still stored there):
+
+| File in Mackup folder                           | Notes                                         |
+| ----------------------------------------------- | --------------------------------------------- |
+| `Library/Application Support/Charles/`           | Charles proxy (certs, passwords.keystore)     |
+| `Library/Application Support/Code/`              | VS Code settings — has built-in Settings Sync |
+| `Library/Application Support/Code - Insiders/`   | VS Code Insiders                              |
+| `Library/Application Support/Tunnelblick/`       | VPN config                                    |
 
 
-| File                                          | Decision          | Notes                      |
-| --------------------------------------------- | ----------------- | -------------------------- |
-| `~/.gitconfig`                                | Migrate (Phase 2) | Template with email/name   |
-| `~/.gitignore_global`                         | ? — User decision | Simple file, `chezmoi add` |
-| `~/.tmux.conf`                                | ? — User decision |                            |
-| `~/.tool-versions`                            | ? — User decision | asdf versions              |
-| `~/.npmrc`                                    | ? — User decision |                            |
-| `~/.ideavimrc`                                | ? — User decision | JetBrains vim bindings     |
-| `~/.ansible.cfg`                              | ? — User decision | Still used?                |
-| `~/.asdfrc`                                   | ? — User decision |                            |
-| `~/.pythonrc`                                 | ? — User decision | 1 byte file                |
-| `~/.amethyst.yml`                             | ? — User decision | Still used?                |
-| `~/.carbon-now.json`                          | ? — User decision | Still used?                |
-| `~/.logseq/`                                  | ? — User decision | Directory                  |
-| `~/.spacemacs.d/`                             | ? — User decision | Still used?                |
-| `~/.ipython/`                                 | ? — User decision | Directory                  |
-| `~/.config/cheat`                             | ? — User decision | Still used?                |
-| `~/.config/linearmouse`                       | ? — User decision |                            |
-| `~/.config/karabiner`                         | ? — User decision |                            |
-| `~/.config/terminator/config`                 | ? — User decision | Linux only                 |
-| `Library/.../Charles`                         | ? — User decision | Charles proxy              |
-| `Library/.../Code/User/...`                   | ? — User decision | VS Code settings+snippets  |
-| `Library/.../Code - Insiders/...`             | ? — User decision | VS Code Insiders           |
-| `Library/Preferences/com.xk72.charles.config` | ? — User decision | Charles plist              |
+### Phase 3.5: Non-Mackup Unmanaged Config
 
+> Goal: config files discovered outside Mackup that should be in chezmoi.
+
+These files live in `~/.config/` but were never managed by Mackup — they were found during the 2026-02-26 audit.
+
+- `~/.config/karabiner/karabiner.json` — keyboard remapping (complex JSON, actively used)
+- `~/.config/linearmouse/linearmouse.json` — mouse acceleration/scroll settings
+- `~/.config/cheat/` — `conf.yml` (cheat tool config) + personal cheatsheets directory
 
 ### Phase 4: Wire Secrets into Templates
 
@@ -201,6 +289,44 @@ Reference: [migration-status.md §The Plist Question](2026-02-17/migration-statu
 - `chezmoi forget` the raw plist files as each script replaces them
 - Apps to migrate: Moom, Raycast, Bartender, iStat Menus, Clocker, Ice
 
+### Source Audit: config-in-the-cloud/
+
+Full audit completed 2026-02-26. Reference table for all subfolders:
+
+| Subfolder | Contents | Status | Feeds into |
+|---|---|---|---|
+| `dotfiles/restored_via_mackup/` | 14 public dotfile symlinks | Active | Phase 2–3 |
+| `dotfiles-secret/restored_via_mackup/` | 5 secret dotfile symlinks | Active | Phase 4 |
+| `dotfiles-binary/restored_via_mackup/` | App plists + Library data (copy-not-symlink) | Active | Phase 5 |
+| `dotfiles-binary/plist_human_readable/` | XML versions of binary plists | Reference | Phase 5 analysis |
+| `secrets/` | TLS certs (5 contexts), SSH keys, DO tokens | Partially stale | Phase 4 + Phase 7 |
+| `ansible-magic/` | Ansible playbooks; `base_ssh_config` template | Mostly stale | Phase 2 (SSH), then archive |
+
+#### Phase 5 Reference: Plist Signal vs. Noise
+
+**Per-app key categories** (which keys to keep in `defaults write` scripts):
+- **ShiftIt:** all `*KeyCode`/`*Modifiers` keys (keyboard shortcuts)
+- **Rocket:** trigger char, launch-at-login, use-fuzzy-search
+- **Bartender:** `ProfileSettings.activeProfile`, `TriggerSettings`
+- **Keyboard Maestro:** `Macros.plist` (binary file — entire macro library); serial number via rbw template
+- **SteerMouse:** `Device.smsetting` (binary file, not a plist — custom button/scroll mappings)
+- **iTerm2:** `GlobalKeyMap`, `Profiles`, `TabStyle` (most complex — do last)
+
+**Noise pattern filters** (keys to exclude from `defaults write` scripts):
+- `NSStatusItem Preferred Position *` — menu bar icon positions
+- `NSWindow Frame *` — window geometry
+- `SU*` — Sparkle update framework
+- `NoSync*` — transient app state
+- `*RunCount` — launch counters
+- `trialStart*` — trial period timestamps
+
+**Special cases:**
+- **Keyboard Maestro:** `Macros.plist` is a binary plist containing the full macro library — manage as binary file, not `defaults write`. Serial number goes in separate rbw template.
+- **SteerMouse:** `Device.smsetting` is a custom binary format (not a plist at all) — manage as binary file.
+
+**Not migrating (documented reason):**
+- **Pock, Spotify, Telegram, WhatsApp:** plists contain only window positions, session tokens, update timestamps — zero user-configured preferences in git history. No config to preserve.
+
 ### Phase 6: Multi-Machine Testing
 
 > Goal: `chezmoi init --apply` works from scratch on a second machine.
@@ -211,14 +337,31 @@ Reference: [next-actions.md §Phase 5](2026-02-25/next-actions.md#phase-5-multi-
 - Test on headless Linux (exercises `is_headless`, `pinentry-tty`)
 - Fix whatever breaks
 
+### Phase 6.5: Automate Dev Environment Setup
+
+> Goal: automate the manual "Dev Environment Steps" from Notion into chezmoi run scripts.
+
+Source: [Dev Environment Steps (from Notion)](2026-02-26/Dev%20Environment%20Steps%20(from%20Notion).md)
+
+Design pattern: tool lists in `.chezmoi.toml.tmpl` `[data.tools]` tables, run scripts iterate with `{{ range }}`. Same decoupling as Brewfile workflow — *what* to install vs. *how*.
+
+- Xcode CLI tools (`run_once_before_`)
+- asdf plugins + versions from `.tool-versions` (`run_onchange_after_`)
+- pip/npm/cargo/go tool lists from `[data.tools]` (`run_onchange_after_` per ecosystem)
+- Repo cloning via `hierarchy` (`run_once_after_`)
+- Antigen + vim plugin bootstrapping (`run_once_after_`)
+
 ### Phase 7: Post-Migration Transition
 
 > Goal: shift from migration mode to maintenance mode. See [dedicated section below](#post-migration-transition).
 
+- Clean all `~/config-in-the-cloud/*/restored_via_mackup/` directories
+- Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to rbw, archive stale contexts
+- Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
 - Build Claude Code assistant skill for chezmoi health checks
 - Rewrite CLAUDE.md — remove migration section, add maintenance guidance
-- Archive this file (move to dated session folder or mark complete)
-- Clean up `~/config-in-the-cloud/*/restored_via_mackup/` stale files
+- Archive MIGRATION.md
+- Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
 
 ---
 
@@ -263,6 +406,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-02-26 | Research: config-in-the-cloud full audit  | All 5 subfolders catalogued; plist git history analyzed (104 commits, signal vs noise per app); triage decisions populated; SSH config Ansible source identified; Phase 3.5 added for non-Mackup config |
 | 2026-02-26 | **Phase 1 complete**                     | Config template rewritten with `[data]` prompts, install hook renamed + rewritten for `rbw`, `chezmoi init --prompt` verified. |
 | 2026-02-25 | Research session: architecture decisions | Decided rbw-only, edit→apply workflow, no age for v1. Created cheatsheets, next-actions, decisions docs. |
 | 2026-02-25 | Installed `rbw`                          | v1.15.0 via Homebrew. Configured: email, lock-timeout 12h, pinentry-mac.                                 |
@@ -275,11 +419,13 @@ Reverse-chronological log.
 
 ## Unknowns / Decisions Needed
 
-- **Triage table (Phase 3):** ~20 Mackup-symlinked files need individual migrate/drop decisions. See table above.
 - **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
-- **Stale tools:** Several Mackup-managed files may be for tools no longer used (Amethyst, Spacemacs, Carbon Now, Cheat, Ansible). Need user audit.
 - **Ice.plist:** Re-add to chezmoi or forget? Depends on whether it moves to a `defaults write` script.
-- `**.claude/` directory:** Not yet in chezmoi. Target-authoritative — will need special handling (Phase 6 polish item in next-actions.md §15).
+- **`.claude/` directory:** Not yet in chezmoi. Target-authoritative — will need special handling (Phase 6 polish item in next-actions.md §15).
+- **`.npmrc`:** Check for auth tokens before deciding plain file vs. rbw template.
+- **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
+- **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
+- **`.logseq/git/`:** Check if this is config or state — migrate if config, skip if state.
 
 ---
 
@@ -295,5 +441,8 @@ Reverse-chronological log.
 | Assistant skill spec          | [assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md) | Why a skill, what it does, when to build          |
 | Cheatsheet index              | [cheatsheets/INDEX.md](cheatsheets/INDEX.md)                            | 10 topic cheatsheets for chezmoi                  |
 | Plist tutorial                | [plist-chezmoi-tutorial.html](2026-02-17/plist-chezmoi-tutorial.html)   | HTML reference on plist management                |
+| config-in-the-cloud/ audit   | MIGRATION.md §Source Audit                                              | Subfolder inventory                               |
+| Ansible SSH config template  | `ansible-magic/.../base_ssh_config`                                     | Source for `~/.ssh/config`                        |
+| Dev Environment Steps (from Notion) | [Dev Environment Steps](2026-02-26/Dev%20Environment%20Steps%20(from%20Notion).md) | Manual setup steps — feeds Phase 6.5 automation |
 
 
