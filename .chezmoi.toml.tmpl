@@ -1,13 +1,22 @@
-{{- $email := promptStringOnce . "email" "Email address" "flo@kempenich.dev" -}}
-{{- $machine_type := promptChoiceOnce . "machine_type" "Machine type" (list "personal" "work" "server") -}}
-{{- $is_headless := promptBoolOnce . "is_headless" "Is this a headless machine (no GUI)" false -}}
+# Machine classification axes (all orthogonal):
+#
+#   OS            — automatic via .chezmoi.os (darwin / linux)
+#   is_headless   — GUI (false) vs terminal-only (true)
+#   trust_level   — what secrets to place on this machine:
+#                     personal = everything (personal keys, API tokens, .secrets.env)
+#                     work     = work credentials only, no personal secrets
+#                     server   = no secrets in dotfiles at all
+#
+# Re-prompt all values: `chezmoi init --prompt`
+
+{{ $email := promptStringOnce . "email" "Email address" "flo@kempenich.dev" -}}
+{{ $trust_level := promptChoiceOnce . "trust_level" "Trust level (personal = all secrets, work = work only, server = none)" (list "personal" "work" "server") -}}
+{{ $is_headless := promptBoolOnce . "is_headless" "Is this a headless machine (no GUI)" false -}}
 
 
 [data]
-    # Prompted values — set once during `chezmoi init`, reused on every apply.
-    # To re-prompt, run `chezmoi init --prompt`.
     email = {{ $email | quote }}
-    machine_type = {{ $machine_type | quote }}
+    trust_level = {{ $trust_level | quote }}
     is_headless = {{ $is_headless }}
 
 
