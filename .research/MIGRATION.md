@@ -19,30 +19,31 @@ Each phase checklist includes Mackup cleanup items — a phase is not done until
 
 ## Current State
 
-Last verified: 2026-02-26
+Last verified: 2026-02-28
 
 ### Summary
 
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/machine_type/is_headless, rbw hook, comments    |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/machine_type/is_headless, rbw hook, delta diff, autoCommit off |
 | Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
 | `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
+| `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
-| Mackup public dotfiles                        | Still symlinked   | 14 symlinks in `~/` → `~/config-in-the-cloud/dotfiles/restored_via_mackup/`  |
+| Mackup public dotfiles                        | Still symlinked   | 13 symlinks remain (`.gitconfig` symlink broken, migration in progress)    |
 | Mackup secret dotfiles                        | Still symlinked   | 5 symlinks in `~/` → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
-| macOS plists                                  | Partially managed | 6 plists in chezmoi, 5 show MM (modified-modified) drift                   |
-| Ice.plist                                     | Broken            | `DA` status — deleted from source but exists on disk                       |
-| `.gitconfig`                                  | Not in chezmoi    | Still a Mackup symlink                                                     |
+| macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
+| `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
 | `.ssh/config`                                 | Not in chezmoi    | Deployed by Ansible from `ansible-magic/`; Phase 2 target                  |
+| `~/CLAUDE.md`                                 | Moved             | Home dir instructions moved to `~/.claude/CLAUDE.md`. Not yet added to chezmoi |
 
 
 ### What works
 
-- `chezmoi apply` runs successfully (ignoring plist drift)
-- `autoCommit` on add/apply — every change tracked
+- `chezmoi apply` runs successfully
+- `chezmoi status` is clean — no plist noise
 - `delta` diff pager — readable diffs
 - `plutil` textconv — binary plists shown as XML in diffs
 - Brewfile workflow (`cmbrew` alias)
@@ -51,8 +52,6 @@ Last verified: 2026-02-26
 
 ### What's broken or degraded
 
-- **5 plists show MM drift** — apps write runtime data (GPS, timestamps, window state) into the same files chezmoi tracks. `chezmoi apply` would silently overwrite target changes.
-- **Ice.plist DA** — deleted from chezmoi source, file exists on disk. Needs `chezmoi add` or `chezmoi forget`.
 - **Mackup symlinks are a ticking clock** — macOS 14+ (Sonoma) breaks `cfprefsd` symlinks in `~/Library/Preferences`. See [migration-status.md known issue](2026-02-17/migration-status.md#important-going-back-to-mackup-is-not-viable).
 
 ---
@@ -69,15 +68,24 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] Rename + rewrite install hook → `.ensure-password-manager-installed.sh`
 - [x] Run `chezmoi init --prompt` and verify with `chezmoi data`
 
+### Phase 1.5: Housekeeping ✅
+
+- [x] `chezmoi forget` all noisy plists (Bartender, Clocker, iStat Menus, Moom, Raycast, Ice, Mos, VLC) — deferred to Phase 5
+- [x] `chezmoi forget` empty `Library/` directories, `CLAUDE.md`, `doc/`
+- [x] Create `.chezmoiignore` — excludes `CLAUDE.md` and `.research/` from target
+- [x] Move `~/CLAUDE.md` → `~/.claude/CLAUDE.md` (repo CLAUDE.md stays at root for Claude Code, home dir instructions live in `~/.claude/`)
+- [x] Disable `autoCommit` in `.chezmoi.toml.tmpl` — prefer semantic commits over mechanical per-operation commits
+- [x] Decision: **delta is a requirement everywhere** — no `lookPath` guards in config or templates. Phase 6.5 will ensure delta is installed on all platforms
+
 ### Phase 2: First Templates ⬜ ← next
 
-- [ ] `.gitconfig`: break symlink (cp real file over symlink)
-- [ ] `.gitconfig`: `chezmoi add --template` and templatise (email, name, homeDir)
-- [ ] `.gitconfig`: verify with `chezmoi cat` and `chezmoi apply`
-- [ ] `.gitconfig`: delete source from `~/config-in-the-cloud/dotfiles/restored_via_mackup/.gitconfig`
+- [x] `.gitconfig`: break symlink (cp real file over symlink)
+- [x] `.gitconfig`: `chezmoi add --template` and templatise (email, homeDir)
+- [x] `.gitconfig`: verify with `chezmoi cat` and `chezmoi apply`
+- [x] `.gitconfig`: delete source from Mackup folder (commit deferred to Phase 7 cleanup)
 - [ ] `.gitignore_global`: break symlink, `chezmoi add`, delete from Mackup
 - [ ] `.ssh/config`: convert Ansible Jinja2 template to Go template, `chezmoi add --template`
-- [ ] Add `.chezmoiignore` rules for machine-specific files
+- [ ] Add `~/.claude/CLAUDE.md` to chezmoi (`dot_claude/CLAUDE.md`)
 
 ### Phase 3: Triage + Migrate Mackup Symlinks ⬜
 
@@ -138,7 +146,7 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 - [ ] `run_onchange_after_install-asdf-tools.sh.tmpl` — reads `.tool-versions`, installs plugins + versions
 - [ ] `run_onchange_after_install-pip-tools.sh.tmpl` — iterates `{{ range .tools.pip }}`, hash includes list
 - [ ] `run_onchange_after_install-npm-tools.sh.tmpl` — iterates `{{ range .tools.npm }}`
-- [ ] `run_onchange_after_install-cargo-tools.sh.tmpl` — iterates `{{ range .tools.cargo }}`
+- [ ] `run_onchange_after_install-cargo-tools.sh.tmpl` — iterates `{{ range .tools.cargo }}` (**must include `git-delta`** — it's a hard requirement for `.gitconfig` and chezmoi diff, no `lookPath` guards)
 - [ ] `run_onchange_after_install-go-tools.sh.tmpl` — iterates `{{ range .tools.go }}`
 - [ ] `run_once_after_clone-repos.sh` — `hierarchy` command (clones all repos)
 - [ ] `run_once_after_install-antigen.sh` — `git clone` antigen
@@ -415,6 +423,8 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-02-28 | `.gitconfig` migrated (Phase 2)          | Symlink broken, `chezmoi add --template`, templatised email + homeDir (fixed stale `/Users/floriankempenich` path), Mackup source deleted. |
+| 2026-02-28 | **Phase 1.5: Housekeeping**              | Forgot all plists (defer to Phase 5), created `.chezmoiignore`, moved home CLAUDE.md to `~/.claude/`, disabled autoCommit, decided delta is a hard requirement (no guards). |
 | 2026-02-26 | Research: config-in-the-cloud full audit  | All 5 subfolders catalogued; plist git history analyzed (104 commits, signal vs noise per app); triage decisions populated; SSH config Ansible source identified; Phase 3.5 added for non-Mackup config |
 | 2026-02-26 | **Phase 1 complete**                     | Config template rewritten with `[data]` prompts, install hook renamed + rewritten for `rbw`, `chezmoi init --prompt` verified. |
 | 2026-02-25 | Research session: architecture decisions | Decided rbw-only, edit→apply workflow, no age for v1. Created cheatsheets, next-actions, decisions docs. |
@@ -429,8 +439,8 @@ Reverse-chronological log.
 ## Unknowns / Decisions Needed
 
 - **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
-- **Ice.plist:** Re-add to chezmoi or forget? Depends on whether it moves to a `defaults write` script.
-- **`.claude/` directory:** Not yet in chezmoi. Target-authoritative — will need special handling (Phase 6 polish item in next-actions.md §15).
+- **Ice.plist:** Forgotten from chezmoi. Will be handled in Phase 5 if needed.
+- **`.claude/` directory:** `CLAUDE.md` will be managed via `dot_claude/CLAUDE.md`. Other files (`settings.json`, `mcp.json`) are target-authoritative — use `re-add` workflow.
 - **`.npmrc`:** Check for auth tokens before deciding plain file vs. rbw template.
 - **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
 - **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
