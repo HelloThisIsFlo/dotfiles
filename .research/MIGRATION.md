@@ -26,18 +26,19 @@ Last verified: 2026-02-28
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/machine_type/is_headless, rbw hook, delta diff, autoCommit off |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless, rbw hook, delta diff, autoCommit off |
 | Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
 | `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
-| Mackup public dotfiles                        | Still symlinked   | 13 symlinks remain (`.gitconfig` symlink broken, migration in progress)    |
+| Mackup public dotfiles                        | Still symlinked   | 11 symlinks remain (`.gitconfig` + `.gitignore_global` migrated)           |
 | Mackup secret dotfiles                        | Still symlinked   | 5 symlinks in `~/` → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
 | macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
 | `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
-| `.ssh/config`                                 | Not in chezmoi    | Deployed by Ansible from `ansible-magic/`; Phase 2 target                  |
-| `~/CLAUDE.md`                                 | Moved             | Home dir instructions moved to `~/.claude/CLAUDE.md`. Not yet added to chezmoi |
+| `.gitignore_global`                           | Done              | Managed as `private_dot_gitignore_global`, audited and modernized          |
+| `~/.claude/CLAUDE.md`                         | Done              | Managed as `dot_claude/CLAUDE.md`, plain file                              |
+| `.ssh/config`                                 | In progress       | Added to chezmoi as `private_dot_ssh/private_config.tmpl`, templatizing next |
 
 
 ### What works
@@ -48,7 +49,7 @@ Last verified: 2026-02-28
 - `plutil` textconv — binary plists shown as XML in diffs
 - Brewfile workflow (`cmbrew` alias)
 - Shell config, vim, bash, direnv all managed
-- `chezmoi data` returns correct email, machine_type, is_headless values
+- `chezmoi data` returns correct email, trust_level, is_headless values
 
 ### What's broken or degraded
 
@@ -83,9 +84,9 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `.gitconfig`: `chezmoi add --template` and templatise (email, homeDir)
 - [x] `.gitconfig`: verify with `chezmoi cat` and `chezmoi apply`
 - [x] `.gitconfig`: delete source from Mackup folder (commit deferred to Phase 7 cleanup)
-- [ ] `.gitignore_global`: break symlink, `chezmoi add`, delete from Mackup
+- [x] `.gitignore_global`: break symlink, `chezmoi add`, delete from Mackup, audited and modernized
 - [ ] `.ssh/config`: convert Ansible Jinja2 template to Go template, `chezmoi add --template`
-- [ ] Add `~/.claude/CLAUDE.md` to chezmoi (`dot_claude/CLAUDE.md`)
+- [x] Add `~/.claude/CLAUDE.md` to chezmoi (`dot_claude/CLAUDE.md`)
 
 ### Phase 3: Triage + Migrate Mackup Symlinks ⬜
 
@@ -423,6 +424,8 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-02-28 | `~/.claude/CLAUDE.md` added (Phase 2)    | Plain file, no symlink to break (was already a regular file). Added as `dot_claude/CLAUDE.md`. |
+| 2026-02-28 | `.gitignore_global` migrated (Phase 2)   | Symlink broken, `chezmoi add` (plain file, no template), Mackup source deleted. Audited: fixed `*.swp`, dropped 70-line IntelliJ block, added Python/Node/Claude Code/.env patterns. |
 | 2026-02-28 | `.gitconfig` migrated (Phase 2)          | Symlink broken, `chezmoi add --template`, templatised email + homeDir (fixed stale `/Users/floriankempenich` path), Mackup source deleted. |
 | 2026-02-28 | **Phase 1.5: Housekeeping**              | Forgot all plists (defer to Phase 5), created `.chezmoiignore`, moved home CLAUDE.md to `~/.claude/`, disabled autoCommit, decided delta is a hard requirement (no guards). |
 | 2026-02-26 | Research: config-in-the-cloud full audit  | All 5 subfolders catalogued; plist git history analyzed (104 commits, signal vs noise per app); triage decisions populated; SSH config Ansible source identified; Phase 3.5 added for non-Mackup config |
