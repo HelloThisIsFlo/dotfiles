@@ -243,10 +243,7 @@ window-minimum-width: 0
 
 # List of bundle identifiers for applications to either be automatically floating or automatically tiled based on floating-is-blacklist (default []).
 floating: [
-  'com.lencx.chatgpt',
-  'com.electron.noi',
-  # 'com.apple.Safari.WebApp.A5BD6710-EF35-45D9-A4AC-8151970EF6BD',  # ChatGPT (Safari Native App)
-  # 'com.joehribar.toggl', # Timery
+  'jurkin.io.beam', # Beam (AI chat)
   'com.apple.systempreferences', # System Settings
   'com.apple.MobileSMS', # iMessage
   'com.apple.findmy', # Find My
