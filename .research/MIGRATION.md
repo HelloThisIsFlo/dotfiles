@@ -38,6 +38,10 @@ Last verified: 2026-02-28
 | `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
 | `.gitignore_global`                           | Done              | Managed as `private_dot_gitignore_global`, audited and modernized          |
 | `~/.claude/CLAUDE.md`                         | Done              | Managed as `dot_claude/CLAUDE.md`, plain file                              |
+| `~/.claude/settings.json`                     | Done              | Managed as `dot_claude/settings.json`, plain file (target-authoritative)   |
+| `~/.claude/commands/daily-summary.md`         | Done              | Managed as `dot_claude/commands/daily-summary.md`, plain file              |
+| `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
+| `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 
 
@@ -410,6 +414,7 @@ The skill handles:
 - **Safety enforcement** — always re-add target-authoritative files before apply, warn on overwrites
 - **Semantic commits** — group related changes into meaningful commits
 - **File flow awareness** — encoded in a manifest (`.chezmoi-workflow.yaml` or similar)
+- **Unmanaged file detection** — run `chezmoi unmanaged` on watched directories (`~/.claude/agents/`, `~/.claude/commands/`, `~/.claude/skills/`) at session start. Alert if new files exist that should be added to chezmoi. This is the only way to catch newly-created files since chezmoi doesn't auto-discover target-side additions.
 
 ### When to build it
 
@@ -424,6 +429,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-03-01 | Claude Code config added (Phase 3 subset) | `settings.json`, `commands/daily-summary.md`, skill symlinks (templatised with homeDir, trust_level guarded in `.chezmoiignore`), 5 project `MEMORY.md` files. Agents/hooks/GSD skipped by design. |
 | 2026-03-01 | **Phase 2 complete**                     | All 4 items done: `.gitconfig`, `.gitignore_global`, `~/.claude/CLAUDE.md`, `.ssh/config`. |
 | 2026-03-01 | `.ssh/config` migrated (Phase 2)         | Was Ansible-deployed (not Mackup). Fixed perms to 700/600, `chezmoi add --template`. Templatised: UseKeychain OS guard, trust_level personal block, $ts Tailscale var. Removed stale hosts (remarkable-old, mainsailos, dadhome direct IP, Old section, sandbox). |
 | 2026-02-28 | `~/.claude/CLAUDE.md` added (Phase 2)    | Plain file, no symlink to break (was already a regular file). Added as `dot_claude/CLAUDE.md`. |
@@ -445,7 +451,7 @@ Reverse-chronological log.
 
 - **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
 - **Ice.plist:** Forgotten from chezmoi. Will be handled in Phase 5 if needed.
-- **`.claude/` directory:** `CLAUDE.md` will be managed via `dot_claude/CLAUDE.md`. Other files (`settings.json`, `mcp.json`) are target-authoritative — use `re-add` workflow.
+- **`.claude/` directory:** Managed: `CLAUDE.md`, `settings.json`, `commands/daily-summary.md`, skill symlinks, 5 project memories. Not managed (by design): `settings.local.json`, `hooks/`, `agents/` (all GSD), `get-shit-done/`, runtime dirs. Target-authoritative files use `re-add` workflow.
 - **`.npmrc`:** Check for auth tokens before deciding plain file vs. rbw template.
 - **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
 - **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
