@@ -1,12 +1,16 @@
-### ANSIBLE MANAGED - BASE SSH CONFIG - BEGIN #######################
+{{ $ts := "neko-hoki.ts.net" -}}
+
 Host *
   ForwardAgent yes
   AddKeysToAgent yes
-  UseKeychain yes  
+{{- if eq .chezmoi.os "darwin" }}
+  UseKeychain yes
+{{- end }}
+{{- if eq .trust_level "personal" }}
 
 
+# --- Devices ---------------------------------------------------------
 
-#### Devices ##################################################
 Host steamdeck
   HostName 192.168.0.106
   User deck
@@ -19,71 +23,53 @@ Host remarkable-paper-pro
   HostName 192.168.0.114
   User root
 
-Host remarkable-old
-  HostName 192.168.0.164
-  User root
 
+# --- Home servers ----------------------------------------------------
 
-
-#### Physical Servers #########################################
 Host dadhome-haos
-  HostName dadhome-haos.neko-hoki.ts.net
+  HostName dadhome-haos.{{ $ts }}
   User root
 
 Host dadhome-nas
-  HostName dadhome-nas.neko-hoki.ts.net
+  HostName dadhome-nas.{{ $ts }}
   User flo
 
 Host dadhome-pm
-  HostName dadhome-pm.neko-hoki.ts.net
+  HostName dadhome-pm.{{ $ts }}
   User root
 
 Host thehome-haos
-  HostName thehome-haos.neko-hoki.ts.net
+  HostName thehome-haos.{{ $ts }}
   User root
 
 Host thehome-nas
-  HostName thehome-nas.neko-hoki.ts.net
+  HostName thehome-nas.{{ $ts }}
   User flo
 
 Host thehome-pm
-  HostName thehome-pm.neko-hoki.ts.net
+  HostName thehome-pm.{{ $ts }}
   User root
 
 Host thehome-server
-  HostName thehome-server.neko-hoki.ts.net
+  HostName thehome-server.{{ $ts }}
   User flo
 
 Host thehome
-  HostName  thehome.floriankempenich.com
+  HostName thehome.floriankempenich.com
   Port 7022
   User flo
 
 Host thehome.local
-  HostName  192.168.0.100
+  HostName 192.168.0.100
   User flo
 
 Host homeassistant.local
   HostName homeassistant.local
   User flo
 
-Host mainsailos.local
-  HostName 192.168.0.103
-  User pi
 
-Host mainsailos.remote
-  HostName  192.168.0.103
-  User pi
-  ProxyCommand ssh -W %h:%p thehome
+# --- Cloud servers ---------------------------------------------------
 
-Host dadhome
-  HostName 90.101.246.75
-  #HostName dadhome.floriankempenich.com
-  User floriankempenich
-
-
-
-#### Cloud Servers ############################################
 Host floriankempenich.com
   HostName floriankempenich.com
   User root
@@ -91,26 +77,13 @@ Host floriankempenich.com
 Host seedbox
   HostName cacus.feralhosting.com
   User shockn745
+{{- end }}
 
 
+# --- Tools -----------------------------------------------------------
 
-#### Tools ####################################################
-# Fix for using github on public WiFi
+# Use SSH over HTTPS for GitHub (works on restrictive WiFi)
 # See: https://stackoverflow.com/a/8081292
 Host github.com
   HostName ssh.github.com
   Port 443
-
-
-
-#### Old ######################################################
-  # Host home
-  #   HostName the-home.access.ly
-  #   User floriankempenich
-  #   # Port forwarding to enable remote VS Code via 'rmate'
-  #   RemoteForward 52698 127.0.0.1:52698
-
-Host sandbox
-  HostName the-sandbox.access.ly
-  User floriankempenich
-### ANSIBLE MANAGED - BASE SSH CONFIG - END #######################
