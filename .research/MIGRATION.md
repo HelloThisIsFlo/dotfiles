@@ -32,7 +32,7 @@ Last verified: 2026-02-28
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
-| Mackup public dotfiles                        | Mostly migrated   | 3 symlinks remain (`.npmrc`, `.logseq/`, `.spacemacs.d/`, `.ipython/`). 8 plain files migrated in Phase 3. |
+| Mackup public dotfiles                        | Nearly done       | 1 symlink remains (`.logseq/` — deferred to Phase 4, has API key). `.npmrc` dropped. `.spacemacs.d/`, `.ipython/` migrated. |
 | Mackup secret dotfiles                        | Still symlinked   | 5 symlinks in `~/` → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
 | macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
 | `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
@@ -92,17 +92,18 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `.ssh/config`: added to chezmoi, templatised (UseKeychain OS guard, trust_level personal block, $ts Tailscale var, stale hosts removed)
 - [x] Add `~/.claude/CLAUDE.md` to chezmoi (`dot_claude/CLAUDE.md`)
 
-### Phase 3: Triage + Migrate Mackup Symlinks 🔶 (in progress)
+### Phase 3: Triage + Migrate Mackup Symlinks ✅ (`.logseq/` deferred to Phase 4)
 
 - [x] Triage ~20 Mackup-symlinked files (keep/drop/migrate decisions) — see triage table in Phase 3 section
 - [x] Batch-migrate 8 plain files: `.tmux.conf`, `.tool-versions`, `.ideavimrc`, `.ansible.cfg`, `.asdfrc`, `.carbon-now.json`, `.amethyst.yml`, `.pythonrc`
 - [x] Add `.amethyst.yml` macOS guard in `.chezmoiignore`
 - [x] Delete Mackup sources for 8 migrated files
-- [ ] `.npmrc`: inspect for auth tokens, decide plain vs. rbw template
-- [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/)
-- [ ] `.spacemacs.d/`: migrate init.el + layers/
-- [ ] `.ipython/`: migrate ipython_config.py only
-- [ ] Verify `~/config-in-the-cloud/dotfiles/restored_via_mackup/` has only Library/ and deferred items
+- [x] `.npmrc`: inspected — no auth tokens, just stale Python paths and commented defaults. **Dropped** (symlink + Mackup source deleted, not added to chezmoi)
+- [ ] `.logseq/`: **deferred to Phase 4** — plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Needs rbw template.
+- [x] `.spacemacs.d/`: migrated `init.el` + `layers/the-standalones/packages.el` (archived config, not actively used)
+- [x] `.ipython/`: migrated `profile_default/ipython_config.py` only (skipped runtime dirs)
+- [x] Cleanup: `.tmux.conf` deprecated section removed + 4 QoL settings added; `.ansible.cfg` stale inventory removed; `.amethyst.yml` floating list updated
+- [x] Verify `~/config-in-the-cloud/dotfiles/restored_via_mackup/` has only `Library/` and `.logseq/` (deferred)
 
 ### Phase 3.5: Non-Mackup Unmanaged Config ⬜
 
@@ -115,6 +116,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] Identify files containing secrets
 - [ ] Organise Bitwarden vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
+- [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
 - [ ] Verify `secrets = "error"` catches missed plaintext
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
@@ -434,6 +436,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-03-01 | **Phase 3 complete** (`.logseq/` deferred) | 10 Mackup files resolved: 8 plain files batch-migrated, `.spacemacs.d/` + `.ipython/` migrated (config subsets only), `.npmrc` dropped (stale), `.logseq/` deferred to Phase 4 (Gemini API key in plugin settings). Cleanup: `.tmux.conf` trimmed + QoL settings, `.ansible.cfg` stale inventory removed, `.amethyst.yml` floating list updated (Beam). |
 | 2026-03-01 | 8 plain Mackup dotfiles migrated (Phase 3) | `.tmux.conf`, `.tool-versions`, `.ideavimrc`, `.ansible.cfg`, `.asdfrc`, `.carbon-now.json`, `.amethyst.yml` (macOS guard), `.pythonrc` (empty marker). Symlinks broken, added to chezmoi, Mackup sources deleted. |
 | 2026-03-01 | Claude Code config added (Phase 3 subset) | `settings.json`, `commands/daily-summary.md`, skill symlinks (templatised with homeDir, trust_level guarded in `.chezmoiignore`), 5 project `MEMORY.md` files. Agents/hooks/GSD skipped by design. |
 | 2026-03-01 | **Phase 2 complete**                     | All 4 items done: `.gitconfig`, `.gitignore_global`, `~/.claude/CLAUDE.md`, `.ssh/config`. |
