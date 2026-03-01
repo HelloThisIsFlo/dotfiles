@@ -1,0 +1,2 @@
+# Java Plugin - See https://github.com/halcyon/asdf-java#java_home-integration
+java_macos_integration_enable = yes

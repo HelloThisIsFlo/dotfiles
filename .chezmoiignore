@@ -5,3 +5,7 @@ CLAUDE.md
 .claude/skills/explore-and-present
 .claude/skills/flo-cheatsheet
 {{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+.amethyst.yml
+{{ end }}

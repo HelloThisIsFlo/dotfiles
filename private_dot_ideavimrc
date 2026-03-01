@@ -1,0 +1,14 @@
+source ~/.vimrc
+
+# IDE Actions
+noremap <silent> <Leader>r :action Run<CR>
+noremap <silent> <Leader>d :action Debug<CR>
+noremap <silent> <Leader>P :action TogglePresentationMode<CR>
+
+# Adapted Vim behaviors
+noremap <silent> <Leader>; :action CommentByLineComment<CR>
+noremap <silent> <Leader>Z :action ToggleDistractionFreeMode<CR>
+
+# Enable Plugins in Jetbrain Apps
+set easymotion
+set sneak
