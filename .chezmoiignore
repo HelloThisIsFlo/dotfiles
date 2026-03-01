@@ -1,2 +1,7 @@
 CLAUDE.md
 .research
+
+{{ if ne .trust_level "personal" }}
+.claude/skills/explore-and-present
+.claude/skills/flo-cheatsheet
+{{ end }}

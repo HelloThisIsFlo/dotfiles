@@ -1,0 +1,102 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(date:*)",
+      "Bash(docker ps:*)",
+      "Bash(echo:*)",
+      "Bash(gh api:*)",
+      "Bash(gh pr status:*)",
+      "Bash(gh pr view:*)",
+      "Bash(git add:*)",
+      "Bash(git blame:*)",
+      "Bash(git branch:*)",
+      "Bash(git commit:*)",
+      "Bash(git describe:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git pull:*)",
+      "Bash(git reflog:*)",
+      "Bash(git remote:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git show:*)",
+      "Bash(git stash:*)",
+      "Bash(git status:*)",
+      "Bash(git tag:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(jq:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(open:*)",
+      "Bash(sort:*)",
+      "Bash(tail:*)",
+      "Bash(tr:*)",
+      "Bash(uv add:*)",
+      "Bash(uv lock:*)",
+      "Bash(uv pip index versions:*)",
+      "Bash(uv pip show:*)",
+      "Bash(uv sync:*)",
+      "Bash(wc:*)",
+      "Read(//Users/flo/.claude/**)",
+      "mcp__github__get_commit",
+      "mcp__github__get_latest_release",
+      "mcp__github__list_pull_requests",
+      "mcp__github__search_code",
+      "mcp__claude_ai_Context7__resolve-library-id",
+      "mcp__claude_ai_Context7__query-docs",
+      "WebSearch",
+      "WebFetch(domain:www.tech-invite.com)",
+      "WebFetch(domain:www.muonics.com)",
+      "Bash(curl:*)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.local)",
+      "Read(.env.production)",
+      "Read(.env.development)",
+      "Read(**/secrets/*)",
+      "Read(**/*credential*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/flo/.claude/hooks/gsd-context-monitor.js\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/flo/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  },
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "playground@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "autoUpdatesChannel": "stable"
+}
