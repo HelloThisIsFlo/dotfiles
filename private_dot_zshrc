@@ -729,6 +729,8 @@ autoload -U +X bashcompinit && bashcompinit
 #  AWS CLI
 complete -C aws_completer aws
 
+#  Gita (manage multiple git repos)
+eval "$(register-python-argcomplete gita -s zsh)"
 
 #  ----- Completion ----------------------------------------------------- }}}
 
