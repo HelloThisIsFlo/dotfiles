@@ -1,0 +1,46 @@
+[global_config]
+  always_split_with_profile = True
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  title_font = Fira Code 59
+  title_receive_bg_color = "#246eb2"
+  title_receive_fg_color = "#2c1d16"
+  title_transmit_bg_color = "#ffcc2f"
+  title_transmit_fg_color = "#2c1d16"
+[keybindings]
+  close_term = <Primary><Alt>w
+  edit_window_title = <Primary><Alt>Page_Up
+  go_down = <Primary><Alt>j
+  go_left = <Primary><Alt>h
+  go_right = <Primary><Alt>l
+  go_up = <Primary><Alt>k
+  split_horiz = <Primary><Alt>minus
+  split_vert = <Primary><Alt>slash
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = Jackie Brown
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]
+[profiles]
+  [[default]]
+    background_color = "#002b36"
+    cursor_color = "#839496"
+    font = Monospace 18
+    foreground_color = "#839496"
+    palette = "#000000:#cd0000:#00cd00:#cdcd00:#0000cd:#cd00cd:#00cdcd:#faebd7:#404040:#ff0000:#00ff00:#ffff00:#0000ff:#ff00ff:#00ffff:#ffffff"
+  [[Jackie Brown]]
+    background_color = "#2c1d16"
+    cursor_color = "#ffcc2f"
+    font = Fira Code 13
+    foreground_color = "#ffcc2f"
+    palette = "#2c1d16:#ef5734:#2baf2b:#bebf00:#246eb2:#d05ec1:#00acee:#bfbfbf:#666666:#e50000:#86a93e:#e5e500:#246eb2:#e500e5:#00e5e5:#e5e5e5"
+    use_system_font = False
+  [[MonaLisa]]
+    background_color = "#120b0d"
+    cursor_color = "#c46c32"
+    foreground_color = "#f7d66a"
+    palette = "#351b0e:#9b291c:#636232:#c36e28:#515c5d:#9b1d29:#588056:#f7d75c:#874228:#ff4331:#b4b264:#ff9566:#9eb2b4:#ff5b6a:#8acd8f:#ffe598"

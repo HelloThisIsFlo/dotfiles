@@ -1,0 +1,22 @@
+# ON SERVER
+# ---------
+
+iperf -s -p PORT
+
+
+# ON CLIENT
+# ---------
+
+iperf -c HOST -p PORT
+
+# Specify duration
+-t DURATION
+
+# Use multiple threads
+-P 2 \
+
+# Report every X seconds
+-i X
+
+# Test speed in both directions
+-r

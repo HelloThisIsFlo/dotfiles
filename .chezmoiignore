@@ -8,4 +8,10 @@ CLAUDE.md
 
 {{ if ne .chezmoi.os "darwin" }}
 .amethyst.yml
+.config/karabiner
+.config/linearmouse
+{{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.config/terminator
 {{ end }}

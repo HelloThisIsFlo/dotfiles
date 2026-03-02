@@ -1,0 +1,16 @@
+# To create a new session
+ts
+ts NAME
+
+# To attach to a previous session
+ta
+ta NAME
+
+# To detach the current session
+td
+
+# To list all sessions
+tl
+
+# To kill a session
+tk NAME

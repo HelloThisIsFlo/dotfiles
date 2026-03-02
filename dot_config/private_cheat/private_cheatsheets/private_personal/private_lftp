@@ -1,0 +1,24 @@
+# To ENTER `lftp` cli - Password will be asked
+lftp USER@SERVER
+
+-------------------------------------------------------------------------------
+                                  INSIDE `lftp`
+-------------------------------------------------------------------------------
+Note: Files are downloaded in the current local dir
+
+# To download a file with 5 parallel connections
+# - `-c` ensures the transfer can be stopped and resumed
+# - `-nX` X is the number of connections
+pget -c -n5 FILENAME
+
+# To download an entire directory with 5 parallel connections for each file
+# - `/` at the end will create a new dir named `DIR` in the local
+#   directory before downloading contents
+mirror -c --use-pget-n=5 DIR/
+
+# Set a download limit of 5MB/s
+# - Format: DOWNLOAD_LIMIT:UPLOAD_LIMIT
+# - In this example: `5242880:0`
+#   - `5242880` -> 5242880B/s == 5MB/s
+#   - `0`       -> Infinite
+set net:limit-total-rate 5242880:0

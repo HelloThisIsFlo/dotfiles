@@ -1,0 +1,895 @@
+{
+  "schemes" : [
+    {
+      "scrolling" : {
+        "modifiers" : {
+          "vertical" : {
+            "command" : {
+              "type" : "alterOrientation"
+            }
+          }
+        },
+        "speed" : 0,
+        "distance" : "auto",
+        "acceleration" : 1,
+        "reverse" : {
+          "vertical" : true
+        }
+      },
+      "if" : {
+        "device" : {
+          "productID" : "0x8018",
+          "productName" : "Expert Wireless TB",
+          "category" : "mouse",
+          "vendorID" : "0x47d"
+        }
+      },
+      "pointer" : {
+        "acceleration" : 0.4,
+        "disableAcceleration" : false,
+        "speed" : 0.208
+      },
+      "buttons" : {
+        "mappings" : [
+          {
+            "button" : 0,
+            "command" : false,
+            "shift" : true,
+            "option" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "e"
+              ]
+            }
+          },
+          {
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "e"
+              ]
+            },
+            "command" : true,
+            "button" : 0,
+            "shift" : true,
+            "option" : true
+          },
+          {
+            "button" : 1,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "o"
+              ]
+            },
+            "shift" : true,
+            "control" : false,
+            "command" : false,
+            "option" : true
+          },
+          {
+            "control" : false,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "o"
+              ]
+            },
+            "command" : true,
+            "shift" : true,
+            "button" : 1
+          },
+          {
+            "option" : false,
+            "control" : false,
+            "shift" : false,
+            "command" : false,
+            "action" : "mouse.button.back",
+            "button" : 2
+          },
+          {
+            "command" : true,
+            "button" : 2,
+            "shift" : false,
+            "option" : false,
+            "control" : false,
+            "action" : "missionControl"
+          },
+          {
+            "option" : true,
+            "shift" : true,
+            "button" : 2,
+            "command" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "a"
+              ]
+            }
+          },
+          {
+            "shift" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "a"
+              ]
+            },
+            "button" : 2,
+            "option" : true,
+            "command" : true
+          },
+          {
+            "action" : "missionControl.spaceLeft",
+            "command" : false,
+            "option" : false,
+            "control" : true,
+            "shift" : false,
+            "button" : 2
+          },
+          {
+            "command" : true,
+            "shift" : true,
+            "control" : true,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "3"
+              ]
+            },
+            "button" : 2
+          },
+          {
+            "command" : false,
+            "option" : false,
+            "shift" : false,
+            "control" : false,
+            "button" : 3,
+            "action" : "mouse.button.forward"
+          },
+          {
+            "shift" : false,
+            "button" : 3,
+            "control" : false,
+            "action" : "appExpose",
+            "command" : true,
+            "option" : false
+          },
+          {
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "i"
+              ]
+            },
+            "command" : false,
+            "control" : false,
+            "shift" : true,
+            "button" : 3
+          },
+          {
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "i"
+              ]
+            },
+            "button" : 3,
+            "option" : true,
+            "shift" : true,
+            "command" : true,
+            "control" : false
+          },
+          {
+            "control" : true,
+            "button" : 3,
+            "command" : false,
+            "shift" : false,
+            "action" : "missionControl.spaceRight",
+            "option" : false
+          },
+          {
+            "shift" : true,
+            "button" : 3,
+            "control" : true,
+            "command" : true,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "h"
+              ]
+            },
+            "repeat" : false
+          },
+          {
+            "option" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "y"
+              ]
+            },
+            "shift" : true,
+            "command" : false,
+            "scroll" : "right"
+          },
+          {
+            "scroll" : "left",
+            "shift" : true,
+            "option" : true,
+            "command" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "u"
+              ]
+            }
+          }
+        ],
+        "universalBackForward" : false,
+        "clickDebouncing" : {
+          "timeout" : 0
+        }
+      }
+    },
+    {
+      "buttons" : {
+        "clickDebouncing" : {
+          "timeout" : 50
+        },
+        "mappings" : [
+          {
+            "shift" : false,
+            "command" : false,
+            "option" : false,
+            "button" : 1,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "i"
+              ]
+            }
+          },
+          {
+            "shift" : true,
+            "button" : 1,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "i"
+              ]
+            },
+            "control" : false,
+            "command" : false
+          },
+          {
+            "option" : true,
+            "control" : false,
+            "button" : 1,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "i"
+              ]
+            },
+            "command" : true,
+            "shift" : true
+          },
+          {
+            "button" : 2,
+            "command" : false,
+            "shift" : false,
+            "option" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "o"
+              ]
+            }
+          },
+          {
+            "option" : true,
+            "button" : 2,
+            "shift" : true,
+            "control" : false,
+            "command" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "o"
+              ]
+            }
+          },
+          {
+            "shift" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "o"
+              ]
+            },
+            "option" : true,
+            "button" : 2,
+            "command" : true
+          },
+          {
+            "shift" : true,
+            "option" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "u"
+              ]
+            },
+            "button" : 3,
+            "command" : true
+          },
+          {
+            "command" : true,
+            "option" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "y"
+              ]
+            },
+            "shift" : true,
+            "button" : 4
+          },
+          {
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "a"
+              ]
+            },
+            "command" : false,
+            "control" : false,
+            "button" : 5,
+            "option" : false,
+            "shift" : false
+          },
+          {
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "a"
+              ]
+            },
+            "option" : true,
+            "shift" : true,
+            "command" : false,
+            "control" : false,
+            "button" : 5
+          },
+          {
+            "button" : 5,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "a"
+              ]
+            },
+            "control" : false,
+            "shift" : true,
+            "command" : true,
+            "option" : true
+          },
+          {
+            "option" : false,
+            "button" : 6,
+            "shift" : false,
+            "command" : false,
+            "control" : false,
+            "action" : "mouse.button.right"
+          },
+          {
+            "button" : 7,
+            "shift" : false,
+            "command" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "e"
+              ]
+            },
+            "option" : false
+          },
+          {
+            "option" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "e"
+              ]
+            },
+            "command" : false,
+            "shift" : true,
+            "button" : 7
+          },
+          {
+            "command" : true,
+            "option" : true,
+            "button" : 7,
+            "shift" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "e"
+              ]
+            }
+          },
+          {
+            "control" : false,
+            "command" : false,
+            "scroll" : "left",
+            "shift" : false,
+            "action" : "missionControl.spaceRight",
+            "option" : false
+          },
+          {
+            "command" : false,
+            "shift" : false,
+            "control" : false,
+            "option" : false,
+            "action" : "missionControl.spaceLeft",
+            "scroll" : "right"
+          },
+          {
+            "shift" : true,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "3"
+              ]
+            },
+            "command" : true,
+            "control" : false,
+            "scroll" : "right"
+          },
+          {
+            "command" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "h"
+              ]
+            },
+            "scroll" : "left",
+            "option" : true,
+            "shift" : true
+          }
+        ]
+      },
+      "pointer" : {
+        "speed" : 0.13,
+        "disableAcceleration" : false,
+        "acceleration" : 0.4
+      },
+      "scrolling" : {
+        "reverse" : {
+          "vertical" : false
+        },
+        "speed" : {
+          "vertical" : 0
+        },
+        "distance" : {
+          "vertical" : "auto"
+        },
+        "modifiers" : {
+          "vertical" : {
+            "command" : {
+              "type" : "alterOrientation"
+            },
+            "option" : {
+              "scale" : 6,
+              "type" : "changeSpeed"
+            }
+          }
+        },
+        "acceleration" : {
+          "vertical" : 1
+        }
+      },
+      "if" : {
+        "device" : {
+          "category" : "mouse",
+          "productID" : "0x132",
+          "vendorID" : "0x56e",
+          "productName" : "DEFT Pro TrackBall",
+          "serialNumber" : "D809E18598"
+        }
+      }
+    },
+    {
+      "if" : {
+        "device" : {
+          "productName" : "HUGE TrackBall",
+          "productID" : "0x11c",
+          "vendorID" : "0x56e",
+          "category" : "mouse"
+        }
+      },
+      "pointer" : {
+        "speed" : 0.13,
+        "acceleration" : 0.4
+      },
+      "scrolling" : {
+        "reverse" : {
+          "vertical" : false
+        }
+      }
+    },
+    {
+      "if" : {
+        "device" : {
+          "productID" : "0x133",
+          "category" : "mouse",
+          "vendorID" : "0x56e",
+          "serialNumber" : "AF755F064749",
+          "productName" : "DEFT Pro TrackBall"
+        }
+      },
+      "pointer" : {
+        "disableAcceleration" : false,
+        "speed" : 0.13,
+        "acceleration" : 0.4
+      },
+      "buttons" : {
+        "mappings" : [
+          {
+            "shift" : false,
+            "button" : 1,
+            "option" : false,
+            "control" : false,
+            "command" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "i"
+              ]
+            }
+          },
+          {
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "i"
+              ]
+            },
+            "button" : 1,
+            "control" : false,
+            "command" : false,
+            "shift" : true
+          },
+          {
+            "button" : 1,
+            "command" : true,
+            "shift" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "i"
+              ]
+            },
+            "option" : true
+          },
+          {
+            "button" : 2,
+            "option" : false,
+            "command" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "o"
+              ]
+            },
+            "shift" : false
+          },
+          {
+            "button" : 2,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "o"
+              ]
+            },
+            "shift" : true,
+            "command" : false,
+            "option" : true
+          },
+          {
+            "option" : true,
+            "command" : true,
+            "shift" : true,
+            "button" : 2,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "o"
+              ]
+            }
+          },
+          {
+            "shift" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "u"
+              ]
+            },
+            "control" : false,
+            "option" : true,
+            "button" : 3,
+            "command" : true
+          },
+          {
+            "control" : false,
+            "command" : true,
+            "button" : 4,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "y"
+              ]
+            },
+            "shift" : true,
+            "option" : true
+          },
+          {
+            "shift" : false,
+            "option" : false,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "a"
+              ]
+            },
+            "command" : false,
+            "button" : 5
+          },
+          {
+            "shift" : true,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "a"
+              ]
+            },
+            "command" : false,
+            "button" : 5,
+            "option" : true
+          },
+          {
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "a"
+              ]
+            },
+            "button" : 5,
+            "control" : false,
+            "command" : true,
+            "shift" : true
+          },
+          {
+            "shift" : false,
+            "button" : 6,
+            "option" : false,
+            "command" : false,
+            "action" : "mouse.button.right",
+            "control" : false
+          },
+          {
+            "shift" : false,
+            "command" : false,
+            "option" : false,
+            "button" : 7,
+            "control" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "e"
+              ]
+            }
+          },
+          {
+            "button" : 7,
+            "control" : false,
+            "shift" : true,
+            "option" : true,
+            "command" : false,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "e"
+              ]
+            }
+          },
+          {
+            "shift" : true,
+            "control" : false,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "e"
+              ]
+            },
+            "command" : true,
+            "button" : 7
+          },
+          {
+            "scroll" : "left",
+            "action" : "missionControl.spaceRight",
+            "shift" : false,
+            "command" : false,
+            "option" : false,
+            "control" : false
+          },
+          {
+            "option" : false,
+            "scroll" : "right",
+            "control" : false,
+            "action" : "missionControl.spaceLeft",
+            "shift" : false,
+            "command" : false
+          },
+          {
+            "command" : true,
+            "option" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "3"
+              ]
+            },
+            "scroll" : "right",
+            "control" : false,
+            "shift" : true
+          },
+          {
+            "shift" : true,
+            "scroll" : "left",
+            "command" : true,
+            "action" : {
+              "keyPress" : [
+                "shift",
+                "option",
+                "command",
+                "h"
+              ]
+            },
+            "control" : false,
+            "option" : true
+          }
+        ],
+        "clickDebouncing" : {
+          "timeout" : 50
+        }
+      },
+      "scrolling" : {
+        "reverse" : {
+          "vertical" : false
+        },
+        "speed" : {
+          "vertical" : 0
+        },
+        "acceleration" : {
+          "vertical" : 1
+        },
+        "distance" : {
+          "vertical" : "auto"
+        },
+        "modifiers" : {
+          "vertical" : {
+            "option" : {
+              "type" : "changeSpeed",
+              "scale" : 6
+            },
+            "command" : {
+              "type" : "alterOrientation"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.9.6-beta.3"
+}
