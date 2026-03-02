@@ -3,5 +3,5 @@
 
 # Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
 
-brew bundle
+brew bundle || echo "⚠ brew bundle had errors (see above)"
 {{ end -}}
