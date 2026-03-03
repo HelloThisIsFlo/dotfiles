@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+> **Note:** The `CLAUDE.md` at the repo root is managed by chezmoi and deployed to `~/CLAUDE.md`. It is NOT instructions for working in this repo. Ignore it. **This file** (`.claude/CLAUDE.md`) contains the repo-specific instructions.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What this repo is

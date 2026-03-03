@@ -1,4 +1,3 @@
-CLAUDE.md
 .research
 
 {{ if ne .trust_level "personal" }}
