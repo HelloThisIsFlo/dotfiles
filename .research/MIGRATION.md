@@ -19,7 +19,7 @@ Each phase checklist includes Mackup cleanup items — a phase is not done until
 
 ## Current State
 
-Last verified: 2026-02-28
+Last verified: 2026-03-03
 
 ### Summary
 
@@ -31,9 +31,9 @@ Last verified: 2026-02-28
 | `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
-| Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — working                    |
+| Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Migration to data-driven approach pending (see [comparison guide](cheatsheets/brew-management-approaches.md)) |
 | Mackup public dotfiles                        | Nearly done       | 1 symlink remains (`.logseq/` — deferred to Phase 4, has API key). `.npmrc` dropped. `.spacemacs.d/`, `.ipython/` migrated. |
-| Mackup secret dotfiles                        | Still symlinked   | 5 symlinks in `~/` → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/` |
+| Mackup secret dotfiles                        | Still symlinked   | 6 symlinks → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
 | macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
 | `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
 | `.gitignore_global`                           | Done              | Managed as `private_dot_gitignore_global`, audited and modernized          |
@@ -43,6 +43,8 @@ Last verified: 2026-02-28
 | `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
+| `~/.config/gh/`                               | Not managed       | GitHub CLI config — `config.yml` (preferences, aliases) + `hosts.yml` (username, git protocol). No secrets (OAuth in keychain). Phase 3.5 candidate. |
+| `~/.config/git/ignore`                        | Not managed       | XDG global gitignore — has `**/.claude/settings.local.json` duplicated 11×. Overlaps with `.gitignore_global` (which `.gitconfig` points to). Needs cleanup + merge. |
 
 
 ### What works
@@ -107,16 +109,24 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 3.5: Non-Mackup Unmanaged Config ⬜
 
-- [ ] `~/.config/karabiner/karabiner.json` — add to chezmoi
-- [ ] `~/.config/linearmouse/linearmouse.json` — add to chezmoi
-- [ ] `~/.config/cheat/` — add `conf.yml` + personal cheatsheets to chezmoi
+- [x] `~/.config/karabiner/karabiner.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
+- [x] `~/.config/linearmouse/linearmouse.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
+- [x] `~/.config/cheat/` — `conf.yml` + 12 personal cheatsheets added (community cheatsheets excluded — re-downloadable)
+- [ ] `~/.config/gh/` — add `config.yml` + `hosts.yml` to chezmoi (plain files, no secrets — OAuth token lives in macOS keychain). Cross-platform, no macOS guard needed.
+- [ ] `~/.config/git/ignore` — clean up (same line duplicated 11×), then either: (a) add to chezmoi as standalone file, or (b) merge the one pattern into `.gitignore_global` and delete the file. Note: git reads BOTH `core.excludesFile` and `$XDG_CONFIG_HOME/git/ignore` — they stack, so having both is valid but redundant for this one pattern.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
-- [ ] Identify files containing secrets
+- [ ] Triage each secret file — inspect contents, decide keep/drop/template
+- [ ] `.secrets.env` — env vars with secrets, needs rbw template
+- [ ] `.tadl-pass` — TADL password
+- [ ] `.tadl-minion` — TADL agent config
+- [ ] `.cli_chat.json` — API tokens/credentials
+- [ ] `.aws/config` + `.aws/credentials` — AWS profiles and access keys, needs rbw template
+- [ ] `.config/exercism/user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`). Decide: still in use? If yes, rbw template + fix path. If no, delete symlink + Mackup source.
+- [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
 - [ ] Organise Bitwarden vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
-- [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
 - [ ] Verify `secrets = "error"` catches missed plaintext
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
@@ -265,6 +275,7 @@ Secret (`~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
 | `~/.tadl-minion`         | ? — Phase 4       | Secrets                              |
 | `~/.cli_chat.json`       | ? — Phase 4       | Secrets                              |
 | `~/.aws`                 | ? — Phase 4       | Directory symlink, secrets           |
+| `~/.config/exercism`     | ? — Phase 4       | Symlink to `dotfiles-secret/`. Contains API token + stale workspace path (`/Users/floriankempenich/`). Check if still in use. |
 
 Also in Mackup folder (not currently symlinked but still stored there):
 
@@ -280,11 +291,13 @@ Also in Mackup folder (not currently symlinked but still stored there):
 
 > Goal: config files discovered outside Mackup that should be in chezmoi.
 
-These files live in `~/.config/` but were never managed by Mackup — they were found during the 2026-02-26 audit.
+These files live in `~/.config/` but were never managed by Mackup — they were found during audits (2026-02-26 and 2026-03-03).
 
-- `~/.config/karabiner/karabiner.json` — keyboard remapping (complex JSON, actively used)
-- `~/.config/linearmouse/linearmouse.json` — mouse acceleration/scroll settings
-- `~/.config/cheat/` — `conf.yml` (cheat tool config) + personal cheatsheets directory
+- `~/.config/karabiner/karabiner.json` — keyboard remapping (complex JSON, actively used) ✅
+- `~/.config/linearmouse/linearmouse.json` — mouse acceleration/scroll settings ✅
+- `~/.config/cheat/` — `conf.yml` (cheat tool config) + personal cheatsheets directory ✅
+- `~/.config/gh/` — GitHub CLI config. `config.yml` has preferences + aliases (`co: pr checkout`), `hosts.yml` has username + git protocol. No secrets (OAuth token in macOS keychain). Cross-platform.
+- `~/.config/git/ignore` — XDG global gitignore. Currently has `**/.claude/settings.local.json` duplicated 11 times. `.gitconfig` already points to `.gitignore_global` via `core.excludesFile`. Git reads both files. Options: (a) clean up to 1 line and add to chezmoi, or (b) merge into `.gitignore_global` and delete this file.
 
 ### Phase 4: Wire Secrets into Templates
 
@@ -292,7 +305,22 @@ These files live in `~/.config/` but were never managed by Mackup — they were 
 
 Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secrets)
 
-- Identify files containing secrets (`.secrets.env`, `.aws/`, `.tadl-`*, etc.)
+**Active Mackup secret symlinks** (verified 2026-03-03, all point to `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
+
+| Symlink | Contents | Notes |
+|---|---|---|
+| `~/.secrets.env` | Environment variables with secrets | Needs rbw template |
+| `~/.tadl-pass` | TADL password | Needs rbw template |
+| `~/.tadl-minion` | TADL agent config | Needs rbw template |
+| `~/.cli_chat.json` | API tokens/credentials | Needs rbw template |
+| `~/.aws/` | `config` (profiles) + `credentials` (access keys) | Directory symlink. `config` may be plain, `credentials` needs rbw template |
+| `~/.config/exercism/` | `user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`) | Discovered 2026-03-03 audit. Decide: still in use? If yes, rbw + fix path. If no, delete symlink + Mackup source. |
+
+**Also deferred from Phase 3:**
+- `.logseq/`: plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Migrate config subset (preferences.json, config/, settings/).
+
+**Steps:**
+- Triage each file — inspect contents, decide keep/drop/template
 - Organise Bitwarden vault items with consistent naming for chezmoi
 - Convert secret files to `.tmpl` files using `{{ (rbw "...") }}` syntax
 - Verify `secrets = "error"` catches any missed plaintext
@@ -436,6 +464,9 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
+| 2026-03-03 | Deep audit: unmanaged dotfiles            | Scanned `~/`, `~/.config/`, Mackup folders, and chezmoi managed list. Found: (1) `.config/exercism/` — missed secret symlink to Mackup, added to Phase 4; (2) `.config/gh/` — GitHub CLI config, no secrets, added to Phase 3.5; (3) `.config/git/ignore` — XDG gitignore with 11× duplicate line, added to Phase 3.5 for cleanup. ~40+ vendor/runtime dirs confirmed as noise (not managed). |
+| 2026-03-03 | Phase 3.5 partially complete               | karabiner, linearmouse, cheat were already added to chezmoi (discovered during tracker review). Reopened phase for gh config + git/ignore cleanup. |
 | 2026-03-01 | **Phase 3 complete** (`.logseq/` deferred) | 10 Mackup files resolved: 8 plain files batch-migrated, `.spacemacs.d/` + `.ipython/` migrated (config subsets only), `.npmrc` dropped (stale), `.logseq/` deferred to Phase 4 (Gemini API key in plugin settings). Cleanup: `.tmux.conf` trimmed + QoL settings, `.ansible.cfg` stale inventory removed, `.amethyst.yml` floating list updated (Beam). |
 | 2026-03-01 | 8 plain Mackup dotfiles migrated (Phase 3) | `.tmux.conf`, `.tool-versions`, `.ideavimrc`, `.ansible.cfg`, `.asdfrc`, `.carbon-now.json`, `.amethyst.yml` (macOS guard), `.pythonrc` (empty marker). Symlinks broken, added to chezmoi, Mackup sources deleted. |
 | 2026-03-01 | Claude Code config added (Phase 3 subset) | `settings.json`, `commands/daily-summary.md`, skill symlinks (templatised with homeDir, trust_level guarded in `.chezmoiignore`), 5 project `MEMORY.md` files. Agents/hooks/GSD skipped by design. |
@@ -461,10 +492,12 @@ Reverse-chronological log.
 - **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
 - **Ice.plist:** Forgotten from chezmoi. Will be handled in Phase 5 if needed.
 - **`.claude/` directory:** Managed: `CLAUDE.md`, `settings.json`, `commands/daily-summary.md`, skill symlinks, 5 project memories. Not managed (by design): `settings.local.json`, `hooks/`, `agents/` (all GSD), `get-shit-done/`, runtime dirs. Target-authoritative files use `re-add` workflow.
-- **`.npmrc`:** Check for auth tokens before deciding plain file vs. rbw template.
 - **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
 - **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
 - **`.logseq/git/`:** Check if this is config or state — migrate if config, skip if state.
+- **Exercism:** Still in use? API token in `~/.config/exercism/user.json`, workspace path is stale (`/Users/floriankempenich/`). If dropped, delete symlink + Mackup source.
+- **`.config/git/ignore` vs `.gitignore_global` overlap:** Git reads both files. Currently `.config/git/ignore` has `**/.claude/settings.local.json` (duplicated 11×) and `.gitconfig` points to `.gitignore_global` via `core.excludesFile`. Need to decide: keep both (add git/ignore to chezmoi cleaned up) or consolidate into `.gitignore_global` only.
+- **Community cheatsheets for `cheat`:** 276 files in `~/.config/cheat/cheatsheets/community/`, not managed, not a git repo. Re-downloadable. Could add a download script in Phase 6.5 if desired.
 
 ---
 
