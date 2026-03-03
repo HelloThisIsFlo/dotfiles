@@ -6,8 +6,8 @@ gradle 7.6
 java liberica-18+37
 ruby 3.1.2
 maven 3.8.5
-golang 1.22.12
-rust 1.83.0
+golang 1.25.7
+rust stable
 kubectl 1.30.3
 terraform 1.6.0
 clojure 1.11.1.1435
