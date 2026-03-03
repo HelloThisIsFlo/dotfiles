@@ -77,6 +77,10 @@ alias cmbrew="cm edit --apply ~/.Brewfile && cm apply ~/brew-bundle.sh"
 
 #   ----- Chezmoi ---------------------------------------------------- }}}
 
+#   ----- Claude Code ----------------------------------------------- {{{
+alias claude="claude --allow-dangerously-skip-permissions"
+#   ----- Claude Code ----------------------------------------------- }}}
+
 #   ----- One-click Update ------------------------------------------- {{{
 function updateall {
     if [ "$(uname)" '==' Linux ]; then
