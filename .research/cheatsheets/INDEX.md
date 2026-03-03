@@ -72,6 +72,14 @@ Timeless reference material for chezmoi concepts, patterns, and configuration. E
 - **Version pinning** — tags, commits, shallow clones
 - **Examples** — zsh plugins, Nerd Fonts, Neovim plugin managers
 
+## [Brew Management Approaches](brew-management-approaches.md)
+
+- **Three officially blessed patterns** — `dot_Brewfile`, `.chezmoidata/` YAML, inline template lists
+- **Side-by-side comparison** — pros, cons, when to use each
+- **The `brew bundle --adopt` bug** — which approaches avoid it
+- **Decision framework** — per-machine conditionals, Phase 6.5 readiness, brew bundle avoidance
+- **Sources** — links to official docs, Tom Payne's dotfiles, relevant GitHub issues
+
 ## [Hooks](hooks.md)
 
 - **Key difference from run scripts** — hooks run *before* template parsing

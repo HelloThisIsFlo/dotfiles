@@ -3,5 +3,5 @@
 
 # Brewfile hash: {{ include "dot_Brewfile" | sha256sum }}
 
-brew bundle || echo "⚠ brew bundle had errors (see above)"
+brew bundle --no-upgrade || echo "⚠ brew bundle had errors (see above). If cask version mismatches, run: brew upgrade --cask <name>"
 {{ end -}}
