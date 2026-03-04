@@ -43,9 +43,9 @@ Last verified: 2026-03-03
 | `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
-| `~/.config/gh/`                               | Not managed       | GitHub CLI config — `config.yml` (preferences, aliases) + `hosts.yml` (username, git protocol). No secrets (OAuth in keychain). Phase 3.5 candidate. |
+| `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
 | `~/.cloudflared/`                             | Not managed       | Cloudflare Tunnel. 5 files: `cert.pem` (account auth token — secret), `d5f42136-...json` (tunnel credentials — secret), `config-themac.yml` (ingress rules — config, has hardcoded homedir), `config.yml` (symlink → config-themac.yml), `README.md` (plain). Phase 4 candidate. |
-| `~/.config/git/ignore`                        | Not managed       | XDG global gitignore — has `**/.claude/settings.local.json` duplicated 11×. Overlaps with `.gitignore_global` (which `.gitconfig` points to). Needs cleanup + merge. |
+| `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
 
 ### What works
@@ -113,8 +113,8 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `~/.config/karabiner/karabiner.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
 - [x] `~/.config/linearmouse/linearmouse.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
 - [x] `~/.config/cheat/` — `conf.yml` + 12 personal cheatsheets added (community cheatsheets excluded — re-downloadable)
-- [ ] `~/.config/gh/` — add `config.yml` + `hosts.yml` to chezmoi (plain files, no secrets — OAuth token lives in macOS keychain). Cross-platform, no macOS guard needed.
-- [ ] `~/.config/git/ignore` — clean up (same line duplicated 11×), then either: (a) add to chezmoi as standalone file, or (b) merge the one pattern into `.gitignore_global` and delete the file. Note: git reads BOTH `core.excludesFile` and `$XDG_CONFIG_HOME/git/ignore` — they stack, so having both is valid but redundant for this one pattern.
+- [x] `~/.config/gh/` — added `config.yml` (preferences, customized: bat pager, editor prompt enabled) + `hosts.yml` (personal identity, ignored on non-personal machines via `.chezmoiignore`). No secrets — OAuth token lives in macOS keychain.
+- [x] `~/.config/git/ignore` — deleted. Had `**/.claude/settings.local.json` duplicated 11× (Claude Code kept appending it). Fully redundant — `.gitignore_global` already covers it via `core.excludesFile`.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
@@ -471,6 +471,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
 | 2026-03-03 | Deep audit: unmanaged dotfiles            | Scanned `~/`, `~/.config/`, Mackup folders, and chezmoi managed list. Found: (1) `.config/exercism/` — missed secret symlink to Mackup, added to Phase 4; (2) `.config/gh/` — GitHub CLI config, no secrets, added to Phase 3.5; (3) `.config/git/ignore` — XDG gitignore with 11× duplicate line, added to Phase 3.5 for cleanup. ~40+ vendor/runtime dirs confirmed as noise (not managed). |
 | 2026-03-03 | Phase 3.5 partially complete               | karabiner, linearmouse, cheat were already added to chezmoi (discovered during tracker review). Reopened phase for gh config + git/ignore cleanup. |
@@ -503,7 +504,6 @@ Reverse-chronological log.
 - **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
 - **`.logseq/git/`:** Check if this is config or state — migrate if config, skip if state.
 - **Exercism:** Still in use? API token in `~/.config/exercism/user.json`, workspace path is stale (`/Users/floriankempenich/`). If dropped, delete symlink + Mackup source.
-- **`.config/git/ignore` vs `.gitignore_global` overlap:** Git reads both files. Currently `.config/git/ignore` has `**/.claude/settings.local.json` (duplicated 11×) and `.gitconfig` points to `.gitignore_global` via `core.excludesFile`. Need to decide: keep both (add git/ignore to chezmoi cleaned up) or consolidate into `.gitignore_global` only.
 - **Community cheatsheets for `cheat`:** 276 files in `~/.config/cheat/cheatsheets/community/`, not managed, not a git repo. Re-downloadable. Could add a download script in Phase 6.5 if desired.
 
 ---
