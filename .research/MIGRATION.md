@@ -44,6 +44,7 @@ Last verified: 2026-03-03
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.config/gh/`                               | Not managed       | GitHub CLI config — `config.yml` (preferences, aliases) + `hosts.yml` (username, git protocol). No secrets (OAuth in keychain). Phase 3.5 candidate. |
+| `~/.cloudflared/`                             | Not yet created   | Cloudflare Tunnel config. Will contain: `cert.pem` (account auth cert — secret), `<UUID>.json` (tunnel credentials — secret), `config.yml` (tunnel routing — config). Phase 4 candidate. |
 | `~/.config/git/ignore`                        | Not managed       | XDG global gitignore — has `**/.claude/settings.local.json` duplicated 11×. Overlaps with `.gitignore_global` (which `.gitconfig` points to). Needs cleanup + merge. |
 
 
@@ -125,6 +126,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] `.aws/config` + `.aws/credentials` — AWS profiles and access keys, needs rbw template
 - [ ] `.config/exercism/user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`). Decide: still in use? If yes, rbw template + fix path. If no, delete symlink + Mackup source.
 - [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
+- [ ] `~/.cloudflared/`: Cloudflare Tunnel — `cert.pem` (account auth cert) and `<UUID>.json` (tunnel credentials) need rbw templates. `config.yml` (tunnel routing/ingress rules) is plain config — add as regular file or template if it references dynamic values.
 - [ ] Organise Bitwarden vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
 - [ ] Verify `secrets = "error"` catches missed plaintext
