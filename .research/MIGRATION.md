@@ -2,6 +2,8 @@
 
 Living document. Updated as migration progresses. Any agent or returning human should read this first.
 
+> **For agents:** Before answering questions about how to do something, check `.research/cheatsheets/` — most migration topics have pre-researched solutions (secrets, templates, naming, macOS preferences, etc.). See [cheatsheet index](cheatsheets/INDEX.md).
+
 > **This repo is in transitionary mode.** The migration from Mackup symlinks to fully chezmoi-managed config is in progress. See [Post-Migration Transition](#post-migration-transition) for what changes when it's done.
 
 ### Migration Principle: Both Sides Clean
