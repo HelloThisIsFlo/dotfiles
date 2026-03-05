@@ -689,9 +689,20 @@ export WGET=wget
 export CURL=http # httpie
 #    ----- SingleChar --------------------------------------------- }}}
 
-#    ----- History Substring Search ------------------------------- {{{
+#   ----- Post-activation Plugin Configuration ----------------------- }}}
+#  ----- Antigen -------------------------------------------------------- }}}
+
+
+#  ----- Keybindings ---------------------------------------------------- {{{
+#   ----- General ---------------------------------------------------- {{{
+# Word navigation (Option+Arrow)
+bindkey '^[[1;3D' backward-word
+bindkey '^[[1;3C' forward-word
+#   ----- General ---------------------------------------------------- }}}
+
+#   ----- History Substring Search ----------------------------------- {{{
 # bind UP and DOWN arrow keys
-zmodload zsh/terminfo
+zmodload zsh/terminfo # Gives access to the terminfo database
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 
@@ -703,9 +714,9 @@ bindkey '^[[B' history-substring-search-down
 # bind k and j for VI mode
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
-#    ----- History Substring Search ------------------------------- }}}
-#   ----- Post-activation Plugin Configuration ----------------------- }}}
-#  ----- Antigen -------------------------------------------------------- }}}
+#   ----- History Substring Search ----------------------------------- }}}
+#  ----- Keybindings ---------------------------------------------------- }}}
+
 
 #  ----- Homebrew ------------------------------------------------------- {{{
 export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
