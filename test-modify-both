@@ -1,0 +1,17 @@
+# ============================================
+# App Configuration
+# ============================================
+
+# --- Display ---
+theme = "gruvbox"
+font_size = 16
+show_sidebar = true
+
+# --- Network ---
+proxy = "none"
+timeout = 30
+retry_count = 3
+
+# --- Plugins ---
+plugins = ["core", "git", "docker"]
+auto_update = true
