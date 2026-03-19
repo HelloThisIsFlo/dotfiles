@@ -27,7 +27,7 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 chezmoi apply                  # render source → target (the main operation)
 chezmoi edit <target-path>     # edit a managed file (resolves dot_ naming automatically)
 chezmoi diff                   # preview what apply would change
-chezmoi status                 # show managed files that differ from target (⚠️ columns are NOT source/target — see .research/cheatsheets/chezmoi-status.md)
+chezmoi status                 # show managed files that differ from target (⚠️ see status rules below)
 chezmoi data                   # dump template data (variables, OS info)
 chezmoi cat <target-path>      # show what chezmoi would render (without applying)
 chezmoi add <target-path>      # add a new file to management
@@ -37,6 +37,22 @@ chezmoi doctor                 # diagnostic check
 ```
 
 Git autoCommit is enabled — every `chezmoi add`/`chezmoi apply` creates a git commit automatically. autoPush is disabled.
+
+### `chezmoi status` — how to read it (agents get this wrong constantly)
+
+Output is `XY path/to/file`. The columns are **NOT** source vs target. They are:
+
+- **X** = last-applied state vs disk — "did something change the file since chezmoi last wrote it?"
+- **Y** = disk vs source (what chezmoi would render) — "would `chezmoi apply` change this file?"
+
+| Code | Meaning | Action |
+|------|---------|--------|
+| ` M` | Source is ahead, disk is untouched | `chezmoi apply` — **safe, no conflict** |
+| `MM` | Disk was edited AND differs from source | **Conflict.** `chezmoi diff` first, then `apply` (keep source) or `re-add` (keep disk) or `merge` (keep both) |
+| ` A` | New file in source, doesn't exist on disk | `chezmoi apply` to create |
+| `M ` | Cannot happen in practice — chezmoi hides files where disk matches source |
+
+**Key trap:** ` M` does NOT mean "target has edits source doesn't know about." It means the opposite — source has updates ready to apply. Full details: `.research/cheatsheets/chezmoi-status.md`.
 
 ## Architecture decisions (from .research/2026-02-25/decisions.md)
 
