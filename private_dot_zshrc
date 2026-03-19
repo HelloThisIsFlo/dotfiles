@@ -734,6 +734,7 @@ fpath=(~/.docker/completions $fpath)  # For Docker
 fpath+=~/.zfunc
 talosctl completion zsh > "${fpath[1]}/_talosctl"
 poetry completions zsh > "${fpath[1]}/_poetry"
+chezmoi completion zsh > "${fpath[1]}/_chezmoi"
 
 
 
@@ -747,6 +748,9 @@ complete -C aws_completer aws
 
 #  Gita (manage multiple git repos)
 eval "$(register-python-argcomplete gita -s zsh)"
+
+#  Chezmoi
+compdef cm=chezmoi
 
 #  ----- Completion ----------------------------------------------------- }}}
 
