@@ -14,6 +14,12 @@ Reference material for the chezmoi dotfiles repo. Nothing here is deployed to th
 
 Timeless reference docs for chezmoi concepts. See **[cheatsheets/INDEX.md](cheatsheets/INDEX.md)** for detailed descriptions of each sheet.
 
+> **Browse with Docsify** — local doc site with sidebar nav and search:
+> ```bash
+> cd .research/cheatsheets && serve-current-dir 1234
+> # then open http://localhost:1234
+> ```
+
 - [Templates](cheatsheets/templates.md) — `{{ }}` syntax, conditionals, functions, real-world examples
 - [Run Scripts](cheatsheets/run-scripts.md) — `run_once_before_`, `run_onchange_after_`, execution order
 - [Secrets](cheatsheets/secrets.md) — rbw setup, template syntax for secrets, age as escape hatch
