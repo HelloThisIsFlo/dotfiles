@@ -18,6 +18,11 @@
     --accent: #0078d4;
     --accent-hover: #1c8ae6;
 
+    /* Accent text colors */
+    --current-text: #40c8ae;
+    --incoming-text: #40a6ff;
+    --comment: #6a9955;
+
     /* VS Code merge colors */
     --current-bg: rgba(64, 200, 174, 0.15);
     --current-border: rgba(64, 200, 174, 0.6);
@@ -177,13 +182,13 @@
   .diagram-side.left {
     background: rgba(64, 200, 174, 0.1);
     border: 2px solid var(--current-border);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .diagram-side.left .label { color: rgba(64, 200, 174, 0.6); }
   .diagram-side.right {
     background: rgba(64, 166, 255, 0.1);
     border: 2px solid var(--incoming-border);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
   .diagram-side.right .label { color: rgba(64, 166, 255, 0.6); }
 
@@ -251,11 +256,11 @@
   }
   .pane-header.current {
     background: var(--current-header);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .pane-header.incoming {
     background: var(--incoming-header);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
 
   .pane-label-tag {
@@ -268,11 +273,11 @@
   }
   .pane-label-tag.current {
     background: rgba(64, 200, 174, 0.2);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .pane-label-tag.incoming {
     background: rgba(64, 166, 255, 0.2);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
 
   .pane-content {
@@ -336,8 +341,8 @@
     cursor: default;
     opacity: 0.85;
   }
-  .accept-row .btn-current { color: #40c8ae; }
-  .accept-row .btn-incoming { color: #40a6ff; }
+  .accept-row .btn-current { color: var(--current-text); }
+  .accept-row .btn-incoming { color: var(--incoming-text); }
 
   /* Result pane */
   .result-pane {
@@ -636,6 +641,88 @@
   }
 
   /* Smooth scroll */
+  /* ===== LIGHT THEME ===== */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #ffffff;
+      --bg-editor: #ffffff;
+      --bg-panel: #f5f5f5;
+      --bg-titlebar: #e8e8e8;
+      --bg-sidebar: #ebebeb;
+      --border: #d4d4d4;
+      --text: #333333;
+      --text-dim: #777777;
+      --text-bright: #1a1a1a;
+      --accent: #005fb8;
+      --accent-hover: #0078d4;
+
+      --current-text: #0e8a72;
+      --incoming-text: #1a6fbf;
+      --comment: #008000;
+
+      --current-bg: rgba(14, 138, 114, 0.08);
+      --current-border: rgba(14, 138, 114, 0.4);
+      --current-header: rgba(14, 138, 114, 0.12);
+      --incoming-bg: rgba(26, 111, 191, 0.08);
+      --incoming-border: rgba(26, 111, 191, 0.4);
+      --incoming-header: rgba(26, 111, 191, 0.12);
+
+      --hl-green: rgba(40, 167, 69, 0.12);
+      --hl-green-strong: rgba(40, 167, 69, 0.22);
+      --hl-olive: rgba(40, 167, 69, 0.08);
+
+      --red: #c62828;
+      --green: #2e7d32;
+      --yellow: #f57f17;
+      --blue: #1565c0;
+      --orange: #d84315;
+      --purple: #7b1fa2;
+
+      --annotation-bg: rgba(245, 127, 23, 0.08);
+      --annotation-border: #f57f17;
+      --callout-bg: rgba(0, 95, 184, 0.05);
+      --callout-border: #005fb8;
+    }
+
+    .vscode-mock { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .diagram-side.left {
+      background: rgba(14, 138, 114, 0.06);
+    }
+    .diagram-side.left .label {
+      color: var(--current-text);
+    }
+    .diagram-side.right {
+      background: rgba(26, 111, 191, 0.06);
+    }
+    .diagram-side.right .label {
+      color: var(--incoming-text);
+    }
+    .pane-label-tag.current { background: rgba(14, 138, 114, 0.12); }
+    .pane-label-tag.incoming { background: rgba(26, 111, 191, 0.12); }
+    .accept-row {
+      background: rgba(0, 0, 0, 0.03);
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }
+    .tab-btn:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .annotation.warn {
+      background: rgba(198, 40, 40, 0.05);
+    }
+    .base-toggle .toggle-knob {
+      background: var(--text-dim);
+    }
+    .base-toggle .toggle-track.on .toggle-knob {
+      background: white;
+    }
+    .code-line.hl-green-strong {
+      border-left-color: rgba(40, 167, 69, 0.5);
+    }
+    .pointer-annotation {
+      text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+  }
+
   html { scroll-behavior: smooth; }
 
   /* Nav links */
@@ -664,7 +751,7 @@
   /* key-value annotations */
   .kv { color: var(--green); }
   .str { color: var(--orange); }
-  .comment { color: #6a9955; }
+  .comment { color: var(--comment); }
   .bracket { color: var(--text); }
 </style>
 </head>
@@ -700,14 +787,14 @@
       <svg viewBox="0 0 500 60" preserveAspectRatio="xMidYMid meet">
         <defs>
           <marker id="arrowL" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="#40c8ae"/>
+            <polygon points="0 0, 8 3, 0 6" style="fill: var(--current-text)"/>
           </marker>
           <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="#40a6ff"/>
+            <polygon points="0 0, 8 3, 0 6" style="fill: var(--incoming-text)"/>
           </marker>
         </defs>
-        <line x1="210" y1="2" x2="120" y2="52" stroke="#40c8ae" stroke-width="2" marker-end="url(#arrowL)" stroke-dasharray="4 3"/>
-        <line x1="290" y1="2" x2="380" y2="52" stroke="#40a6ff" stroke-width="2" marker-end="url(#arrowR)" stroke-dasharray="4 3"/>
+        <line x1="210" y1="2" x2="120" y2="52" style="stroke: var(--current-text)" stroke-width="2" marker-end="url(#arrowL)" stroke-dasharray="4 3"/>
+        <line x1="290" y1="2" x2="380" y2="52" style="stroke: var(--incoming-text)" stroke-width="2" marker-end="url(#arrowR)" stroke-dasharray="4 3"/>
         <text x="140" y="28" fill="#888" font-size="11" text-anchor="middle">diverged</text>
         <text x="360" y="28" fill="#888" font-size="11" text-anchor="middle">diverged</text>
       </svg>
@@ -771,7 +858,7 @@
         <span>Result &mdash; the chezmoi file that gets saved</span>
       </div>
       <div class="pane-content" style="min-height: 48px; display:flex; align-items:center; justify-content:center; color: var(--text-dim); font-style:italic; font-family: inherit; font-size: 0.85rem;">
-        Starts as a copy of the <strong style="color:#40c8ae;margin:0 4px;">left</strong> pane (chezmoi)
+        Starts as a copy of the <strong style="color:var(--current-text);margin:0 4px;">left</strong> pane (chezmoi)
       </div>
     </div>
   </div>
@@ -1052,12 +1139,12 @@
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
     <div style="background: rgba(64, 200, 174, 0.06); border: 1px solid rgba(64, 200, 174, 0.3); border-radius: 8px; padding: 20px; text-align: center;">
       <div style="font-size: 1.6rem; margin-bottom: 8px;">&#x2714;&#xfe0f;</div>
-      <div style="font-weight: 600; color: #40c8ae; margin-bottom: 6px;">Chezmoi changes</div>
+      <div style="font-weight: 600; color: var(--current-text); margin-bottom: 6px;">Chezmoi changes</div>
       <div style="font-size: 0.88rem; color: var(--text-dim);">Free. Already in the result. No action needed. Can be <strong style="color:var(--red);">easy to miss</strong> when reviewing.</div>
     </div>
     <div style="background: rgba(64, 166, 255, 0.06); border: 1px solid rgba(64, 166, 255, 0.3); border-radius: 8px; padding: 20px; text-align: center;">
       <div style="font-size: 1.6rem; margin-bottom: 8px;">&#x1f449;</div>
-      <div style="font-weight: 600; color: #40a6ff; margin-bottom: 6px;">Home changes</div>
+      <div style="font-weight: 600; color: var(--incoming-text); margin-bottom: 6px;">Home changes</div>
       <div style="font-size: 0.88rem; color: var(--text-dim);">Incoming. Need a click to accept. Always <strong>visible</strong> with Accept buttons and highlighting.</div>
     </div>
   </div>

@@ -18,6 +18,10 @@
     --accent: #0078d4;
     --accent-hover: #1c8ae6;
 
+    /* Accent text colors */
+    --current-text: #40c8ae;
+    --incoming-text: #40a6ff;
+
     /* VS Code merge colors */
     --current-bg: rgba(64, 200, 174, 0.15);
     --current-border: rgba(64, 200, 174, 0.6);
@@ -198,11 +202,11 @@
   }
   .editor-header.chezmoi {
     background: var(--current-header);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .editor-header.home {
     background: var(--incoming-header);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
   .editor-header .desc {
     font-weight: 400;
@@ -335,11 +339,11 @@
   }
   .pane-header.current {
     background: var(--current-header);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .pane-header.incoming {
     background: var(--incoming-header);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
 
   .pane-label-tag {
@@ -352,11 +356,11 @@
   }
   .pane-label-tag.current {
     background: rgba(64, 200, 174, 0.2);
-    color: #40c8ae;
+    color: var(--current-text);
   }
   .pane-label-tag.incoming {
     background: rgba(64, 166, 255, 0.2);
-    color: #40a6ff;
+    color: var(--incoming-text);
   }
 
   .pane-content {
@@ -425,8 +429,8 @@
     cursor: default;
     opacity: 0.85;
   }
-  .accept-row .btn-current { color: #40c8ae; }
-  .accept-row .btn-incoming { color: #40a6ff; }
+  .accept-row .btn-current { color: var(--current-text); }
+  .accept-row .btn-incoming { color: var(--incoming-text); }
 
   /* Result pane */
   .result-pane {
@@ -490,7 +494,7 @@
   }
   .accept-btn.chezmoi {
     background: rgba(64, 200, 174, 0.15);
-    color: #40c8ae;
+    color: var(--current-text);
     border: 1px solid rgba(64, 200, 174, 0.3);
   }
   .accept-btn.chezmoi:hover {
@@ -596,6 +600,86 @@
   @media (max-width: 900px) {
     .editor-layout { grid-template-columns: 1fr; }
     .vscode-panes { grid-template-columns: 1fr; }
+  }
+
+  /* ===== LIGHT THEME ===== */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #ffffff;
+      --bg-editor: #ffffff;
+      --bg-panel: #f5f5f5;
+      --bg-titlebar: #e8e8e8;
+      --bg-sidebar: #ebebeb;
+      --border: #d4d4d4;
+      --text: #333333;
+      --text-dim: #777777;
+      --text-bright: #1a1a1a;
+      --accent: #005fb8;
+      --accent-hover: #0078d4;
+
+      --current-text: #0e8a72;
+      --incoming-text: #1a6fbf;
+
+      --current-bg: rgba(14, 138, 114, 0.08);
+      --current-border: rgba(14, 138, 114, 0.4);
+      --current-header: rgba(14, 138, 114, 0.12);
+      --incoming-bg: rgba(26, 111, 191, 0.08);
+      --incoming-border: rgba(26, 111, 191, 0.4);
+      --incoming-header: rgba(26, 111, 191, 0.12);
+
+      --red: #c62828;
+      --green: #2e7d32;
+      --yellow: #f57f17;
+      --blue: #1565c0;
+      --orange: #d84315;
+
+      --conflict-bg: rgba(198, 40, 40, 0.06);
+    }
+
+    .vscode-mock { box-shadow: 0 4px 24px rgba(0,0,0,0.08); }
+    .editor-side.repo {
+      background: rgba(14, 138, 114, 0.03);
+      border-color: rgba(14, 138, 114, 0.2);
+    }
+    .editor-side.target {
+      background: rgba(26, 111, 191, 0.03);
+      border-color: rgba(26, 111, 191, 0.2);
+    }
+    .side-label.repo {
+      color: var(--current-text);
+      background: rgba(14, 138, 114, 0.08);
+    }
+    .side-label.target {
+      color: var(--incoming-text);
+      background: rgba(26, 111, 191, 0.08);
+    }
+    .pane-label-tag.current { background: rgba(14, 138, 114, 0.12); }
+    .pane-label-tag.incoming { background: rgba(26, 111, 191, 0.12); }
+    .accept-row {
+      background: rgba(0, 0, 0, 0.03);
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }
+    .accept-btn.home {
+      background: rgba(26, 111, 191, 0.08);
+      border-color: rgba(26, 111, 191, 0.2);
+    }
+    .accept-btn.home:hover {
+      background: rgba(26, 111, 191, 0.15);
+      border-color: rgba(26, 111, 191, 0.35);
+    }
+    .accept-btn.chezmoi {
+      background: rgba(14, 138, 114, 0.08);
+      border-color: rgba(14, 138, 114, 0.2);
+    }
+    .accept-btn.chezmoi:hover {
+      background: rgba(14, 138, 114, 0.15);
+      border-color: rgba(14, 138, 114, 0.35);
+    }
+    .preset-btn.active { background: rgba(0, 95, 184, 0.08); }
+    .editor-highlight-layer .hl-line.changed {
+      background: rgba(245, 127, 23, 0.1);
+      border-left-color: rgba(245, 127, 23, 0.4);
+    }
   }
 
   html { scroll-behavior: smooth; }
