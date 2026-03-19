@@ -140,6 +140,7 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
 
+- [ ] **Control Center:** `com.apple.controlcenter.plist` — back up macOS Control Center preferences via `defaults write` script. Also: audit other common macOS system plists worth backing up (Dock, Finder, NSGlobalDomain, keyboard/trackpad settings, etc.) and prompt Flo to decide which to include.
 - [ ] ShiftIt: `defaults write` for all `*KeyCode`/`*Modifiers` keys
 - [ ] Rocket: `defaults write` for trigger char, launch-at-login, use-fuzzy-search
 - [ ] Bartender: `defaults write` for `ProfileSettings.activeProfile`, `TriggerSettings`
