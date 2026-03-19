@@ -42,12 +42,13 @@
 
 [merge]
     # Use VS Code as a 3-way merge editor for conflicts.
-    # Merge args are evaluated at `chezmoi merge` time, not init time.
-    # Wrap in {{ "..." }} to pass through Go template processing literally.
+    # Init-time: {{ .chezmoi.sourceDir }} is baked into the generated config.
+    # Merge-time: {{ "{{ .Source }}" }} etc. are evaluated when `chezmoi merge` runs.
+    # Base is the last git-committed version (proper 3-way merge ancestor).
     command = "bash"
     args = [
         "-c",
-        '{{ "cp {{ .Target | quote }} {{ printf \"%s.base\" .Target | quote }} && code --new-window --wait --merge {{ .Destination | quote }} {{ .Target | quote }} {{ printf \"%s.base\" .Target | quote }} {{ .Source | quote }}" }}',
+        'SRCDIR={{ .chezmoi.sourceDir | quote }} && SRC={{ "{{ .Source | quote }}" }} && BASE={{ "{{ printf \"%s.base\" .Target | quote }}" }} && (git -C "$SRCDIR" show "HEAD:${SRC#$SRCDIR/}" > "$BASE" 2>/dev/null || cp {{ "{{ .Target | quote }}" }} "$BASE") && code --new-window --wait --merge {{ "{{ .Target | quote }}" }} {{ "{{ .Destination | quote }}" }} "$BASE" {{ "{{ .Source | quote }}" }}',
     ]
 
 
