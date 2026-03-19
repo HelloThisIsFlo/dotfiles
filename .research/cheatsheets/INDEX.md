@@ -89,12 +89,14 @@ Timeless reference material for chezmoi concepts, patterns, and configuration. E
 
 ## [Merge — 3-Way Conflict Resolution](chezmoi-merge.html)
 
-Interactive visual explainer (open in browser). Covers:
+Visual explainer (open in browser). Covers:
 - **When to merge** — vs apply (chezmoi wins) or re-add (home wins)
 - **3-way merge model** — base from git history, auto-resolution
 - **The counter-intuitive part** — lines that differ between panes may not show as conflicts
 - **VS Code layout** — left = chezmoi, right = home, result starts from left
 - **After merge** — you MUST `chezmoi apply` afterwards
+
+Also: **[Interactive merge simulator](chezmoi-merge-interactive.html)** — edit base/chezmoi/home and see the VS Code merge preview update in real-time. Great for experimenting with edge cases.
 
 ## [Status Columns](chezmoi-status.md)
 

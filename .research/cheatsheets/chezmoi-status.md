@@ -83,7 +83,7 @@ This tells you something important: chezmoi status is really just answering **"d
 
 > **Never `re-add` a `.tmpl` file.** It replaces template logic with rendered output. For templates, use `chezmoi merge` or manually edit the source. See [Templates cheat sheet](templates.md).
 
-For the full story on how 3-way merge works (especially the counter-intuitive auto-resolution behavior), see the [Merge visual explainer](chezmoi-merge.html) (open in browser).
+For the full story on how 3-way merge works (especially the counter-intuitive auto-resolution behavior), see the [Merge visual explainer](chezmoi-merge.html) or try the [Interactive merge simulator](chezmoi-merge-interactive.html) (open in browser).
 
 ---
 

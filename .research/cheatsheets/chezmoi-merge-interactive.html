@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chezmoi merge — Interactive Simulator</title>
+<style>
+  :root {
+    --bg: #1e1e1e;
+    --bg-editor: #1e1e1e;
+    --bg-panel: #252526;
+    --bg-titlebar: #2d2d2d;
+    --bg-sidebar: #333333;
+    --border: #3c3c3c;
+    --text: #cccccc;
+    --text-dim: #888888;
+    --text-bright: #e0e0e0;
+    --accent: #0078d4;
+    --accent-hover: #1c8ae6;
+
+    /* VS Code merge colors */
+    --current-bg: rgba(64, 200, 174, 0.15);
+    --current-border: rgba(64, 200, 174, 0.6);
+    --current-header: rgba(64, 200, 174, 0.3);
+    --incoming-bg: rgba(64, 166, 255, 0.15);
+    --incoming-border: rgba(64, 166, 255, 0.6);
+    --incoming-header: rgba(64, 166, 255, 0.3);
+
+    --red: #f14c4c;
+    --green: #89d185;
+    --yellow: #cca700;
+    --blue: #75beff;
+    --orange: #ce9178;
+
+    --conflict-bg: rgba(241, 76, 76, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  h1 code {
+    color: var(--blue);
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.9em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 1rem;
+    margin-bottom: 32px;
+  }
+
+  /* ===== PRESETS ===== */
+  .preset-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .preset-bar .label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-right: 4px;
+  }
+  .preset-btn {
+    padding: 6px 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .preset-btn:hover {
+    background: var(--bg-titlebar);
+    border-color: var(--accent);
+    color: var(--text-bright);
+  }
+  .preset-btn.active {
+    background: rgba(0, 120, 212, 0.15);
+    border-color: var(--accent);
+    color: var(--blue);
+  }
+
+  /* ===== EDITOR LAYOUT ===== */
+  .editor-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .editor-side {
+    border: 1px dashed rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 16px;
+    position: relative;
+  }
+  .editor-side.repo {
+    background: rgba(64, 200, 174, 0.02);
+    border-color: rgba(64, 200, 174, 0.12);
+  }
+  .editor-side.target {
+    background: rgba(64, 166, 255, 0.02);
+    border-color: rgba(64, 166, 255, 0.12);
+  }
+
+  .side-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .side-label.repo {
+    color: rgba(64, 200, 174, 0.5);
+    background: rgba(64, 200, 174, 0.06);
+  }
+  .side-label.target {
+    color: rgba(64, 166, 255, 0.5);
+    background: rgba(64, 166, 255, 0.06);
+  }
+
+  .editor-side .editors-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* The target side vertically centers its editor to align with chezmoi */
+  .editor-side.target {
+    display: flex;
+    flex-direction: column;
+  }
+  .editor-side.target .editors-stack {
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  /* Divergence arrow between base and chezmoi */
+  .diverge-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    gap: 6px;
+  }
+  .diverge-arrow .arrow-char {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .editor-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .editor-header {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .editor-header.base {
+    background: rgba(204, 167, 0, 0.08);
+    color: var(--yellow);
+  }
+  .editor-header.chezmoi {
+    background: var(--current-header);
+    color: #40c8ae;
+  }
+  .editor-header.home {
+    background: var(--incoming-header);
+    color: #40a6ff;
+  }
+  .editor-header .desc {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  /* Textarea + highlight overlay container */
+  .editor-textarea-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .editor-highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    padding: 10px 12px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
+    tab-size: 2;
+  }
+  .editor-highlight-layer .hl-line {
+    display: block;
+    margin: 0 -12px;
+    padding: 0 12px;
+  }
+  .editor-highlight-layer .hl-line.changed {
+    background: rgba(204, 167, 0, 0.12);
+    border-left: 2px solid rgba(204, 167, 0, 0.5);
+    padding-left: 10px;
+  }
+
+  .editor-box textarea {
+    width: 100%;
+    min-height: 140px;
+    background: transparent;
+    color: var(--text);
+    border: none;
+    padding: 10px 12px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    tab-size: 2;
+    position: relative;
+    z-index: 1;
+  }
+  .editor-box textarea::placeholder {
+    color: var(--text-dim);
+  }
+
+  /* Base textarea doesn't need transparent bg — nothing to highlight */
+  .editor-box textarea.base-textarea {
+    background: var(--bg-editor);
+  }
+
+  /* ===== MERGE PREVIEW ===== */
+  .preview-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .preview-label .arrow {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+  }
+
+  .vscode-mock {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--bg-editor);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .vscode-titlebar {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--bg-titlebar);
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .vscode-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .vscode-dots span {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .vscode-dots .r { background: #ff5f57; }
+  .vscode-dots .y { background: #febc2e; }
+  .vscode-dots .g { background: #28c840; }
+
+  .vscode-panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vscode-pane {
+    border-right: 1px solid var(--border);
+    min-height: 0;
+  }
+  .vscode-pane:last-child { border-right: none; }
+
+  .pane-header {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pane-header.current {
+    background: var(--current-header);
+    color: #40c8ae;
+  }
+  .pane-header.incoming {
+    background: var(--incoming-header);
+    color: #40a6ff;
+  }
+
+  .pane-label-tag {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pane-label-tag.current {
+    background: rgba(64, 200, 174, 0.2);
+    color: #40c8ae;
+  }
+  .pane-label-tag.incoming {
+    background: rgba(64, 166, 255, 0.2);
+    color: #40a6ff;
+  }
+
+  .pane-content {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    padding: 0;
+    min-height: 40px;
+  }
+
+  .code-line {
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+    position: relative;
+    white-space: pre;
+  }
+  .code-line .ln {
+    color: var(--text-dim);
+    width: 24px;
+    text-align: right;
+    margin-right: 12px;
+    font-size: 0.75rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .code-line .code {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .code-line.hl-current {
+    background: var(--current-bg);
+    border-left: 3px solid var(--current-border);
+    padding-left: 9px;
+  }
+  .code-line.hl-incoming {
+    background: var(--incoming-bg);
+    border-left: 3px solid var(--incoming-border);
+    padding-left: 9px;
+  }
+  .code-line.hl-conflict-current {
+    background: var(--current-bg);
+    border-left: 3px solid var(--current-border);
+    padding-left: 9px;
+  }
+  .code-line.hl-conflict-incoming {
+    background: var(--incoming-bg);
+    border-left: 3px solid var(--incoming-border);
+    padding-left: 9px;
+  }
+
+  /* Accept buttons row */
+  .accept-row {
+    padding: 2px 12px;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: 10px;
+    background: rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(60,60,60,0.5);
+  }
+  .accept-row span {
+    cursor: default;
+    opacity: 0.85;
+  }
+  .accept-row .btn-current { color: #40c8ae; }
+  .accept-row .btn-incoming { color: #40a6ff; }
+
+  /* Result pane */
+  .result-pane {
+    border-top: 1px solid var(--border);
+  }
+  .result-header {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--bg-titlebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-badge {
+    font-size: 0.7rem;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .result-badge.conflict {
+    background: rgba(241, 76, 76, 0.15);
+    color: var(--red);
+  }
+  .result-badge.ok {
+    background: rgba(137, 209, 133, 0.15);
+    color: var(--green);
+  }
+
+  /* Result line states */
+  .code-line.result-conflict {
+    background: var(--conflict-bg);
+  }
+  .code-line.result-accepted {
+    background: rgba(137, 209, 133, 0.08);
+  }
+
+  /* Accept button in result */
+  .accept-btn {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 1px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 12px;
+    transition: all 0.15s;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .accept-btn.home {
+    background: rgba(64, 166, 255, 0.15);
+    color: var(--blue);
+    border: 1px solid rgba(64, 166, 255, 0.3);
+  }
+  .accept-btn.home:hover {
+    background: rgba(64, 166, 255, 0.3);
+    border-color: rgba(64, 166, 255, 0.6);
+  }
+  .accept-btn.chezmoi {
+    background: rgba(64, 200, 174, 0.15);
+    color: #40c8ae;
+    border: 1px solid rgba(64, 200, 174, 0.3);
+  }
+  .accept-btn.chezmoi:hover {
+    background: rgba(64, 200, 174, 0.3);
+    border-color: rgba(64, 200, 174, 0.6);
+  }
+  .accept-btn.undo {
+    background: rgba(136, 136, 136, 0.1);
+    color: var(--text-dim);
+    border: 1px solid rgba(136, 136, 136, 0.2);
+    font-size: 0.65rem;
+  }
+  .accept-btn.undo:hover {
+    background: rgba(136, 136, 136, 0.2);
+  }
+
+  .accepted-label {
+    font-size: 0.7rem;
+    color: var(--green);
+    margin-left: 12px;
+    font-style: italic;
+    flex-shrink: 0;
+  }
+
+  /* ===== LINE CATEGORY BADGES ===== */
+  .line-badge {
+    font-size: 0.65rem;
+    padding: 0px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-left: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .line-badge.invisible {
+    background: rgba(136, 136, 136, 0.12);
+    color: var(--text-dim);
+  }
+  .line-badge.accept {
+    background: rgba(64, 166, 255, 0.15);
+    color: var(--blue);
+  }
+  .line-badge.conflict {
+    background: rgba(241, 76, 76, 0.15);
+    color: var(--red);
+  }
+
+  /* ===== LEGEND ===== */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0 0 32px;
+    font-size: 0.8rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .legend-swatch.unchanged { background: transparent; border: 1px solid var(--border); }
+  .legend-swatch.chezmoi-only { background: transparent; border: 1px dashed var(--text-dim); position: relative; }
+  .legend-swatch.chezmoi-only::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px dashed var(--text-dim); }
+  .legend-swatch.home-only { background: var(--incoming-bg); border-left: 3px solid var(--incoming-border); }
+  .legend-swatch.conflict-swatch { background: linear-gradient(135deg, var(--current-bg) 50%, var(--incoming-bg) 50%); border: 1px solid var(--red); }
+
+  /* ===== ANNOTATION ===== */
+  .annotation {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 20px 0;
+    padding: 14px 16px;
+    border-radius: 6px;
+    border-left: 3px solid;
+    font-size: 0.88rem;
+  }
+  .annotation.insight {
+    background: rgba(255, 200, 50, 0.08);
+    border-color: var(--yellow);
+  }
+  .annotation.info {
+    background: rgba(0, 120, 212, 0.06);
+    border-color: var(--accent);
+  }
+  .annotation-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .annotation strong { color: var(--text-bright); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .editor-layout { grid-template-columns: 1fr; }
+    .vscode-panes { grid-template-columns: 1fr; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1><code>chezmoi merge</code> Interactive Simulator</h1>
+  <p class="subtitle">Edit the three versions below and watch the VS Code merge preview update in real-time.</p>
+
+  <div class="annotation info">
+    <span class="annotation-icon">&#x1f4a1;</span>
+    <div><strong>How it works:</strong> Each line is compared against the <strong>base</strong> (not against the other pane). Chezmoi's changes are already in the result &mdash; invisible. Home's changes need explicit acceptance. Edit any text area to see the merge rules in action.</div>
+  </div>
+
+  <!-- Presets -->
+  <div class="preset-bar">
+    <span class="label">Load preset:</span>
+    <button class="preset-btn active" onclick="loadPreset('scenario1', this)">Scenario 1: Different Lines</button>
+    <button class="preset-btn" onclick="loadPreset('scenario2', this)">Scenario 2: Same Line Conflict</button>
+    <button class="preset-btn" onclick="loadPreset('blank', this)">Blank Slate</button>
+  </div>
+
+  <!-- Editor text areas — repo side (base + chezmoi) and target side (home) -->
+  <div class="editor-layout">
+    <div class="editor-side repo">
+      <span class="side-label repo">repo side</span>
+      <div class="editors-stack">
+        <div class="editor-box">
+          <div class="editor-header base">
+            Base <span class="desc">&mdash; last committed version</span>
+          </div>
+          <textarea id="base" class="base-textarea" spellcheck="false" placeholder="Enter the base (committed) version..."></textarea>
+        </div>
+        <div class="diverge-arrow">
+          <span class="arrow-char">&#x2193;</span> diverged
+        </div>
+        <div class="editor-box">
+          <div class="editor-header chezmoi">
+            Chezmoi <span class="desc">&mdash; what's in the repo now</span>
+          </div>
+          <div class="editor-textarea-wrap">
+            <div class="editor-highlight-layer" id="hl-chezmoi"></div>
+            <textarea id="chezmoi" spellcheck="false" placeholder="Enter the chezmoi (repo) version..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="editor-side target">
+      <span class="side-label target">target side</span>
+      <div class="editors-stack">
+        <div class="editor-box">
+          <div class="editor-header home">
+            Home <span class="desc">&mdash; what's at ~/</span>
+          </div>
+          <div class="editor-textarea-wrap">
+            <div class="editor-highlight-layer" id="hl-home"></div>
+            <textarea id="home" spellcheck="false" placeholder="Enter the home (~/) version..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch unchanged"></div> Unchanged</div>
+    <div class="legend-item"><div class="legend-swatch chezmoi-only"></div> Chezmoi only (invisible auto-resolve)</div>
+    <div class="legend-item"><div class="legend-swatch home-only"></div> Home only (needs Accept)</div>
+    <div class="legend-item"><div class="legend-swatch conflict-swatch"></div> Conflict (both changed)</div>
+  </div>
+
+  <!-- Merge preview -->
+  <div class="preview-label">
+    <span class="arrow">&#x25BC;</span> VS Code Merge Preview <span style="font-weight:400; color:var(--text-dim); font-size:0.82rem;">&mdash; updates as you type</span>
+  </div>
+
+  <div class="vscode-mock">
+    <div class="vscode-titlebar">
+      <div class="vscode-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+      <span>config.toml &mdash; 3-way Merge Editor</span>
+    </div>
+
+    <div class="vscode-panes">
+      <!-- LEFT: chezmoi -->
+      <div class="vscode-pane">
+        <div class="pane-header current">
+          <span class="pane-label-tag current">Current</span>
+          chezmoi &mdash; what chezmoi wants
+        </div>
+        <div class="pane-content" id="pane-chezmoi"></div>
+      </div>
+      <!-- RIGHT: home -->
+      <div class="vscode-pane">
+        <div class="pane-header incoming">
+          <span class="pane-label-tag incoming">Incoming</span>
+          home &mdash; what's at ~/
+        </div>
+        <div class="pane-content" id="pane-home"></div>
+      </div>
+    </div>
+
+    <div class="result-pane">
+      <div class="result-header">
+        <span>Result &mdash; saved to chezmoi after merge</span>
+        <span id="result-badge"></span>
+      </div>
+      <div class="pane-content" id="pane-result"></div>
+    </div>
+  </div>
+
+  <div class="annotation insight" style="margin-top: 24px;">
+    <span class="annotation-icon">&#x1f50d;</span>
+    <div><strong>Try it:</strong> In Scenario 1, change the <code>theme</code> value in the Home editor to match chezmoi's value. Watch the invisible auto-resolve disappear &mdash; now all three agree. Then change Home's <code>theme</code> to something different from <em>both</em> base and chezmoi &mdash; it becomes a conflict.</div>
+  </div>
+
+</div>
+
+<script>
+// ===== PRESETS =====
+const PRESETS = {
+  scenario1: {
+    base: [
+      '# --- Display ---',
+      'theme = "gruvbox"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "docker"]',
+    ].join('\n'),
+    chezmoi: [
+      '# --- Display ---',
+      'theme = "catppuccin"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "docker"]',
+    ].join('\n'),
+    home: [
+      '# --- Display ---',
+      'theme = "gruvbox"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "k8s"]',
+    ].join('\n'),
+  },
+  scenario2: {
+    base: [
+      '# --- Display ---',
+      'theme = "gruvbox"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "docker"]',
+    ].join('\n'),
+    chezmoi: [
+      '# --- Display ---',
+      'theme = "catppuccin"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "docker"]',
+    ].join('\n'),
+    home: [
+      '# --- Display ---',
+      'theme = "tokyo-night"',
+      'show_sidebar = true',
+      '# --- Plugins ---',
+      'plugins = ["core", "git", "docker"]',
+    ].join('\n'),
+  },
+  blank: {
+    base: '',
+    chezmoi: '',
+    home: '',
+  },
+};
+
+// ===== STATE =====
+// Track which result lines the user has accepted (by line index)
+// Values: null (no action), 'home', 'chezmoi'
+let acceptedLines = {};
+
+// ===== DOM REFS =====
+const baseEl = document.getElementById('base');
+const chezmoiEl = document.getElementById('chezmoi');
+const homeEl = document.getElementById('home');
+const paneChezmoi = document.getElementById('pane-chezmoi');
+const paneHome = document.getElementById('pane-home');
+const paneResult = document.getElementById('pane-result');
+const resultBadge = document.getElementById('result-badge');
+const hlChezmoi = document.getElementById('hl-chezmoi');
+const hlHome = document.getElementById('hl-home');
+
+// ===== HELPERS =====
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function splitLines(text) {
+  if (text === '') return [];
+  return text.split('\n');
+}
+
+// ===== EDITOR HIGHLIGHT OVERLAYS =====
+// Highlights lines in chezmoi/home editors that differ from base (yellow tint)
+function renderEditorHighlights() {
+  const baseLines = splitLines(baseEl.value);
+  const chezmoiLines = splitLines(chezmoiEl.value);
+  const homeLines = splitLines(homeEl.value);
+
+  // Build highlight HTML for chezmoi editor
+  let chezHl = '';
+  for (let i = 0; i < chezmoiLines.length; i++) {
+    const base = i < baseLines.length ? baseLines[i] : undefined;
+    const changed = chezmoiLines[i] !== base;
+    // Use invisible character so line takes up correct height
+    chezHl += `<span class="hl-line${changed ? ' changed' : ''}">${escapeHtml(chezmoiLines[i]) || ' '}\n</span>`;
+  }
+  hlChezmoi.innerHTML = chezHl;
+
+  // Build highlight HTML for home editor
+  let homeHl = '';
+  for (let i = 0; i < homeLines.length; i++) {
+    const base = i < baseLines.length ? baseLines[i] : undefined;
+    const changed = homeLines[i] !== base;
+    homeHl += `<span class="hl-line${changed ? ' changed' : ''}">${escapeHtml(homeLines[i]) || ' '}\n</span>`;
+  }
+  hlHome.innerHTML = homeHl;
+
+  // Sync scroll position of highlight layer with textarea
+  syncHighlightScroll();
+}
+
+function syncHighlightScroll() {
+  hlChezmoi.scrollTop = chezmoiEl.scrollTop;
+  hlHome.scrollTop = homeEl.scrollTop;
+}
+
+// ===== MERGE LOGIC =====
+function computeMerge() {
+  const baseLines = splitLines(baseEl.value);
+  const chezmoiLines = splitLines(chezmoiEl.value);
+  const homeLines = splitLines(homeEl.value);
+
+  const maxLen = Math.max(baseLines.length, chezmoiLines.length, homeLines.length);
+
+  // Build line-by-line analysis
+  const analysis = [];
+  for (let i = 0; i < maxLen; i++) {
+    const b = i < baseLines.length ? baseLines[i] : undefined;
+    const c = i < chezmoiLines.length ? chezmoiLines[i] : undefined;
+    const h = i < homeLines.length ? homeLines[i] : undefined;
+
+    const chezmoiChanged = c !== b;
+    const homeChanged = h !== b;
+
+    let type;
+    if (chezmoiChanged && homeChanged) {
+      // Both changed — but if they changed to the same thing, it's auto-resolved
+      if (c === h) {
+        type = 'both-same'; // Both changed identically — no conflict
+      } else {
+        type = 'conflict';
+      }
+    } else if (chezmoiChanged && !homeChanged) {
+      type = 'chezmoi-only';
+    } else if (!chezmoiChanged && homeChanged) {
+      type = 'home-only';
+    } else {
+      type = 'unchanged';
+    }
+
+    analysis.push({
+      index: i,
+      base: b,
+      chezmoi: c,
+      home: h,
+      type: type,
+      chezmoiExists: i < chezmoiLines.length,
+      homeExists: i < homeLines.length,
+      baseExists: i < baseLines.length,
+    });
+  }
+
+  return analysis;
+}
+
+// ===== RENDER =====
+function render() {
+  const analysis = computeMerge();
+
+  let chezmoiHtml = '';
+  let homeHtml = '';
+  let resultHtml = '';
+  let conflictCount = 0;
+  let homeOnlyCount = 0;
+
+  for (const line of analysis) {
+    const ln = line.index + 1;
+    const cText = line.chezmoiExists ? escapeHtml(line.chezmoi) : '<span style="color:var(--text-dim);font-style:italic;">(no line)</span>';
+    const hText = line.homeExists ? escapeHtml(line.home) : '<span style="color:var(--text-dim);font-style:italic;">(no line)</span>';
+    const bText = line.baseExists ? escapeHtml(line.base) : '';
+
+    const accepted = acceptedLines[line.index] || null;
+
+    if (line.type === 'unchanged') {
+      // No highlighting anywhere
+      chezmoiHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span></div>`;
+      homeHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${hText}</span></div>`;
+      resultHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span></div>`;
+
+    } else if (line.type === 'chezmoi-only') {
+      // Chezmoi changed, home didn't — INVISIBLE. No highlighting.
+      // But we add a subtle badge so the user can see what's happening in simulator mode.
+      chezmoiHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="line-badge invisible">invisible</span></div>`;
+      homeHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${hText}</span></div>`;
+      // Result has chezmoi's version (auto-resolved)
+      resultHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span><span style="color:var(--text-dim);font-size:0.7rem;margin-left:12px;font-style:italic;">auto-resolved (chezmoi)</span></div>`;
+
+    } else if (line.type === 'home-only') {
+      // Home changed, chezmoi didn't — highlighted with Accept buttons
+      homeOnlyCount++;
+
+      // Accept row above the highlighted lines
+      chezmoiHtml += renderAcceptRow();
+      chezmoiHtml += `<div class="code-line hl-current"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="line-badge accept">accept needed</span></div>`;
+
+      homeHtml += renderAcceptRow();
+      homeHtml += `<div class="code-line hl-incoming"><span class="ln">${ln}</span><span class="code">${hText}</span><span class="line-badge accept">accept needed</span></div>`;
+
+      // Result: shows chezmoi's version (base) with option to accept home's
+      if (accepted === 'home') {
+        const displayText = line.homeExists ? escapeHtml(line.home) : '';
+        resultHtml += `<div class="code-line result-accepted"><span class="ln">${ln}</span><span class="code">${displayText}</span><span class="accepted-label">accepted (home)</span><span class="accept-btn undo" onclick="undoAccept(${line.index})">undo</span></div>`;
+      } else {
+        resultHtml += `<div class="code-line result-conflict"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="accept-btn home" onclick="acceptLine(${line.index}, 'home')">Accept Home</span></div>`;
+      }
+
+    } else if (line.type === 'both-same') {
+      // Both changed to the same value — auto-resolved, no conflict
+      chezmoiHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span></div>`;
+      homeHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${hText}</span></div>`;
+      resultHtml += `<div class="code-line"><span class="ln">${ln}</span><span class="code">${cText}</span><span style="color:var(--text-dim);font-size:0.7rem;margin-left:12px;font-style:italic;">auto-resolved (both agree)</span></div>`;
+
+    } else if (line.type === 'conflict') {
+      // Both changed differently — real conflict
+      conflictCount++;
+
+      chezmoiHtml += renderAcceptRow();
+      chezmoiHtml += `<div class="code-line hl-conflict-current"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="line-badge conflict">conflict</span></div>`;
+
+      homeHtml += renderAcceptRow();
+      homeHtml += `<div class="code-line hl-conflict-incoming"><span class="ln">${ln}</span><span class="code">${hText}</span><span class="line-badge conflict">conflict</span></div>`;
+
+      // Result: show conflict state or accepted state
+      if (accepted === 'home') {
+        const displayText = line.homeExists ? escapeHtml(line.home) : '';
+        resultHtml += `<div class="code-line result-accepted"><span class="ln">${ln}</span><span class="code">${displayText}</span><span class="accepted-label">accepted (home)</span><span class="accept-btn undo" onclick="undoAccept(${line.index})">undo</span></div>`;
+      } else if (accepted === 'chezmoi') {
+        resultHtml += `<div class="code-line result-accepted"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="accepted-label">accepted (chezmoi)</span><span class="accept-btn undo" onclick="undoAccept(${line.index})">undo</span></div>`;
+      } else {
+        resultHtml += `<div class="code-line result-conflict"><span class="ln">${ln}</span><span class="code">${cText}</span><span class="accept-btn chezmoi" onclick="acceptLine(${line.index}, 'chezmoi')">Accept Chezmoi</span><span class="accept-btn home" onclick="acceptLine(${line.index}, 'home')">Accept Home</span></div>`;
+      }
+    }
+  }
+
+  // Empty state
+  if (analysis.length === 0) {
+    const emptyMsg = '<div style="padding:16px;color:var(--text-dim);font-style:italic;font-family:inherit;font-size:0.85rem;">Enter text in the editors above to see the merge preview</div>';
+    chezmoiHtml = emptyMsg;
+    homeHtml = emptyMsg;
+    resultHtml = emptyMsg;
+  }
+
+  paneChezmoi.innerHTML = chezmoiHtml;
+  paneHome.innerHTML = homeHtml;
+  paneResult.innerHTML = resultHtml;
+
+  // Update editor highlight overlays
+  renderEditorHighlights();
+
+  // Count unresolved: conflicts + unaccepted home-only
+  const unresolvedConflicts = analysis.filter(l => l.type === 'conflict' && !acceptedLines[l.index]).length;
+  const unresolvedHome = analysis.filter(l => l.type === 'home-only' && !acceptedLines[l.index]).length;
+  const totalUnresolved = unresolvedConflicts + unresolvedHome;
+
+  if (analysis.length === 0) {
+    resultBadge.innerHTML = '';
+  } else if (totalUnresolved === 0) {
+    resultBadge.innerHTML = '<span class="result-badge ok">all resolved</span>';
+  } else {
+    const parts = [];
+    if (unresolvedConflicts > 0) parts.push(`${unresolvedConflicts} conflict${unresolvedConflicts > 1 ? 's' : ''}`);
+    if (unresolvedHome > 0) parts.push(`${unresolvedHome} pending accept`);
+    resultBadge.innerHTML = `<span class="result-badge conflict">${parts.join(', ')}</span>`;
+  }
+}
+
+function renderAcceptRow() {
+  return `<div class="accept-row">
+    <span class="btn-current">Accept Current Change</span>
+    <span>|</span>
+    <span class="btn-incoming">Accept Incoming Change</span>
+    <span>|</span>
+    <span>Accept Both</span>
+  </div>`;
+}
+
+// ===== ACCEPT / UNDO =====
+function acceptLine(index, side) {
+  acceptedLines[index] = side;
+  render();
+}
+
+function undoAccept(index) {
+  delete acceptedLines[index];
+  render();
+}
+
+// ===== PRESET LOADING =====
+function loadPreset(name, btn) {
+  const preset = PRESETS[name];
+  baseEl.value = preset.base;
+  chezmoiEl.value = preset.chezmoi;
+  homeEl.value = preset.home;
+  acceptedLines = {};
+
+  // Update active button
+  if (btn) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  render();
+}
+
+// ===== EVENT LISTENERS =====
+baseEl.addEventListener('input', () => { acceptedLines = {}; render(); });
+chezmoiEl.addEventListener('input', () => { acceptedLines = {}; render(); });
+homeEl.addEventListener('input', () => { acceptedLines = {}; render(); });
+
+// Sync highlight scroll on textarea scroll
+chezmoiEl.addEventListener('scroll', () => { hlChezmoi.scrollTop = chezmoiEl.scrollTop; });
+homeEl.addEventListener('scroll', () => { hlHome.scrollTop = homeEl.scrollTop; });
+
+// ===== INIT =====
+loadPreset('scenario1');
+</script>
+
+</body>
+</html>
