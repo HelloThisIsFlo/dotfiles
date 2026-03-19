@@ -87,16 +87,16 @@ Timeless reference material for chezmoi concepts, patterns, and configuration. E
 - **Event types** — `read-source-state`, command-specific, `git-auto-commit`, `git-auto-push`
 - **When NOT to use** — prefer run scripts for most post-apply tasks
 
-## [Merge — 3-Way Conflict Resolution](merge.md)
+## [Merge — 3-Way Conflict Resolution](chezmoi-merge.html)
 
-- **When to merge** — vs apply (source wins) or re-add (disk wins)
-- **3-way merge model** — base from git history, auto-resolution of one-sided changes
-- **The counter-intuitive part** — lines that differ between panes may not show as conflicts (one side matches base)
-- **VS Code layout** — left = source, right = disk, result = source file
-- **After merge** — you MUST `chezmoi apply` afterwards (merge only edits source)
-- **Caveats** — uncommitted files degrade to 2-way merge
+Interactive visual explainer (open in browser). Covers:
+- **When to merge** — vs apply (chezmoi wins) or re-add (home wins)
+- **3-way merge model** — base from git history, auto-resolution
+- **The counter-intuitive part** — lines that differ between panes may not show as conflicts
+- **VS Code layout** — left = chezmoi, right = home, result starts from left
+- **After merge** — you MUST `chezmoi apply` afterwards
 
-## [Status Columns (WIP)](WIP-chezmoi-status.md)
+## [Status Columns](chezmoi-status.md)
 
 - **Common misconception** — columns are NOT "source changed" vs "target changed"
 - **Column 1** — last-applied state vs actual disk state (what changed since last apply)

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>chezmoi merge — Visual Explainer</title>
+<style>
+  :root {
+    --bg: #1e1e1e;
+    --bg-editor: #1e1e1e;
+    --bg-panel: #252526;
+    --bg-titlebar: #2d2d2d;
+    --bg-sidebar: #333333;
+    --border: #3c3c3c;
+    --text: #cccccc;
+    --text-dim: #888888;
+    --text-bright: #e0e0e0;
+    --accent: #0078d4;
+    --accent-hover: #1c8ae6;
+
+    /* VS Code merge colors */
+    --current-bg: rgba(64, 200, 174, 0.15);
+    --current-border: rgba(64, 200, 174, 0.6);
+    --current-header: rgba(64, 200, 174, 0.3);
+    --incoming-bg: rgba(64, 166, 255, 0.15);
+    --incoming-border: rgba(64, 166, 255, 0.6);
+    --incoming-header: rgba(64, 166, 255, 0.3);
+
+    /* Highlighted line in diff */
+    --hl-green: rgba(155, 185, 85, 0.2);
+    --hl-green-strong: rgba(155, 185, 85, 0.35);
+    --hl-olive: rgba(155, 185, 85, 0.15);
+
+    --red: #f14c4c;
+    --green: #89d185;
+    --yellow: #cca700;
+    --blue: #75beff;
+    --orange: #ce9178;
+    --purple: #c586c0;
+
+    --annotation-bg: rgba(255, 200, 50, 0.12);
+    --annotation-border: #cca700;
+    --callout-bg: rgba(0, 120, 212, 0.08);
+    --callout-border: #0078d4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== LAYOUT ===== */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  h1 code {
+    color: var(--blue);
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.9em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-top: 56px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 .num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.9em;
+    background: var(--bg-panel);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--orange);
+  }
+
+  /* ===== THREE-WAY DIAGRAM ===== */
+  .diagram-section {
+    margin: 32px 0;
+  }
+
+  .three-way-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 32px 16px;
+    background: var(--bg-panel);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+
+  .diagram-base {
+    background: var(--bg-titlebar);
+    border: 2px solid var(--yellow);
+    border-radius: 8px;
+    padding: 14px 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--yellow);
+    position: relative;
+  }
+  .diagram-base .label { font-size: 0.85rem; color: var(--text-dim); display: block; font-weight: 400; }
+
+  .diagram-arrows {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 500px;
+    height: 60px;
+    position: relative;
+  }
+  .diagram-arrows svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .diagram-sides {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .diagram-side {
+    border-radius: 8px;
+    padding: 14px 24px;
+    text-align: center;
+    font-weight: 600;
+    min-width: 180px;
+  }
+  .diagram-side .label { font-size: 0.85rem; display: block; font-weight: 400; }
+  .diagram-side.left {
+    background: rgba(64, 200, 174, 0.1);
+    border: 2px solid var(--current-border);
+    color: #40c8ae;
+  }
+  .diagram-side.left .label { color: rgba(64, 200, 174, 0.6); }
+  .diagram-side.right {
+    background: rgba(64, 166, 255, 0.1);
+    border: 2px solid var(--incoming-border);
+    color: #40a6ff;
+  }
+  .diagram-side.right .label { color: rgba(64, 166, 255, 0.6); }
+
+  .diagram-caption {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 480px;
+  }
+
+  /* ===== VS CODE MOCK ===== */
+  .vscode-mock {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 24px 0;
+    background: var(--bg-editor);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+
+  .vscode-titlebar {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: var(--bg-titlebar);
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+  .vscode-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .vscode-dots span {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .vscode-dots .r { background: #ff5f57; }
+  .vscode-dots .y { background: #febc2e; }
+  .vscode-dots .g { background: #28c840; }
+
+  .vscode-panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vscode-pane {
+    border-right: 1px solid var(--border);
+    min-height: 0;
+  }
+  .vscode-pane:last-child { border-right: none; }
+
+  .pane-header {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pane-header.current {
+    background: var(--current-header);
+    color: #40c8ae;
+  }
+  .pane-header.incoming {
+    background: var(--incoming-header);
+    color: #40a6ff;
+  }
+
+  .pane-label-tag {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pane-label-tag.current {
+    background: rgba(64, 200, 174, 0.2);
+    color: #40c8ae;
+  }
+  .pane-label-tag.incoming {
+    background: rgba(64, 166, 255, 0.2);
+    color: #40a6ff;
+  }
+
+  .pane-content {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    padding: 0;
+  }
+
+  .code-line {
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    min-height: 24px;
+    position: relative;
+    white-space: pre;
+  }
+  .code-line .ln {
+    color: var(--text-dim);
+    width: 24px;
+    text-align: right;
+    margin-right: 12px;
+    font-size: 0.75rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .code-line .code {
+    flex: 1;
+  }
+
+  .code-line.hl-current {
+    background: var(--current-bg);
+    border-left: 3px solid var(--current-border);
+    padding-left: 9px;
+  }
+  .code-line.hl-incoming {
+    background: var(--incoming-bg);
+    border-left: 3px solid var(--incoming-border);
+    padding-left: 9px;
+  }
+  .code-line.hl-green {
+    background: var(--hl-green);
+  }
+  .code-line.hl-green-strong {
+    background: var(--hl-green-strong);
+    border-left: 3px solid rgba(155, 185, 85, 0.6);
+    padding-left: 9px;
+  }
+
+  /* Accept buttons */
+  .accept-row {
+    padding: 2px 12px;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    display: flex;
+    gap: 10px;
+    background: rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(60,60,60,0.5);
+  }
+  .accept-row span {
+    cursor: default;
+    opacity: 0.85;
+  }
+  .accept-row .btn-current { color: #40c8ae; }
+  .accept-row .btn-incoming { color: #40a6ff; }
+
+  /* Result pane */
+  .result-pane {
+    border-top: 1px solid var(--border);
+  }
+  .result-header {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--bg-titlebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .result-badge {
+    font-size: 0.7rem;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .result-badge.conflict {
+    background: rgba(241, 76, 76, 0.15);
+    color: var(--red);
+  }
+  .result-badge.ok {
+    background: rgba(137, 209, 133, 0.15);
+    color: var(--green);
+  }
+
+  /* ===== ANNOTATION CALLOUT ===== */
+  .annotation {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 16px 0;
+    padding: 14px 16px;
+    border-radius: 6px;
+    border-left: 3px solid;
+    font-size: 0.92rem;
+  }
+  .annotation.insight {
+    background: var(--annotation-bg);
+    border-color: var(--annotation-border);
+  }
+  .annotation.info {
+    background: var(--callout-bg);
+    border-color: var(--callout-border);
+  }
+  .annotation.warn {
+    background: rgba(241, 76, 76, 0.06);
+    border-color: var(--red);
+  }
+  .annotation-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .annotation strong { color: var(--text-bright); }
+
+  /* ===== POINTER ANNOTATIONS on mock ===== */
+  .mock-wrapper {
+    position: relative;
+  }
+  .pointer-annotation {
+    position: absolute;
+    font-size: 0.78rem;
+    color: var(--yellow);
+    font-weight: 600;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  }
+  .pointer-annotation .arrow {
+    font-size: 1.2rem;
+    line-height: 1;
+  }
+
+  /* ===== RULE TABLE ===== */
+  .rule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9rem;
+  }
+  .rule-table th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--bg-titlebar);
+    color: var(--text-bright);
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent);
+  }
+  .rule-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .rule-table tr:last-child td { border-bottom: none; }
+  .rule-table .yes { color: var(--green); font-weight: 600; }
+  .rule-table .no { color: var(--text-dim); }
+
+  .badge-invisible {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: rgba(136, 136, 136, 0.15);
+    color: var(--text-dim);
+  }
+  .badge-accept {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: rgba(64, 166, 255, 0.15);
+    color: var(--blue);
+  }
+  .badge-conflict {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+    background: rgba(241, 76, 76, 0.15);
+    color: var(--red);
+  }
+
+  /* ===== TABS ===== */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+  }
+  .tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .tab-btn:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.03);
+  }
+  .tab-btn.active {
+    color: var(--text-bright);
+    border-bottom-color: var(--accent);
+  }
+  .tab-panel {
+    display: none;
+  }
+  .tab-panel.active {
+    display: block;
+  }
+
+  /* ===== WORKFLOW ===== */
+  .workflow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 24px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .workflow-step {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .workflow-step .cmd {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 0.85rem;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .workflow-step .desc {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .workflow-arrow {
+    font-size: 1.4rem;
+    color: var(--text-dim);
+    padding: 0 8px;
+  }
+
+  /* ===== BASE TOGGLE ===== */
+  .base-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    margin: 8px 0;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .base-toggle:hover {
+    background: var(--bg-titlebar);
+    color: var(--text);
+  }
+  .base-toggle .toggle-track {
+    width: 32px; height: 18px;
+    border-radius: 9px;
+    background: var(--border);
+    position: relative;
+    transition: background 0.2s;
+  }
+  .base-toggle .toggle-track.on {
+    background: var(--accent);
+  }
+  .base-toggle .toggle-knob {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: white;
+    position: absolute;
+    top: 2px; left: 2px;
+    transition: left 0.2s;
+  }
+  .base-toggle .toggle-track.on .toggle-knob {
+    left: 16px;
+  }
+
+  .base-row {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+  }
+  .base-row.visible {
+    max-height: 200px;
+    opacity: 1;
+  }
+
+  .base-pane-full {
+    border: 1px dashed var(--yellow);
+    border-radius: 6px;
+    margin: 12px 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 0;
+    opacity: 0;
+  }
+  .base-pane-full.visible {
+    max-height: 300px;
+    opacity: 1;
+  }
+  .base-pane-header {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--yellow);
+    background: rgba(204, 167, 0, 0.08);
+    border-bottom: 1px dashed var(--yellow);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .base-pane-header .ghost { font-size: 0.7rem; color: var(--text-dim); font-weight: 400; }
+
+  /* ===== SEPARATOR ===== */
+  .section-sep {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0 0;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    .vscode-panes { grid-template-columns: 1fr; }
+    .diagram-sides { gap: 20px; flex-direction: column; align-items: center; }
+    .workflow { flex-direction: column; }
+    .workflow-arrow { transform: rotate(90deg); }
+  }
+
+  /* Smooth scroll */
+  html { scroll-behavior: smooth; }
+
+  /* Nav links */
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 32px;
+  }
+  .toc a {
+    padding: 6px 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.15s;
+  }
+  .toc a:hover {
+    background: var(--bg-titlebar);
+    border-color: var(--accent);
+    color: var(--text-bright);
+  }
+
+  /* key-value annotations */
+  .kv { color: var(--green); }
+  .str { color: var(--orange); }
+  .comment { color: #6a9955; }
+  .bracket { color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <h1><code>chezmoi merge</code> Visual Explainer</h1>
+  <p class="subtitle">How the 3-way merge works in VS Code, and why some differences are invisible.</p>
+
+  <nav class="toc">
+    <a href="#model">3-Way Model</a>
+    <a href="#layout">VS Code Layout</a>
+    <a href="#scenarios">Scenarios</a>
+    <a href="#rule">The Rule</a>
+    <a href="#after">After Merge</a>
+  </nav>
+
+  <!-- ========== SECTION 1: THE MODEL ========== -->
+  <hr class="section-sep">
+  <h2 id="model"><span class="num">1</span>The 3-Way Merge Model</h2>
+
+  <p>A 3-way merge compares two versions against a <strong>common ancestor</strong> (the base). It does <em>not</em> diff left vs. right &mdash; it diffs <strong>left vs. base</strong> and <strong>right vs. base</strong> independently.</p>
+
+  <div class="three-way-diagram">
+    <div class="diagram-base">
+      base<br>
+      <span class="label">last committed version in git</span>
+    </div>
+
+    <div class="diagram-arrows">
+      <svg viewBox="0 0 500 60" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <marker id="arrowL" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#40c8ae"/>
+          </marker>
+          <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#40a6ff"/>
+          </marker>
+        </defs>
+        <line x1="210" y1="2" x2="120" y2="52" stroke="#40c8ae" stroke-width="2" marker-end="url(#arrowL)" stroke-dasharray="4 3"/>
+        <line x1="290" y1="2" x2="380" y2="52" stroke="#40a6ff" stroke-width="2" marker-end="url(#arrowR)" stroke-dasharray="4 3"/>
+        <text x="140" y="28" fill="#888" font-size="11" text-anchor="middle">diverged</text>
+        <text x="360" y="28" fill="#888" font-size="11" text-anchor="middle">diverged</text>
+      </svg>
+    </div>
+
+    <div class="diagram-sides">
+      <div class="diagram-side left">
+        chezmoi<br>
+        <span class="label">~/.local/share/chezmoi/</span>
+      </div>
+      <div class="diagram-side right">
+        home<br>
+        <span class="label">~/</span>
+      </div>
+    </div>
+
+    <p class="diagram-caption">The base is the last <code>git commit</code> of the chezmoi file. Each side is compared <strong>against the base</strong>, not against each other.</p>
+  </div>
+
+  <div class="annotation info">
+    <span class="annotation-icon">&#x1f4a1;</span>
+    <div>The base comes from <code>git show HEAD:&lt;file&gt;</code>. If the file was never committed, the merge degrades to a 2-way diff (less useful). <strong>Always commit before editing.</strong></div>
+  </div>
+
+
+  <!-- ========== SECTION 2: VS CODE LAYOUT ========== -->
+  <hr class="section-sep">
+  <h2 id="layout"><span class="num">2</span>VS Code Merge Layout</h2>
+
+  <p>The merge editor opens with three visible areas. The base is invisible &mdash; VS Code uses it internally.</p>
+
+  <div class="vscode-mock">
+    <div class="vscode-titlebar">
+      <div class="vscode-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+      <span>config.toml &mdash; 3-way Merge Editor</span>
+    </div>
+
+    <div class="vscode-panes">
+      <div class="vscode-pane">
+        <div class="pane-header current">
+          <span class="pane-label-tag current">Current</span>
+          chezmoi &mdash; what chezmoi wants
+        </div>
+        <div class="pane-content" style="min-height: 64px; display:flex; align-items:center; justify-content:center; color: var(--text-dim); font-style:italic; font-family: inherit; font-size: 0.85rem;">
+          Left pane
+        </div>
+      </div>
+      <div class="vscode-pane">
+        <div class="pane-header incoming">
+          <span class="pane-label-tag incoming">Incoming</span>
+          home &mdash; what's at ~/
+        </div>
+        <div class="pane-content" style="min-height: 64px; display:flex; align-items:center; justify-content:center; color: var(--text-dim); font-style:italic; font-family: inherit; font-size: 0.85rem;">
+          Right pane
+        </div>
+      </div>
+    </div>
+
+    <div class="result-pane">
+      <div class="result-header">
+        <span>Result &mdash; the chezmoi file that gets saved</span>
+      </div>
+      <div class="pane-content" style="min-height: 48px; display:flex; align-items:center; justify-content:center; color: var(--text-dim); font-style:italic; font-family: inherit; font-size: 0.85rem;">
+        Starts as a copy of the <strong style="color:#40c8ae;margin:0 4px;">left</strong> pane (chezmoi)
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation insight">
+    <span class="annotation-icon">&#x26a0;&#xfe0f;</span>
+    <div><strong>The result starts as a copy of the LEFT (chezmoi) side.</strong> This is the key to everything below. Chezmoi's changes are "free" &mdash; already in the result. Home's changes are "incoming" and need explicit acceptance.</div>
+  </div>
+
+
+  <!-- ========== SECTION 3: SCENARIOS ========== -->
+  <hr class="section-sep">
+  <h2 id="scenarios"><span class="num">3</span>Scenarios</h2>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(event, 'scenario1')">Scenario 1: Different Lines</button>
+    <button class="tab-btn" onclick="switchTab(event, 'scenario2')">Scenario 2: Same Line</button>
+  </div>
+
+  <!-- ===== SCENARIO 1 ===== -->
+  <div id="scenario1" class="tab-panel active">
+
+    <h3>Each side changed a different line</h3>
+    <p>Chezmoi changed <code>theme</code>. Home changed <code>plugins</code>. Base has the originals of both.</p>
+
+    <label class="base-toggle" onclick="toggleBase()">
+      <div class="toggle-track" id="baseToggle"><div class="toggle-knob"></div></div>
+      Show the invisible base
+    </label>
+
+    <div class="base-pane-full" id="basePaneFull">
+      <div class="base-pane-header">
+        Base (invisible) <span class="ghost">&mdash; last committed version, used internally by VS Code</span>
+      </div>
+      <div class="pane-content">
+        <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+        <div class="code-line"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"gruvbox"</span></span></div>
+        <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+        <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+        <div class="code-line"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span></span></div>
+      </div>
+    </div>
+
+    <div class="vscode-mock mock-wrapper">
+      <div class="vscode-titlebar">
+        <div class="vscode-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span>config.toml &mdash; 3-way Merge Editor</span>
+      </div>
+
+      <div class="vscode-panes">
+        <!-- LEFT: chezmoi -->
+        <div class="vscode-pane">
+          <div class="pane-header current">
+            <span class="pane-label-tag current">Current</span>
+            chezmoi
+          </div>
+          <div class="pane-content">
+            <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+            <div class="code-line"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"modified"</span></span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+            <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+            <div class="accept-row">
+              <span class="btn-current">Accept Current Change</span>
+              <span>|</span>
+              <span class="btn-incoming">Accept Incoming Change</span>
+              <span>|</span>
+              <span>Accept Both</span>
+            </div>
+            <div class="code-line hl-current"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span></span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: home -->
+        <div class="vscode-pane">
+          <div class="pane-header incoming">
+            <span class="pane-label-tag incoming">Incoming</span>
+            home
+          </div>
+          <div class="pane-content">
+            <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+            <div class="code-line"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"gruvbox"</span></span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+            <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+            <div class="accept-row">
+              <span class="btn-current">Accept Current Change</span>
+              <span>|</span>
+              <span class="btn-incoming">Accept Incoming Change</span>
+              <span>|</span>
+              <span>Accept Both</span>
+            </div>
+            <div class="code-line hl-incoming"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"k8s"</span><span class="bracket">]</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-pane">
+        <div class="result-header">
+          <span>Result (saved to chezmoi)</span>
+          <span class="result-badge conflict">1 conflict remaining</span>
+        </div>
+        <div class="pane-content">
+          <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+          <div class="code-line"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"modified"</span></span></div>
+          <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+          <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+          <div class="code-line" style="background: rgba(241,76,76,0.08);"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span>  <span style="color:var(--text-dim); font-style:italic;">&larr; waiting for your decision</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotations for scenario 1 -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+      <div style="background: var(--bg-panel); border-radius: 8px; padding: 16px; border: 1px solid var(--border);">
+        <div style="font-weight: 600; color: var(--text-bright); margin-bottom: 8px; font-size: 0.95rem;">
+          <code>theme</code> &mdash; the invisible change
+        </div>
+        <div style="font-size: 0.88rem;">
+          <div style="margin-bottom: 6px;">Left says <code>"modified"</code>, right says <code>"gruvbox"</code>.</div>
+          <div style="margin-bottom: 6px;">They <strong>differ</strong> &mdash; but there is <strong style="color:var(--red);">no highlighting</strong>, <strong style="color:var(--red);">no Accept buttons</strong>. Completely invisible.</div>
+          <div style="color: var(--text-dim);">Why? Chezmoi changed it, home didn't. The result starts from the left, so <code>"modified"</code> is already there. Nothing to do.</div>
+        </div>
+      </div>
+      <div style="background: var(--bg-panel); border-radius: 8px; padding: 16px; border: 1px solid var(--border);">
+        <div style="font-weight: 600; color: var(--text-bright); margin-bottom: 8px; font-size: 0.95rem;">
+          <code>plugins</code> &mdash; the highlighted change
+        </div>
+        <div style="font-size: 0.88rem;">
+          <div style="margin-bottom: 6px;"><strong>Both</strong> panes show highlighting and Accept buttons.</div>
+          <div style="margin-bottom: 6px;">The result still has <code>"docker"</code>. You need to click <strong style="color: var(--blue);">Accept Incoming</strong> on the right to get <code>"k8s"</code>.</div>
+          <div style="color: var(--text-dim);">Why? Home changed it, chezmoi didn't. Home's changes are "incoming" and need a click.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation insight" style="margin-top: 20px;">
+      <span class="annotation-icon">&#x1f50d;</span>
+      <div><strong>The deceptive part:</strong> <code>theme</code> clearly differs between the two panes, but there is zero visual indication. You can only see it if you read the actual values line by line. The merge UI is correct &mdash; it's showing you what <em>changed relative to the base</em>, not what differs between panes.</div>
+    </div>
+
+  </div>
+
+
+  <!-- ===== SCENARIO 2 ===== -->
+  <div id="scenario2" class="tab-panel">
+
+    <h3>Both sides changed the same line</h3>
+    <p>Both chezmoi and home changed <code>theme</code>. Base had <code>"gruvbox"</code>.</p>
+
+    <div class="vscode-mock mock-wrapper">
+      <div class="vscode-titlebar">
+        <div class="vscode-dots"><span class="r"></span><span class="y"></span><span class="g"></span></div>
+        <span>config.toml &mdash; 3-way Merge Editor</span>
+      </div>
+
+      <div class="vscode-panes">
+        <!-- LEFT: chezmoi -->
+        <div class="vscode-pane">
+          <div class="pane-header current">
+            <span class="pane-label-tag current">Current</span>
+            chezmoi
+          </div>
+          <div class="pane-content">
+            <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+            <div class="accept-row">
+              <span class="btn-current">Accept Current Change</span>
+              <span>|</span>
+              <span class="btn-incoming">Accept Incoming Change</span>
+              <span>|</span>
+              <span>Accept Both</span>
+            </div>
+            <div class="code-line hl-current"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"catppuccin"</span></span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+            <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+            <div class="code-line"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span></span></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: home -->
+        <div class="vscode-pane">
+          <div class="pane-header incoming">
+            <span class="pane-label-tag incoming">Incoming</span>
+            home
+          </div>
+          <div class="pane-content">
+            <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+            <div class="accept-row">
+              <span class="btn-current">Accept Current Change</span>
+              <span>|</span>
+              <span class="btn-incoming">Accept Incoming Change</span>
+              <span>|</span>
+              <span>Accept Both</span>
+            </div>
+            <div class="code-line hl-incoming"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"tokyo-night"</span></span></div>
+            <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+            <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+            <div class="code-line"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result-pane">
+        <div class="result-header">
+          <span>Result (saved to chezmoi)</span>
+          <span class="result-badge conflict">1 conflict remaining</span>
+        </div>
+        <div class="pane-content">
+          <div class="code-line"><span class="ln">1</span><span class="code"><span class="comment"># --- Display ---</span></span></div>
+          <div class="code-line" style="background: rgba(241,76,76,0.08);"><span class="ln">2</span><span class="code"><span class="kv">theme</span> = <span class="str">"catppuccin"</span>  <span style="color:var(--text-dim); font-style:italic;">&larr; chezmoi's version by default &mdash; you must choose</span></span></div>
+          <div class="code-line"><span class="ln">3</span><span class="code"><span class="kv">show_sidebar</span> = <span class="str">true</span></span></div>
+          <div class="code-line"><span class="ln">4</span><span class="code"><span class="comment"># --- Plugins ---</span></span></div>
+          <div class="code-line"><span class="ln">5</span><span class="code"><span class="kv">plugins</span> = <span class="bracket">[</span><span class="str">"core"</span>, <span class="str">"git"</span>, <span class="str">"docker"</span><span class="bracket">]</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation insight">
+      <span class="annotation-icon">&#x26a0;&#xfe0f;</span>
+      <div><strong>This is a real conflict.</strong> Both sides changed <code>theme</code> relative to the base. Both panes highlight it with Accept buttons. You pick one, accept a combination, or edit the result manually.</div>
+    </div>
+
+    <div class="annotation info">
+      <span class="annotation-icon">&#x2194;&#xfe0f;</span>
+      <div><strong>Compare with Scenario 1.</strong> In both scenarios, highlighted lines have Accept buttons on both panes. The difference is <em>why</em>: Scenario 1's <code>plugins</code> line shows buttons because home's change is "incoming." Scenario 2's <code>theme</code> line shows buttons because both sides genuinely changed. Visually they look the same.</div>
+    </div>
+
+  </div>
+
+
+  <!-- ========== SECTION 4: THE RULE ========== -->
+  <hr class="section-sep">
+  <h2 id="rule"><span class="num">4</span>The Rule</h2>
+
+  <p>The result starts from the <strong>left</strong> (chezmoi). This creates an asymmetry:</p>
+
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th>Chezmoi changed?</th>
+        <th>Home changed?</th>
+        <th>What VS Code does</th>
+        <th>Visual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="yes">Yes</span></td>
+        <td><span class="no">No</span></td>
+        <td>Already in result. No highlighting. <strong>Invisible.</strong></td>
+        <td><span class="badge-invisible">invisible</span></td>
+      </tr>
+      <tr>
+        <td><span class="no">No</span></td>
+        <td><span class="yes">Yes</span></td>
+        <td>Accept buttons on both panes. Click Accept on right to bring it in.</td>
+        <td><span class="badge-accept">accept needed</span></td>
+      </tr>
+      <tr>
+        <td><span class="yes">Yes</span></td>
+        <td><span class="yes">Yes</span></td>
+        <td>Accept buttons on both panes. <strong>Real conflict</strong> &mdash; you choose.</td>
+        <td><span class="badge-conflict">conflict</span></td>
+      </tr>
+      <tr>
+        <td><span class="no">No</span></td>
+        <td><span class="no">No</span></td>
+        <td>Nothing to do. Identical everywhere.</td>
+        <td><span class="badge-invisible">nothing</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="annotation insight">
+    <span class="annotation-icon">&#x1f511;</span>
+    <div><strong>"Changed" means "differs from the base"</strong> (last committed version) &mdash; <em>not</em> "differs from the other pane." This is why row 1 and row 2 look completely different in the UI even though both are "one side changed."</div>
+  </div>
+
+  <!-- Visual summary of the asymmetry -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
+    <div style="background: rgba(64, 200, 174, 0.06); border: 1px solid rgba(64, 200, 174, 0.3); border-radius: 8px; padding: 20px; text-align: center;">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">&#x2714;&#xfe0f;</div>
+      <div style="font-weight: 600; color: #40c8ae; margin-bottom: 6px;">Chezmoi changes</div>
+      <div style="font-size: 0.88rem; color: var(--text-dim);">Free. Already in the result. No action needed. Can be <strong style="color:var(--red);">easy to miss</strong> when reviewing.</div>
+    </div>
+    <div style="background: rgba(64, 166, 255, 0.06); border: 1px solid rgba(64, 166, 255, 0.3); border-radius: 8px; padding: 20px; text-align: center;">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">&#x1f449;</div>
+      <div style="font-weight: 600; color: #40a6ff; margin-bottom: 6px;">Home changes</div>
+      <div style="font-size: 0.88rem; color: var(--text-dim);">Incoming. Need a click to accept. Always <strong>visible</strong> with Accept buttons and highlighting.</div>
+    </div>
+  </div>
+
+
+  <!-- ========== SECTION 5: AFTER MERGE ========== -->
+  <hr class="section-sep">
+  <h2 id="after"><span class="num">5</span>After the Merge</h2>
+
+  <p><code>chezmoi merge</code> only modifies the <strong>chezmoi file</strong>. Home (<code>~/</code>) is untouched. You must apply afterwards.</p>
+
+  <div class="workflow">
+    <div class="workflow-step">
+      <div class="cmd">chezmoi merge ~/file</div>
+      <div class="desc">Resolve conflicts<br>Saves to chezmoi</div>
+    </div>
+    <div class="workflow-arrow">&rarr;</div>
+    <div class="workflow-step">
+      <div class="cmd">chezmoi apply ~/file</div>
+      <div class="desc">Push merged result<br>to home</div>
+    </div>
+    <div class="workflow-arrow">&rarr;</div>
+    <div class="workflow-step">
+      <div class="cmd">chezmoi status ~/file</div>
+      <div class="desc">Should be clean</div>
+    </div>
+  </div>
+
+  <div class="annotation warn">
+    <span class="annotation-icon">&#x203c;&#xfe0f;</span>
+    <div><strong>Don't forget <code>chezmoi apply</code>.</strong> After merge, chezmoi has the resolved version but home still has the old file. Without apply, your merge work just sits in the repo.</div>
+  </div>
+
+  <div style="margin-top: 32px; padding: 20px; background: var(--bg-panel); border-radius: 8px; border: 1px solid var(--border);">
+    <div style="font-weight: 600; color: var(--text-bright); margin-bottom: 12px;">Quick decision table</div>
+    <table class="rule-table" style="margin: 0;">
+      <thead>
+        <tr>
+          <th>I want to...</th>
+          <th>Command</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Keep chezmoi, discard home changes</td>
+          <td><code>chezmoi apply ~/file</code></td>
+        </tr>
+        <tr>
+          <td>Keep home, discard chezmoi changes</td>
+          <td><code>chezmoi re-add ~/file</code></td>
+        </tr>
+        <tr>
+          <td>Keep parts of both</td>
+          <td><code>chezmoi merge ~/file</code> then <code>chezmoi apply ~/file</code></td>
+        </tr>
+        <tr>
+          <td>See what's different first</td>
+          <td><code>chezmoi diff ~/file</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="margin-top: 48px; text-align: center; color: var(--text-dim); font-size: 0.82rem;">
+    Based on the chezmoi merge cheatsheet &mdash; <code>.research/cheatsheets/merge.md</code>
+  </p>
+
+</div>
+
+<script>
+function switchTab(event, panelId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+function toggleBase() {
+  const track = document.getElementById('baseToggle');
+  const pane = document.getElementById('basePaneFull');
+  track.classList.toggle('on');
+  pane.classList.toggle('visible');
+}
+</script>
+
+</body>
+</html>

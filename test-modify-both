@@ -1,5 +1,0 @@
-# --- Display ---
-theme = "gruvbox"
-show_sidebar = true
-# --- Plugins ---
-plugins = ["core", "git", "docker"]

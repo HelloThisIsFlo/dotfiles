@@ -27,7 +27,7 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 chezmoi apply                  # render source → target (the main operation)
 chezmoi edit <target-path>     # edit a managed file (resolves dot_ naming automatically)
 chezmoi diff                   # preview what apply would change
-chezmoi status                 # show managed files that differ from target
+chezmoi status                 # show managed files that differ from target (⚠️ columns are NOT source/target — see .research/cheatsheets/chezmoi-status.md)
 chezmoi data                   # dump template data (variables, OS info)
 chezmoi cat <target-path>      # show what chezmoi would render (without applying)
 chezmoi add <target-path>      # add a new file to management
