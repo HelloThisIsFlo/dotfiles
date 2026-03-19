@@ -52,7 +52,7 @@ Output is `XY path/to/file`. The columns are **NOT** source vs target. They are:
 | ` A` | New file in source, doesn't exist on disk | `chezmoi apply` to create |
 | `M ` | Cannot happen in practice — chezmoi hides files where disk matches source |
 
-**Key trap:** ` M` does NOT mean "target has edits source doesn't know about." It means the opposite — source has updates ready to apply. Full details: `.research/cheatsheets/chezmoi-status.md`.
+**Key trap:** ` M` does NOT mean "target has edits source doesn't know about." It means the opposite — source has updates ready to apply. Full details: `.research/cheatsheets/chezmoi/chezmoi-status.md`.
 
 ## Architecture decisions (from .research/2026-02-25/decisions.md)
 
