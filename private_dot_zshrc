@@ -242,11 +242,12 @@ function serve-current-dir () {
 }
 #   ----- Serve Current Dir ------------------------------------------ }}}
 
-#   ----- Git Copy Push Remote --------------------------------------- {{{
+#   ----- Git Utilities ---------------------------------------------- {{{
 function git-copy-push-remote {
     git remote -v | tail -n1 | awk '{print $2}' | pbcopy
 }
-#   ----- Git Copy Push Remote --------------------------------------- }}}
+alias greignore='git rm -r --cached . && git add . && git commit -m "Re-apply .gitignore rules"'
+#   ----- Git Utilities ---------------------------------------------- }}}
 
 #   ----- Scratch ---------------------------------------------------- {{{
 SCRATCH_FOLDER="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/Main/Scratch"
