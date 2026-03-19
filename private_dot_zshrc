@@ -73,7 +73,20 @@ export HASS_TOKEN="$HASS_TOKEN_THEHOME" # Also available: export HASS_TOKEN="$HA
 
 #   ----- Chezmoi ---------------------------------------------------- {{{
 alias cm=chezmoi
+function cma() { chezmoi apply "$@" }
+function cmd() { chezmoi diff "$@" }
+function cme() { chezmoi edit --apply "$@" }
+function cmm() { chezmoi merge "$@" }
+function cmc() { chezmoi cat "$@" }
+function cmra() { chezmoi re-add "$@" }
+alias cms="chezmoi status"
 alias cmbrew="cm edit --apply ~/.Brewfile && cm apply ~/brew-bundle.sh"
+
+function _chezmoi_managed_files() {
+  local -a managed_files
+  managed_files=(${(f)"$(chezmoi managed 2>/dev/null)"})
+  _wanted files expl 'managed file' _multi_parts / managed_files
+}
 
 #   ----- Chezmoi ---------------------------------------------------- }}}
 
@@ -751,6 +764,7 @@ eval "$(register-python-argcomplete gita -s zsh)"
 
 #  Chezmoi
 compdef cm=chezmoi
+compdef _chezmoi_managed_files cma cmd cme cmm cmc cmra
 
 #  ----- Completion ----------------------------------------------------- }}}
 
