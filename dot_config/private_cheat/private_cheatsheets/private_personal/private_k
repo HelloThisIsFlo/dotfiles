@@ -1,0 +1,105 @@
+# Kubernetes Extra Tools
+# krew plugins and standalone tools
+# beyond the oh-my-zsh kubectl aliases (see `cheat zshk`)
+# note: `k` is aliased to `kubectl` (from zshk plugin)
+
+# ============================================================
+# krew - kubectl plugin manager
+# ============================================================
+
+k krew update                  # update plugin index
+k krew search <query>          # search for plugins
+k krew install <plugin>        # install a plugin
+k krew list                    # list installed plugins
+k krew upgrade                 # upgrade all plugins
+
+# ============================================================
+# Plugin: neat - clean up verbose YAML output
+# ============================================================
+
+# Strips managed fields, status noise, and default values
+# so you see only the meaningful spec
+k get pod my-pod -o yaml | k neat
+k get deploy my-deploy -o yaml | k neat
+k neat get -- pod my-pod -o yaml          # shorthand (neat wraps the get)
+
+# ============================================================
+# Plugin: images - show container images in use
+# ============================================================
+
+k images                       # show images for all pods in current namespace
+k images -n kube-system        # show images in a specific namespace
+k images -A                    # show images across all namespaces
+
+# ============================================================
+# Plugin: resource-capacity - node resource usage overview
+# ============================================================
+
+k resource-capacity                        # show CPU/mem requests vs capacity
+k resource-capacity --pods                 # break down by pod
+k resource-capacity --util                 # show actual utilization (requires metrics-server)
+k resource-capacity --sort cpu.util        # sort by CPU utilization
+
+# ============================================================
+# Plugin: status - human-readable resource status
+# ============================================================
+
+# Better than `describe` for quickly understanding why something is broken
+k status pod my-pod
+k status deploy my-deploy
+k status node my-node
+
+# ============================================================
+# Plugin: node-shell - root shell on a node
+# ============================================================
+
+k node-shell my-node           # open root shell on a cluster node
+# useful when the problem is the node, not the pod
+
+# ============================================================
+# Plugin: who-can - RBAC permission queries
+# ============================================================
+
+k who-can get pods                         # who can list pods?
+k who-can delete pods -n production        # who can delete pods in prod?
+k who-can create deployments               # who can create deployments?
+k who-can '*' '*'                          # who has full access?
+
+# ============================================================
+# Plugin: access-matrix - RBAC access overview
+# ============================================================
+
+k access-matrix                            # show access matrix for current namespace
+k access-matrix -n production              # for a specific namespace
+k access-matrix --sa my-service-acct       # for a service account
+
+# ============================================================
+# Plugin: tree - resource ownership hierarchy
+# ============================================================
+
+# Shows parent-child relationships between k8s objects
+k tree deploy my-deploy        # deployment -> replicaset -> pods
+k tree service my-svc          # service -> endpoints -> pods
+
+# ============================================================
+# Standalone tools (installed via brew, not krew plugins)
+# ============================================================
+
+# kubectx - switch between clusters
+kubectx                        # list clusters (current one highlighted)
+kubectx my-cluster             # switch to cluster
+kubectx -                      # switch to previous cluster
+# equivalent: k config use-context my-cluster
+
+# kubens - switch default namespace
+kubens                         # list namespaces (current one highlighted)
+kubens mailroom                # switch to namespace
+kubens -                       # switch to previous namespace
+# equivalent: k config set-context --current --namespace=mailroom
+
+# stern - multi-pod log tailing
+stern mailroom                 # tail logs from all pods matching "mailroom"
+stern -n kube-system coredns   # tail logs in a specific namespace
+stern --since 1h mailroom      # only logs from last hour
+stern -l app=mailroom          # tail by label selector
+stern mailroom -o json         # output as JSON
