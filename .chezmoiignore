@@ -17,3 +17,4 @@
 {{ end }}
 
 # ── watch-dirs: auto-ignored (new entries appended below) ──
+.config/fish/conf.d/fish_frozen_theme.fish.bak
