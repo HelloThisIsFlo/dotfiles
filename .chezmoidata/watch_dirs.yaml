@@ -2,5 +2,6 @@ watch_dirs:
   macos:
     - ".config/fish"
     - ".claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/memory"
+    - ".claude/projects/-Users-flo--local-share-chezmoi/memory"
   linux:
     - ".config/fish"

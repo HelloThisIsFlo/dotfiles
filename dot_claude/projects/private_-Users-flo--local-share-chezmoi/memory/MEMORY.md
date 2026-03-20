@@ -30,6 +30,11 @@ See `.research/MIGRATION.md` for full details. Quick reference:
 - **Phase 2 (next):** `.gitconfig` done. Remaining: `.gitignore_global`, `.ssh/config`, `~/.claude/CLAUDE.md`
 - Mackup dotfiles repo (`~/config-in-the-cloud/dotfiles/`) cleanup deferred to Phase 7
 
+## Hooks & watch-dirs (session 2026-03-20)
+
+- [Hooks dispatcher architecture](hooks_architecture.md) — folder-based dispatcher pattern for chezmoi hooks
+- [Watch-dirs feature design](watch_dirs_design.md) — auto-detect new files in watched directories
+
 ## File migration pattern (established with .gitconfig)
 
 1. Break symlink: `target=$(readlink ~/.file) && rm ~/.file && cp "$target" ~/.file`
