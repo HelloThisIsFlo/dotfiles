@@ -3,7 +3,7 @@
 Host *
   ForwardAgent yes
   AddKeysToAgent yes
-{{- if eq .chezmoi.os "darwin" }}
+{{- if eq .os "macos" }}
   UseKeychain yes
 {{- end }}
 {{- if eq .trust_level "personal" }}

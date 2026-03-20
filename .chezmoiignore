@@ -6,12 +6,12 @@
 .config/gh/hosts.yml
 {{ end }}
 
-{{ if ne .chezmoi.os "darwin" }}
+{{ if ne .os "macos" }}
 .amethyst.yml
 .config/karabiner
 .config/linearmouse
 {{ end }}
 
-{{ if ne .chezmoi.os "linux" }}
+{{ if ne .os "linux" }}
 .config/terminator
 {{ end }}

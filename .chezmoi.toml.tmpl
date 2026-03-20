@@ -18,6 +18,11 @@
     email = {{ $email | quote }}
     trust_level = {{ $trust_level | quote }}
     is_headless = {{ $is_headless }}
+{{ if eq .chezmoi.os "darwin" }}
+    os = "macos"
+{{ else if eq .chezmoi.os "linux" }}
+    os = "linux"
+{{ end }}
 
 
 [add]
