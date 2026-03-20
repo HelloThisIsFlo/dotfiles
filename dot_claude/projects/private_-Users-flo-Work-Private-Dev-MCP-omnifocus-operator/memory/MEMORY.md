@@ -19,3 +19,5 @@
 - [No redundant sentinel tests](feedback_no-redundant-sentinel-tests.md) — skip smoke/deletion guards when existing tests already cover the imports
 - [Don't rush to wrap up](feedback_dont-rush-to-wrap-up.md) — verify tests catch failures before committing/updating docs
 - [UNSET stays at service layer](feedback_unset-is-service-concern.md) — agent-intent logic, never pushed to repos
+- [Don't decide priorities](feedback_dont-decide-priorities.md) — recommend approaches, never assign priority or say "low-priority"
+- [Use git mv for todo moves](feedback_use-git-mv-for-todos.md) — always `git mv`, not plain `mv`, to preserve file history
