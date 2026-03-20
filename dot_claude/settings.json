@@ -94,7 +94,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/flo/.claude/hooks/gsd-context-monitor.js\""
+            "command": "node \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ],
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 5
           }
         ]
       }
