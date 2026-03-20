@@ -45,7 +45,8 @@ done
 echo ""
 
 # Batch prompt.
-read -p "  [a]dd all  [i]gnore all  [s]kip all  [p]ick one-by-one: " choice
+read -n 1 -p "  [a]dd all  [i]gnore all  [s]kip all  [p]ick one-by-one: " choice
+echo ""
 
 SOURCE_DIR=$(chezmoi source-path)
 
@@ -77,7 +78,8 @@ case "$choice" in
     p|P)
         for f in "${NEW_FILES[@]}"; do
             rel="${f#"$HOME"/}"
-            read -p "  $rel — [a]dd  [i]gnore  [s]kip? " per_choice
+            read -n 1 -p "  $rel — [a]dd  [i]gnore  [s]kip? " per_choice
+            echo ""
             case "$per_choice" in
                 a|A) add_file "$f" ;;
                 i|I) ignore_file "$f" ;;
