@@ -1,6 +1,7 @@
 - [Home](INDEX.md)
 - **Chezmoi**
 - [Templates](chezmoi/templates.md)
+- [Template Fragments](chezmoi/template-fragments.md)
 - [Run Scripts](chezmoi/run-scripts.md)
 - [Secrets](chezmoi/secrets.md)
 - [Configuration](chezmoi/config.md)

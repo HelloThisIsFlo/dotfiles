@@ -7,6 +7,7 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 ## Chezmoi
 
 - [Templates](chezmoi/templates.md) — conditionals, whitespace, `lookPath`, secrets, debugging
+- [Template Fragments](chezmoi/template-fragments.md) — shared config across OS-specific paths, DRY reusable blocks, `{{ template }}` vs `{{ include }}`
 - [Run Scripts](chezmoi/run-scripts.md) — frequency prefixes, ordering, change detection
 - [Secrets](chezmoi/secrets.md) — rbw setup, template syntax, age encryption
 - [Configuration](chezmoi/config.md) — encryption, git, diff/merge tools, `[data]`
