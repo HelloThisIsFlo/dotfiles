@@ -58,6 +58,9 @@
 
 
 [hooks.read-source-state.pre]
-    # Runs before chezmoi reads the source state (i.e. on every chezmoi command).
-    # Installs the password manager (rbw) if it's not already on PATH.
-    command = ".local/share/chezmoi/.ensure-password-manager-installed.sh"
+    command = ".local/share/chezmoi/.hooks/run-hooks.sh"
+    args = ["read-source-state.pre"]
+
+[hooks.status.pre]
+    command = ".local/share/chezmoi/.hooks/run-hooks.sh"
+    args = ["status.pre"]

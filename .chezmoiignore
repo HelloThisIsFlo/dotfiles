@@ -15,3 +15,5 @@
 {{ if ne .os "linux" }}
 .config/terminator
 {{ end }}
+
+# ── watch-dirs: auto-ignored (new entries appended below) ──
