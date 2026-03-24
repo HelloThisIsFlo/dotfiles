@@ -15,5 +15,15 @@
 - [Merge Simulator ↗](chezmoi/chezmoi-merge-interactive.html)
 - [Status Columns](chezmoi/chezmoi-status.md)
 - [Tips & Escape Hatches](chezmoi/tips.md)
+- **Ghostty**
+- [Getting Started](ghostty/getting-started.md)
+- [Shell Integration](ghostty/shell-integration.md)
+- [Quick Terminal](ghostty/quick-terminal.md)
+- [Keybinds](ghostty/keybinds.md)
+- [Theme, Colors & Font](ghostty/theme-colors-font.md)
+- [Window & Appearance](ghostty/window-appearance.md)
+- [Splits](ghostty/splits.md)
+- [Behavior & Input](ghostty/behavior-input.md)
+- [macOS](ghostty/macos.md)
 - **Zsh Plugins**
 - [fzf-tab](zsh-plugins/fzf-tab.md)

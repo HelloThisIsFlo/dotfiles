@@ -22,6 +22,18 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 - [Status Columns](chezmoi/chezmoi-status.md) — what `MM`, ` M`, `M ` actually mean
 - [Tips & Escape Hatches](chezmoi/tips.md) — doctor, merge, forget, debug templates
 
+## Ghostty
+
+- [Getting Started](ghostty/getting-started.md) — config format, file locations, `?auto`, live reload, CLI discovery commands
+- [Shell Integration](ghostty/shell-integration.md) — auto-injection, prompt features, SSH terminfo, working dir tracking
+- [Quick Terminal](ghostty/quick-terminal.md) — dropdown terminal setup, `global:` keybind, QT-only mode
+- [Keybinds](ghostty/keybinds.md) — syntax, prefixes, chord sequences, key tables, all actions
+- [Theme, Colors & Font](ghostty/theme-colors-font.md) — theme browser, dark/light auto-switch, font setup, codepoint mapping
+- [Window & Appearance](ghostty/window-appearance.md) — titlebar, padding, transparency, shaders, background image
+- [Splits](ghostty/splits.md) — creating, navigating, resizing, zoom, vs tmux
+- [Behavior & Input](ghostty/behavior-input.md) — clipboard, scrollback, cursor, mouse, notifications, bell
+- [macOS](ghostty/macos.md) — option-as-alt, fullscreen, secure input, dock visibility, app icon
+
 ## Zsh Plugins
 
 - [fzf-tab](zsh-plugins/fzf-tab.md) — fuzzy completion menu, path drilling, previews, config
