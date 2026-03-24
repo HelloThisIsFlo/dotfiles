@@ -1,0 +1,24 @@
+# Color overrides
+# See cheat sheet: theme-colors-font.md
+# Override individual colors from your theme — leave blank to use theme defaults
+
+# Main terminal colors
+# foreground = #cdd6f4
+# background = #1e1e2e
+
+# Override specific palette entries (0-255)
+# palette = 0=#45475a
+# palette = 1=#f38ba8
+
+# Selection colors (special values: cell-foreground, cell-background)
+# selection-foreground = #1e1e2e
+# selection-background = #f5e0dc
+
+# Search highlight colors
+# search-foreground = #000000
+# search-background = #f9e2af
+# search-selected-foreground = #000000
+# search-selected-background = #fab387
+
+# Force minimum contrast ratio (WCAG 2.0, range 1-21, 1 = off)
+# minimum-contrast = 1

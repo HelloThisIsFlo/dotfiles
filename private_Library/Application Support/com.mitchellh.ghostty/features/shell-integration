@@ -1,0 +1,13 @@
+# Shell integration
+# See cheat sheet: shell-integration.md
+# Auto-injects hooks into bash/zsh/fish/elvish for prompt awareness,
+# working directory tracking, cursor changes, sudo wrapping, and SSH terminfo
+
+# Master toggle — detect auto-injects for your shell
+# Values: detect | none | bash | zsh | fish | elvish
+# shell-integration = detect
+
+# Fine-grained feature control (all ON by default)
+# Comma-separated, prefix no- to disable
+# Features: cursor, sudo, title, ssh-env, ssh-terminfo
+# shell-integration-features = no-cursor,no-sudo

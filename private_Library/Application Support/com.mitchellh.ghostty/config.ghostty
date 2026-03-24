@@ -1,0 +1,21 @@
+# Ghostty Configuration
+# Each feature has its own file in features/
+# OS-specific config is optional (? prefix)
+
+config-file = ?auto/theme.ghostty
+config-file = ?macos
+config-file = ?linux
+config-file = features/theme
+config-file = features/colors
+config-file = features/font
+config-file = features/window
+config-file = features/transparency
+config-file = features/keybinds
+config-file = features/shell-integration
+config-file = features/quick-terminal
+config-file = features/splits
+config-file = features/cursor
+config-file = features/clipboard
+config-file = features/mouse
+config-file = features/notifications
+config-file = features/shaders

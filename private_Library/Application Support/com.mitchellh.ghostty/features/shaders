@@ -1,0 +1,11 @@
+# Custom shaders
+# See cheat sheet: window-appearance.md
+# GPU-powered visual effects — CRT scanlines, bloom, chromatic aberration
+# Community shader collections on GitHub: search "ghostty shaders"
+
+# Path to GLSL shader file (repeatable — stack multiple shaders)
+# custom-shader = /path/to/shader.glsl
+
+# Enable animated shader effects (may use more GPU)
+# Values: true | false | always (animate even when terminal isn't updating)
+# custom-shader-animation = false

@@ -1,0 +1,20 @@
+# Clipboard
+# See cheat sheet: behavior-input.md
+
+# Allow programs to read your clipboard via OSC 52 (tmux, nvim clipboard sync)
+# Values: ask | allow | deny
+# clipboard-read = ask
+
+# Allow programs to write to your clipboard via OSC 52
+# Values: ask | allow | deny
+# clipboard-write = allow
+
+# Confirm when pasting potentially dangerous text (multiline, suspicious content)
+# clipboard-paste-protection = true
+
+# Auto-copy selected text
+# Values: true (primary selection) | clipboard (system clipboard) | false
+# copy-on-select = clipboard
+
+# Strip trailing whitespace when copying
+# clipboard-trim-trailing-spaces = false

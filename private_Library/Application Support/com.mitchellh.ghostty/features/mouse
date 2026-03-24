@@ -1,0 +1,24 @@
+# Mouse
+# See cheat sheet: behavior-input.md
+
+# Hide mouse cursor while typing
+# mouse-hide-while-typing = true
+
+# Scroll speed multiplier (prefix precision: or discrete: for specific input types)
+# mouse-scroll-multiplier = 1
+
+# Right-click behavior
+# Values: context-menu | paste | copy-or-paste | ignore
+# right-click-action = context-menu
+
+# Allow terminal programs to receive mouse events
+# mouse-reporting = true
+
+# Characters that break double-click word selection
+# selection-word-chars = \t'"│`|:;,()[]{}<>$
+
+# Clear selection when you start typing
+# selection-clear-on-typing = true
+
+# Clear selection after copying
+# selection-clear-on-copy = false

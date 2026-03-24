@@ -1,0 +1,30 @@
+# Notifications, bell & close behavior
+# See cheat sheet: behavior-input.md
+
+# Notify when a long-running command finishes (requires shell integration)
+# Values: never | unfocused (only when Ghostty isn't active) | always
+# notify-on-command-finish = unfocused
+
+# Minimum command duration before notification triggers
+# notify-on-command-finish-after = 10s
+
+# Notification method
+# Values: bell | notify (system notification) — comma-separated for both
+# notify-on-command-finish-action = notify
+
+# Bell features (comma-separated, prefix no- to disable)
+# Values: system, audio, visual, unfocused-window-badge, unfocused-window-flash
+# bell-features = no-audio
+
+# Custom bell sound file
+# bell-audio-path = /path/to/sound.wav
+
+# Bell volume
+# bell-audio-volume = 0.5
+
+# Confirm before closing a terminal with a running process
+# Values: true | false | always (even at idle prompt)
+# confirm-close-surface = false
+
+# Quit Ghostty when the last window closes
+# quit-after-last-window-closed = false

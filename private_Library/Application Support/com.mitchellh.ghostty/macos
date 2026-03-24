@@ -1,0 +1,49 @@
+# macOS-specific settings
+# See cheat sheet: macos.md
+
+# Make Option key send Alt escape sequences instead of Unicode characters
+# Essential for terminal workflows (readline, tmux, vim)
+# Values: true | false | left | right
+# Default depends on keyboard layout (US = true, others = false)
+# macos-option-as-alt = true
+
+# Titlebar style
+# Values: native | transparent | tabs | hidden
+# macos-titlebar-style = tabs
+
+# Folder icon in the titlebar showing current directory
+# Values: visible | hidden
+# macos-titlebar-proxy-icon = visible
+
+# Traffic light buttons (close/minimize/maximize)
+# Values: visible | hidden
+# macos-window-buttons = visible
+
+# Window drop shadow
+# macos-window-shadow = true
+
+# Non-native fullscreen — instant, no Space-switching animation
+# Warning: tabs break in this mode (titlebar is removed)
+# Values: false | true | visible-menu | padded-notch
+# macos-non-native-fullscreen = false
+
+# Auto-detect password prompts and enable secure input
+# macos-auto-secure-input = true
+
+# Show lock icon when secure input is active
+# macos-secure-input-indication = true
+
+# Hide from Dock and Cmd+Tab (for quick-terminal-only setups)
+# Values: never | always | if-other-instances
+# macos-hidden = never
+
+# What happens when dropping a file on the Dock icon
+# Values: new-tab | new-window
+# macos-dock-drop-behavior = new-tab
+
+# App icon variant — purely cosmetic
+# Values: official | blueprint | chalkboard | microchip | glass | hologram | paper | retro | xray
+# macos-icon = official
+
+# Frame material around the app icon
+# macos-icon-frame = aluminum

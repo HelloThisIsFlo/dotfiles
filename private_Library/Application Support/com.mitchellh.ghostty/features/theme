@@ -1,0 +1,9 @@
+# Theme
+# See cheat sheet: theme-colors-font.md
+# Browse themes: ghostty +list-themes
+
+# Single theme
+# theme = Catppuccin Mocha
+
+# Auto-switch with system dark/light mode
+# theme = dark:Catppuccin Mocha,light:Catppuccin Latte

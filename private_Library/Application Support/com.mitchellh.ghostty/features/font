@@ -1,0 +1,27 @@
+# Font
+# See cheat sheet: theme-colors-font.md
+# Browse installed fonts: ghostty +list-fonts
+
+# Primary font — JetBrains Mono is built-in, no install needed
+# Repeatable for fallback chains (first match wins per glyph)
+# font-family = JetBrains Mono
+
+# Font size in points
+# font-size = 15
+
+# Thicker strokes on macOS Retina — fixes wispy thin fonts
+# font-thicken = true
+
+# Route Nerd Font icons to a symbol font without changing your primary
+# font-codepoint-map = U+E000-U+F8FF=Symbols Nerd Font Mono
+
+# Disable ligatures
+# font-feature = -calt
+# font-feature = -liga
+
+# Variable font weight axis
+# font-variation = wght=500
+# font-variation-bold = wght=700
+
+# Don't synthesize missing styles, use the real font variant
+# font-synthetic-style = true

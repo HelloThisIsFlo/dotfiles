@@ -1,0 +1,19 @@
+# Transparency & background effects
+# See cheat sheet: window-appearance.md
+
+# Window background opacity (0.0 = fully transparent, 1.0 = opaque)
+# background-opacity = 0.9
+
+# Blur behind transparent background (only works when opacity < 1)
+# Values: false | true | integer | macos-glass-regular | macos-glass-clear
+# background-blur = true
+
+# Apply opacity to cells with background colors too (not just the window)
+# background-opacity-cells = false
+
+# Background image
+# background-image = ~/Pictures/terminal-bg.png
+# background-image-opacity = 0.1
+# background-image-position = center
+# background-image-fit = cover
+# background-image-repeat = false

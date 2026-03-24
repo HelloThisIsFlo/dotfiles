@@ -1,6 +1,7 @@
 watch_dirs:
   macos:
     - ".config/fish"
+    - "Library/Application Support/com.mitchellh.ghostty"
     - ".claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/memory"
     - ".claude/projects/-Users-flo--local-share-chezmoi/memory"
   linux:

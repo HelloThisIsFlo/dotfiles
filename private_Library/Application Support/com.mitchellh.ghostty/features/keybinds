@@ -1,0 +1,50 @@
+# Keybinds
+# See cheat sheet: keybinds.md
+# View defaults: ghostty +list-keybinds --default
+# List all actions: ghostty +list-actions
+
+# Quick terminal — system-wide hotkey (global: prefix is essential)
+# keybind = global:ctrl+grave_accent=toggle_quick_terminal
+
+# Copy only if there's a selection, otherwise send Ctrl+C to the program
+# keybind = performable:ctrl+c=copy_to_clipboard
+
+# Tmux-style prefix for splits
+# keybind = ctrl+a>v=new_split:right
+# keybind = ctrl+a>s=new_split:down
+# keybind = ctrl+a>h=goto_split:left
+# keybind = ctrl+a>j=goto_split:down
+# keybind = ctrl+a>k=goto_split:up
+# keybind = ctrl+a>l=goto_split:right
+
+# Split resize with key table (press Ctrl+A, R, then h/j/k/l to resize, Escape to exit)
+# keybind = ctrl+a>r=key_table:resize
+# keybind = resize/h=resize_split:left,20
+# keybind = resize/j=resize_split:down,20
+# keybind = resize/k=resize_split:up,20
+# keybind = resize/l=resize_split:right,20
+
+# Zoom focused split to full window
+# keybind = ctrl+a>z=toggle_split_zoom
+
+# Equalize all splits
+# keybind = ctrl+a>==equalize_splits
+
+# Tab navigation by number
+# keybind = cmd+1=goto_tab:1
+# keybind = cmd+2=goto_tab:2
+# keybind = cmd+3=goto_tab:3
+# keybind = cmd+4=goto_tab:4
+# keybind = cmd+5=goto_tab:5
+
+# Disable Cmd+Q to prevent accidental quit
+# keybind = cmd+q=ignore
+
+# Toggle transparency on/off
+# keybind = ctrl+shift+o=toggle_background_opacity
+
+# Escape exits any key table
+# keybind = all:escape=end_key_sequence
+
+# Unbind a default — key passes through to the program
+# keybind = ctrl+shift+n=unbind
