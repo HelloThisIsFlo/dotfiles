@@ -6,4 +6,10 @@
 # theme = Catppuccin Mocha
 
 # Auto-switch with system dark/light mode
-# theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+theme = dark:Catppuccin Mocha,light:Catppuccin Latte
+theme = dark:Catppuccin Frappe,light:Catppuccin Latte
+theme = dark:Rose Pine,light:Rose Pine Dawn
+theme = dark:iTerm2 Solarized Dark,light:iTerm2 Solarized Light
+
+# Current Winner (defined last so that's the one that applies)
+theme = dark:Flexoki Dark,light:Flexoki Light
