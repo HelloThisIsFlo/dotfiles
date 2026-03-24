@@ -16,8 +16,17 @@
 .config/terminator
 {{ end }}
 
+
 # ── watch-dirs: auto-ignored (new entries appended below) ──
+
+# ──── ".config/fish"
 .config/fish/conf.d/fish_frozen_theme.fish.bak
+# See cache_completions.fish
 .config/fish/completions
 .config/fish/.*-completions-version
+# Fisher
 .config/fish/functions/fisher.fish
+# Tide Prompt
+.config/fish/**/*tide*
+.config/fish/functions/fish_mode_prompt.fish
+.config/fish/functions/fish_prompt.fish
