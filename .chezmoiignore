@@ -20,3 +20,4 @@
 .config/fish/conf.d/fish_frozen_theme.fish.bak
 .config/fish/completions
 .config/fish/.*-completions-version
+.config/fish/functions/fisher.fish
