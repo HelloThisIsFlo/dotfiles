@@ -11,6 +11,12 @@
 ## Critical Safety Rule (repeated here for visibility)
 - **SAFE-01/02**: No automated test, CI pipeline, or agent execution may touch `RealBridge`. All automated testing MUST use `InMemoryBridge` or `SimulatorBridge`. RealBridge = manual UAT only.
 
+## User
+- [Career context](user_career-context.md) — between jobs, newborn, targeting team lead/staff roles. OmniFocus Operator is primary portfolio piece.
+
+## Project artifacts
+- [You-did-good document](project_you-did-good-document.md) — personal imposter syndrome document, V14 final, in `.sandbox/portfolio/you-did-good/`
+
 ## Memory-only decisions
 - Versioning: v1.x series (v1.1→v1.5), reserve v2.0 for workflow logic
 
@@ -21,3 +27,11 @@
 - [UNSET stays at service layer](feedback_unset-is-service-concern.md) — agent-intent logic, never pushed to repos
 - [Don't decide priorities](feedback_dont-decide-priorities.md) — recommend approaches, never assign priority or say "low-priority"
 - [Use git mv for todo moves](feedback_use-git-mv-for-todos.md) — always `git mv`, not plain `mv`, to preserve file history
+- [Plans: contract not implementation](feedback_plans-contract-not-implementation.md) — specify behavioral contracts, let executor decide implementation
+- [Split volatile vs uncomputed](feedback_split-volatile-vs-uncomputed.md) — in golden master normalization, separate truly-random from not-yet-implemented fields
+- [Facts with justified praise](feedback_facts-with-justified-praise.md) — back evaluative statements with evidence; empty praise is dismissed, facts alone feel clinical, the balance is evidence + honest evaluation
+- [Precise commits only](feedback_precise-commits.md) — when asked to commit specific lines, commit ONLY those — no whitespace/newline/formatting changes
+- [Read todo files when cross-referencing](feedback_read-todo-files-when-cross-referencing.md) — todo files contain their own mapping/deferral decisions; read them, don't just search milestone specs
+- [UAT is human-initiated only](feedback_uat-human-initiated-only.md) — never autonomously invoke UAT regression or any real-OmniFocus mutation; extends SAFE-01/02
+- [Respect plan mode boundaries](feedback_respect-plan-mode.md) — don't execute changes during plan mode; write the plan, wait for approval, then implement
+- [Spikes are hands-on](feedback_spikes-are-hands-on.md) — during exploration/spike work, Flo runs experiments himself; Claude provides scaffolding + guide skills
