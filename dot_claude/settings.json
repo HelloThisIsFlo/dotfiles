@@ -78,6 +78,7 @@
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.50",
   "skipDangerousModePermissionPrompt": true,
+  "showClearContextOnPlanAccept": true,
   "hooks": {
     "SessionStart": [
       {
