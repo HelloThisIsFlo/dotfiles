@@ -9,3 +9,7 @@ vim.keymap.set("i", "<M-BS>", "<C-w>", { desc = "Delete word backward" })
 -- macOS-native Option+Arrow word movement in insert mode
 vim.keymap.set("i", "<M-b>", "<C-o>b", { desc = "Move word backward" })
 vim.keymap.set("i", "<M-f>", "<C-o>w", { desc = "Move word forward" })
+
+-- Emacs-style line navigation in insert mode (overrides niche defaults: Ctrl+A = re-insert previous, Ctrl+E = copy char from below)
+vim.keymap.set("i", "<C-a>", "<Home>", { desc = "Beginning of line" })
+vim.keymap.set("i", "<C-e>", "<End>", { desc = "End of line" })

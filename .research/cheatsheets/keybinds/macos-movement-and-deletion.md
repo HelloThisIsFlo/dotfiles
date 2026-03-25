@@ -10,8 +10,8 @@ Where every Option+Backspace and Option+Arrow config lives. For *why* these choi
 |---|---|---|
 | Ghostty | `~/.config/ghostty/macos` | `macos-option-as-alt = true` — makes Option send `\x1b` prefix |
 | Ghostty | `~/.config/ghostty/features/keybinds` | No custom keybinds needed (built-in `esc:b`/`esc:f` handles arrows) |
-| Fish | `~/.config/fish/conf.d/00-keybinds-and-vi-mode.fish` | Word-deletion bindings for emacs + vi insert mode |
-| NeoVim | `~/.config/nvim/lua/config/keymaps.lua` | Insert-mode `<M-BS>`, `<M-b>`, `<M-f>` |
+| Fish | `~/.config/fish/conf.d/00-keybinds-and-vi-mode.fish` | Word-deletion bindings, `Ctrl+A`/`Ctrl+E` for vi insert mode |
+| NeoVim | `~/.config/nvim/lua/config/keymaps.lua` | Insert-mode `<M-BS>`, `<M-b>`, `<M-f>`, `<C-a>`, `<C-e>` |
 | Zsh | `~/.zshrc` | **TODO** — `WORDCHARS=''` + keybinds |
 | Vim | `~/.vimrc` | **TODO** — `inoremap <M-BS> <C-w>`, `inoremap <M-b>` / `<M-f>` |
 
@@ -60,15 +60,24 @@ Bindings are set for both emacs mode and vi insert mode (`-M insert`).
 
 Word-movement (Option+Arrow) works via Fish presets — no custom config needed.
 
+Line navigation (`Ctrl+A`/`Ctrl+E`) is re-added for vi insert mode (emacs presets don't carry over):
+
+```fish
+bind -M insert ctrl-a beginning-of-line
+bind -M insert ctrl-e end-of-line
+```
+
 ### NeoVim (LazyVim)
 
 ```lua
 vim.keymap.set("i", "<M-BS>", "<C-w>", { desc = "Delete word backward" })
 vim.keymap.set("i", "<M-b>", "<C-o>b", { desc = "Move word backward" })
 vim.keymap.set("i", "<M-f>", "<C-o>w", { desc = "Move word forward" })
+vim.keymap.set("i", "<C-a>", "<Home>", { desc = "Beginning of line" })
+vim.keymap.set("i", "<C-e>", "<End>", { desc = "End of line" })
 ```
 
-Only needed in insert mode — normal mode has `b`, `w`, `dB`, etc.
+Only needed in insert mode — normal mode has `b`, `w`, `dB`, `0`, `$`, etc.
 
 ### Zsh — TODO
 
@@ -97,7 +106,7 @@ inoremap <M-f> <C-o>w
 | Context | Deletion | Movement | Notes |
 |---|---|---|---|
 | Fish emacs mode | Yes (preset) | Yes (preset) | No config needed |
-| Fish vi insert mode | Yes (custom) | Yes (preset) | Deletion bindings in `00-keybinds-and-vi-mode.fish` |
+| Fish vi insert mode | Yes (custom) | Yes (preset) | Deletion + `Ctrl+A`/`E` in `00-keybinds-and-vi-mode.fish` |
 | SSH / bash / zsh | Yes (readline) | Yes (readline) | `\x1b\x7f` and `\x1b b`/`\x1b f` handled natively |
 | NeoVim insert mode | Yes (custom) | Yes (custom) | Keymaps in `keymaps.lua` |
 | Claude Code | Yes (token-level) | Unknown | Not configurable — baked into Ink framework |

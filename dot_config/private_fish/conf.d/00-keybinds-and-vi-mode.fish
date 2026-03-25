@@ -20,6 +20,10 @@ if status is-interactive
     set -l soft_fwd kill-word
     set -l hard_fwd kill-token
 
+    # Line navigation (emacs defaults, not set in vi mode)
+    bind -M insert ctrl-a beginning-of-line
+    bind -M insert ctrl-e end-of-line
+
     if fish_in_macos_terminal
         bind alt-backspace $soft
         bind ctrl-alt-h $soft

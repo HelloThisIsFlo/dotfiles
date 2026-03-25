@@ -4,6 +4,10 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 
 ---
 
+## Keybinds
+
+- [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md) — Option+Backspace and Option+Arrow config across Ghostty, Fish, and NeoVim
+
 ## Chezmoi
 
 - [Templates](chezmoi/templates.md) — conditionals, whitespace, `lookPath`, secrets, debugging
@@ -33,10 +37,6 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 - [Splits](ghostty/splits.md) — creating, navigating, resizing, zoom, vs tmux
 - [Behavior & Input](ghostty/behavior-input.md) — clipboard, scrollback, cursor, mouse, notifications, bell
 - [macOS](ghostty/macos.md) — option-as-alt, fullscreen, secure input, dock visibility, app icon
-
-## Keybinds
-
-- [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md) — Option+Backspace and Option+Arrow config across Ghostty, Fish, and NeoVim
 
 ## NeoVim
 
