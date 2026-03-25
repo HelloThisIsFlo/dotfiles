@@ -1,8 +1,18 @@
 watch_dirs:
   macos:
+    # Shell
     - ".config/fish"
+    - ".config/nvim"
+
+    # UI Apps
     - "Library/Application Support/com.mitchellh.ghostty"
+
+    # Claude Project Memories
     - ".claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/memory"
     - ".claude/projects/-Users-flo--local-share-chezmoi/memory"
+
+
   linux:
+    # Shell
     - ".config/fish"
+    - ".config/nvim"

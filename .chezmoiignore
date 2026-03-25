@@ -31,3 +31,7 @@
 .config/fish/**/*tide*
 .config/fish/functions/fish_mode_prompt.fish
 .config/fish/functions/fish_prompt.fish
+# Lazy.nvim
+.config/nvim/lazy-lock.json
+.config/nvim/LICENSE
+.config/nvim/README.md
