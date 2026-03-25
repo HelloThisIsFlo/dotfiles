@@ -5,3 +5,7 @@
 -- macOS-native Option+Backspace in insert mode
 -- See deep dive: .research/2026-03-25/opt-backspace-binding-research--fish-vi-etc.md
 vim.keymap.set("i", "<M-BS>", "<C-w>", { desc = "Delete word backward" })
+
+-- macOS-native Option+Arrow word movement in insert mode
+vim.keymap.set("i", "<M-b>", "<C-o>b", { desc = "Move word backward" })
+vim.keymap.set("i", "<M-f>", "<C-o>w", { desc = "Move word forward" })
