@@ -25,6 +25,8 @@
 - [Splits](ghostty/splits.md)
 - [Behavior & Input](ghostty/behavior-input.md)
 - [macOS](ghostty/macos.md)
+- **Keybinds**
+- [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md)
 - **NeoVim**
 - [LazyVim Configuration](neovim/lazyvim-config.md)
 - **Zsh Plugins**
