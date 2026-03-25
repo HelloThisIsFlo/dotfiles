@@ -25,5 +25,7 @@
 - [Splits](ghostty/splits.md)
 - [Behavior & Input](ghostty/behavior-input.md)
 - [macOS](ghostty/macos.md)
+- **NeoVim**
+- [LazyVim Configuration](neovim/lazyvim-config.md)
 - **Zsh Plugins**
 - [fzf-tab](zsh-plugins/fzf-tab.md)

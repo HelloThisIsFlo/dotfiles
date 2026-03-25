@@ -34,6 +34,10 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 - [Behavior & Input](ghostty/behavior-input.md) — clipboard, scrollback, cursor, mouse, notifications, bell
 - [macOS](ghostty/macos.md) — option-as-alt, fullscreen, secure input, dock visibility, app icon
 
+## NeoVim
+
+- [LazyVim Configuration](neovim/lazyvim-config.md) — file-by-file guide to the LazyVim config directory, layering model, what to track
+
 ## Zsh Plugins
 
 - [fzf-tab](zsh-plugins/fzf-tab.md) — fuzzy completion menu, path drilling, previews, config
