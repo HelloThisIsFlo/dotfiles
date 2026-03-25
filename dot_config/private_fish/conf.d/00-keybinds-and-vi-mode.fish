@@ -1,5 +1,6 @@
 # List active bindings: `bind`
 # See also: Ghostty keybinds (~/.config/ghostty/features/keybinds)
+# Deep dive: .research/2026-03-25/opt-backspace-binding-research--fish-vi-etc.md
 
 if status is-interactive
     fish_vi_key_bindings

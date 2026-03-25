@@ -1,3 +1,7 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
+
+
+-- macOS-native Option+Backspace in insert mode
+-- See deep dive: .research/2026-03-25/opt-backspace-binding-research--fish-vi-etc.md
+vim.keymap.set("i", "<M-BS>", "<C-w>", { desc = "Delete word backward" })
