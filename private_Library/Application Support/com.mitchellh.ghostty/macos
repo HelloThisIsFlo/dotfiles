@@ -1,11 +1,14 @@
 # macOS-specific settings
 # See cheat sheet: macos.md
 
-# Make Option key send Alt escape sequences instead of Unicode characters
-# Essential for terminal workflows (readline, tmux, vim)
-# Values: true | false | left | right
+# Make Option key send Alt escape sequences (\x1b prefix) instead of Unicode characters
+# - Without this, Option+key produces special characters (e.g. Option+e = ´ accent, Option+b = ∫, Option+d = ∂)
+# - With this, Option+key sends Alt+key — needed for word navigation (Alt+B/F), Option+Backspace, etc.
+#
+# Values: true | false | left | right (left/right = only that Option key acts as Alt)
 # Default depends on keyboard layout (US = true, others = false)
-# macos-option-as-alt = true
+macos-option-as-alt = true
+
 
 # Titlebar style
 # Values: native | transparent | tabs | hidden

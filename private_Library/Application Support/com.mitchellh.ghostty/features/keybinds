@@ -1,7 +1,8 @@
-# Keybinds
-# See cheat sheet: keybinds.md
-# View defaults: ghostty +list-keybinds --default
-# List all actions: ghostty +list-actions
+# View defaults: `ghostty +list-keybinds --default`
+# List all actions: `ghostty +list-actions`
+# See also:
+# - Fish keybinds (~/.config/fish/conf.d/00-keybinds-and-vi-mode.fish)
+# - Ghostty keybinds cheat sheet (keybinds.md)
 
 # Quick terminal — system-wide hotkey (global: prefix is essential)
 # keybind = global:ctrl+grave_accent=toggle_quick_terminal
