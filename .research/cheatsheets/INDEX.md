@@ -8,6 +8,10 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 
 - [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md) — Option+Backspace and Option+Arrow config across Ghostty, Fish, and NeoVim
 
+## CLI
+
+- [Modern Replacements](cli/modern-replacements.md) — drop-in replacements for classic Unix tools (eza, bat, fd, rg, sd, zoxide, lazygit, etc.)
+
 ## Chezmoi
 
 - [Templates](chezmoi/templates.md) — conditionals, whitespace, `lookPath`, secrets, debugging

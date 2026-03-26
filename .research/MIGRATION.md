@@ -33,7 +33,7 @@ Last verified: 2026-03-03
 | `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
-| Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
+| Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
 | Mackup public dotfiles                        | Nearly done       | 1 symlink remains (`.logseq/` — deferred to Phase 4, has API key). `.npmrc` dropped. `.spacemacs.d/`, `.ipython/` migrated. |
 | Mackup secret dotfiles                        | Still symlinked   | 6 symlinks → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
 | macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
@@ -474,6 +474,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/chezmoi/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
 | 2026-03-03 | Deep audit: unmanaged dotfiles            | Scanned `~/`, `~/.config/`, Mackup folders, and chezmoi managed list. Found: (1) `.config/exercism/` — missed secret symlink to Mackup, added to Phase 4; (2) `.config/gh/` — GitHub CLI config, no secrets, added to Phase 3.5; (3) `.config/git/ignore` — XDG gitignore with 11× duplicate line, added to Phase 3.5 for cleanup. ~40+ vendor/runtime dirs confirmed as noise (not managed). |
@@ -500,7 +501,7 @@ Reverse-chronological log.
 
 ## Unknowns / Decisions Needed
 
-- **VS Code settings sync:** VS Code has built-in Settings Sync — may not need chezmoi management at all.
+- **VS Code settings sync:** VS Code has built-in Settings Sync — extensions managed there, not in Brewfile. 115 `vscode "..."` lines removed from `dot_Brewfile` on 2026-03-26. If Brewfile-managed extensions are ever wanted again, use `brew bundle dump --vscode` to regenerate the list.
 - **Ice.plist:** Forgotten from chezmoi. Will be handled in Phase 5 if needed.
 - **`.claude/` directory:** Managed: `CLAUDE.md`, `settings.json`, `commands/daily-summary.md`, skill symlinks, 5 project memories. Not managed (by design): `settings.local.json`, `hooks/`, `agents/` (all GSD), `get-shit-done/`, runtime dirs. Target-authoritative files use `re-add` workflow.
 - **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
