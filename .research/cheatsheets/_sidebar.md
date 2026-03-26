@@ -1,4 +1,6 @@
 - [Home](INDEX.md)
+- **CLI**
+- [Modern Replacements](cli/modern-replacements.md)
 - **Keybinds**
 - [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md)
 - **Chezmoi**
