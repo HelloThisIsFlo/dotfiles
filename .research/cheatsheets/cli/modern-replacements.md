@@ -104,8 +104,8 @@ rg "old_name" --json             # structured output for tooling
 Learns your most-used directories. Type partial names, jump instantly.
 
 ```bash
-# Setup: add to shell rc
-eval "$(zoxide init zsh)"   # or fish/bash
+# Setup: add to config.fish
+zoxide init fish | source
 
 # The old way
 cd ~/projects/dotfiles/.research/cheatsheets

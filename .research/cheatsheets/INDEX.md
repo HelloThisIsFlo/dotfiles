@@ -11,6 +11,7 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 ## CLI
 
 - [Modern Replacements](cli/modern-replacements.md) — drop-in replacements for classic Unix tools (eza, bat, fd, rg, sd, zoxide, lazygit, etc.)
+- [Candidates to Explore](cli/candidates.md) — television, atuin, mise, zellij — tools worth evaluating
 
 ## Chezmoi
 
