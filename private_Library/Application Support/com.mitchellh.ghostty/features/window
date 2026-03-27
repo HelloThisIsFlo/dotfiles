@@ -1,52 +1,50 @@
 # Window
 # See cheat sheet: window-appearance.md
 
+
+# --- Window & tabs ---
+
+# Where new tabs appear
+# Values: current | end
+window-new-tab-position = current
+
 # Titlebar style (macOS)
 # Values: native | transparent | tabs | hidden
-# macos-titlebar-style = tabs
+# Default: transparent
+macos-titlebar-style = transparent
 
 # Tab bar visibility (GTK/Linux)
 # Values: always | auto | never
 # window-show-tab-bar = auto
 
+
+# --- Padding ---
+
 # Padding around terminal content (points)
 # Asymmetric: window-padding-x = 8,12 (left, right)
-# window-padding-x = 8
-# window-padding-y = 4
+window-padding-x = 6
+window-padding-y = 0
 
 # Center content when there's leftover space from cell grid
-# window-padding-balance = true
+window-padding-balance = true
 
 # What fills the padding area
 # Values: background | extend (bleed row colors into padding) | extend-always
-# window-padding-color = extend
+window-padding-color = extend
 
-# Initial window size in cells (not pixels)
-# window-width = 120
-# window-height = 35
 
-# Start maximized or fullscreen
-# maximize = false
-# fullscreen = false
-
-# Restore window positions on relaunch (macOS)
-# Values: default | never | always
-# window-save-state = default
-
-# Resize snaps to cell boundaries (macOS)
-# window-step-resize = true
-
-# Where new tabs appear
-# Values: current | end
-# window-new-tab-position = current
-
-# New tabs/windows inherit font size from current window
-# window-inherit-font-size = true
-
-# Cell count overlay during window resize
-# Values: always | never | after-first
-# resize-overlay = after-first
+# --- Color space ---
 
 # Color space — display-p3 for wider gamut on macOS
 # Values: srgb | display-p3
-# window-colorspace = srgb
+window-colorspace = display-p3
+
+
+# --- Misc ---
+
+# New tabs/windows inherit font size from current window
+window-inherit-font-size = true
+
+# Cell count overlay during window resize
+# Values: always | never | after-first
+resize-overlay = never
