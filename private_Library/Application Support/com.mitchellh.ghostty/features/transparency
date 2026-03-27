@@ -1,19 +1,10 @@
 # Transparency & background effects
 # See cheat sheet: window-appearance.md
 
-# Window background opacity (0.0 = fully transparent, 1.0 = opaque)
-# background-opacity = 0.9
+# Subtle transparency with macOS frosted glass blur
+# Just enough to see what's behind without losing readability
+background-opacity = 0.95
+background-blur = macos-glass-clear
 
-# Blur behind transparent background (only works when opacity < 1)
-# Values: false | true | integer | macos-glass-regular | macos-glass-clear
-# background-blur = true
-
-# Apply opacity to cells with background colors too (not just the window)
-# background-opacity-cells = false
-
-# Background image
-# background-image = ~/Pictures/terminal-bg.png
-# background-image-opacity = 0.1
-# background-image-position = center
-# background-image-fit = cover
-# background-image-repeat = false
+# Allow syntax highlighting and status bars to be transparent
+background-opacity-cells = true
