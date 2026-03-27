@@ -36,3 +36,6 @@
 - [UAT is human-initiated only](feedback_uat-human-initiated-only.md) — never autonomously invoke UAT regression or any real-OmniFocus mutation; extends SAFE-01/02
 - [Respect plan mode boundaries](feedback_respect-plan-mode.md) — don't execute changes during plan mode; write the plan, wait for approval, then implement
 - [Spikes are hands-on](feedback_spikes-are-hands-on.md) — during exploration/spike work, Flo runs experiments himself; Claude provides scaffolding + guide skills
+- [Prefer Pythonic test patterns](feedback_prefer-pythonic-test-patterns.md) — use pytest.raises(ToolError) not call_tool_mcp(); agent effort is not a constraint
+- [Scope of delegation](feedback_scope-of-delegation.md) — "check this one" means exactly one, not all remaining items
+- [No token/time optimization](feedback_no-token-time-optimization.md) — review skills prioritize comprehensiveness, not speed or cost
