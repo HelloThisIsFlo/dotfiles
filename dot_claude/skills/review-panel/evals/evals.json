@@ -1,0 +1,49 @@
+{
+  "skill_name": "review-panel",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run the review panel on this spec",
+      "expected_output": "Multi-perspective review with genuine persona diversity, specific references, and comprehensive coverage of the date filtering spec.",
+      "files": ["/Users/flo/Work/Private/Dev/MCP/omnifocus-operator/.research/updated-spec/MILESTONE-v1.3.1.md"],
+      "expectations": [
+        "Persona fidelity: Junior dev (Alex) asks implementation/clarity questions; Staff eng (Morgan) raises architecture/security/scalability; PO (Jordan) flags acceptance criteria gaps and completeness; End user (Sam) flags expectation mismatches or UX confusion",
+        "Unique contributions: At least 2 reviewers surface substantive issues that no other reviewer raised — proving genuine perspective diversity, not 4 copies of the same review",
+        "Specificity: Review points reference specific sections, quote from the document, or give concrete examples — not vague 'this could be clearer' feedback",
+        "Coverage breadth: Review collectively covers at least 4 issue categories (e.g., clarity/ambiguity, architecture/technical, completeness/scope, usability/expectations)",
+        "Non-prioritization: Summary preserves all substantive feedback from individual reviews — the summarizer didn't silently discard anything meaningful (minor noise annotation is fine)",
+        "Flags the undecided configuration mechanism (TBD) as a gap or concern",
+        "Notes the naive month/year approximation (30 days = 1 month) as a potential issue"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want fresh eyes on the architecture doc — what am I missing?",
+      "expected_output": "Multi-perspective review adapted to architecture doc context, with genuine persona diversity and specific, actionable feedback.",
+      "files": ["/Users/flo/Work/Private/Dev/MCP/omnifocus-operator/docs/architecture.md"],
+      "expectations": [
+        "Persona fidelity: Each reviewer demonstrates their specific lens — junior dev flags confusing parts, staff eng raises design concerns, PO flags completeness, end user adapts to developer/architecture consumer perspective",
+        "Unique contributions: At least 2 reviewers surface substantive issues that no other reviewer raised",
+        "Specificity: Review points reference specific sections, quote from the document, or give concrete examples",
+        "Coverage breadth: Review collectively covers at least 4 issue categories",
+        "Non-prioritization: Summary preserves all substantive feedback without silent filtering"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Is this ready to implement? Poke holes in it.",
+      "expected_output": "Multi-perspective review catching the deliberate gaps in this short spec, with each persona contributing distinct types of feedback.",
+      "files": ["/Users/flo/.claude/skills/review-panel/evals/synthetic-spec.md"],
+      "expectations": [
+        "Persona fidelity: Each reviewer demonstrates their specific lens appropriate to the document type",
+        "Unique contributions: At least 2 reviewers surface substantive issues that no other reviewer raised",
+        "Specificity: Review points reference specific sections, quote from the document, or give concrete examples",
+        "Coverage breadth: Review collectively covers at least 4 issue categories",
+        "Non-prioritization: Summary preserves all substantive feedback without silent filtering",
+        "Flags undefined failure/error handling semantics (what happens when one task in the batch fails)",
+        "Flags 'performance is acceptable' as vague or unmeasurable",
+        "Notes the response format/structure is undefined"
+      ]
+    }
+  ]
+}
