@@ -2,26 +2,42 @@
 # See cheat sheet: theme-colors-font.md
 # Browse installed fonts: ghostty +list-fonts
 
-# Primary font — JetBrains Mono is built-in, no install needed
-# Repeatable for fallback chains (first match wins per glyph)
-# font-family = JetBrains Mono
+# Primary font — uncomment one to try, Ghostty live-reloads
+# Browse installed: ghostty +list-fonts
+## Other options
+# font-family = FiraCode Nerd Font Mono
+# font-family = JetBrainsMono Nerd Font Mono
+# font-family = MonaspiceKr Nerd Font Mono
+# font-family = MonaspiceNe Nerd Font Mono
+# font-family = MonaspiceRn Nerd Font Mono
+# font-family = MonaspiceXe Nerd Font Mono
+# font-family = Hack Nerd Font Mono
+# font-family = CaskaydiaCove Nerd Font Mono
+# font-family = CaskaydiaMono Nerd Font Mono
+# font-family = MesloLGS Nerd Font Mono
+# font-family = VictorMono Nerd Font Mono
+# font-family = UbuntuMono Nerd Font Mono
+## No-go options
+# font-family = Iosevka Nerd Font Mono
+## WINNER 🎉
+# Mix Monaspace variants for bold/italic — each has a different texture
+# Ar=Argon (default), Ne=Neon (sharp), Rn=Radon (handwritten), Kr=Krypton (mechanical), Xe=Xenon (serif)
+font-family = Monaspace Argon
+font-family-bold = Monaspace Krypton
+font-family-italic = Monaspace Radon
+font-family-bold-italic = Monaspace Xenon
+# font-family = MonaspiceAr Nerd Font Mono
+# font-family-bold = MonaspiceKr Nerd Font Mono
+# font-family-italic = MonaspiceRn Nerd Font Mono
+# font-family-bold-italic = MonaspiceXe Nerd Font Mono
 
 # Font size in points
-# font-size = 15
+## 14 is ideal on 1440p (Samsung Odyssey G9)
+font-size = 14
 
 # Thicker strokes on macOS Retina — fixes wispy thin fonts
-# font-thicken = true
+font-thicken = true
 
-# Route Nerd Font icons to a symbol font without changing your primary
-# font-codepoint-map = U+E000-U+F8FF=Symbols Nerd Font Mono
-
-# Disable ligatures
-# font-feature = -calt
-# font-feature = -liga
-
-# Variable font weight axis
-# font-variation = wght=500
-# font-variation-bold = wght=700
-
-# Don't synthesize missing styles, use the real font variant
-# font-synthetic-style = true
+# Fine-tune line and character spacing (positive = more space, negative = tighter)
+adjust-cell-height = 1
+adjust-cell-width = 0
