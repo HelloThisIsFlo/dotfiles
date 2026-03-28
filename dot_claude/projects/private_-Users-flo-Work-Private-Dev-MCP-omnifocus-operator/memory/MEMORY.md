@@ -39,3 +39,5 @@
 - [Prefer Pythonic test patterns](feedback_prefer-pythonic-test-patterns.md) — use pytest.raises(ToolError) not call_tool_mcp(); agent effort is not a constraint
 - [Scope of delegation](feedback_scope-of-delegation.md) — "check this one" means exactly one, not all remaining items
 - [No token/time optimization](feedback_no-token-time-optimization.md) — review skills prioritize comprehensiveness, not speed or cost
+- [NEVER touch files you didn't change](feedback_never-touch-unowned-files.md) — no checkout/discard/commit on unowned files, even if they look wrong
+- [Careful worktree merges](feedback_careful-worktree-merges.md) — don't blindly --theirs on code files; read conflicts and combine both sides
