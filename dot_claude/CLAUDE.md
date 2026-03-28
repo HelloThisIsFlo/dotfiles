@@ -74,6 +74,7 @@ Flo uses Claude in multiple modes — he decides which one, and it can shift mid
 
 ## Coding Preferences
 
+- When working on multi-step tasks, always use TodoWrite to create a task list first, then work through each task sequentially using TodoRead to track progress.
 - When building a scripts for a project, use Just to orchestrate:
   - Use it in place of Make
   - For complex bootstrapping, feel free to write scripts that are going to be orchestrated with Just
