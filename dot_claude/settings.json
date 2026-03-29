@@ -62,23 +62,6 @@
       "Read(**/*.key)"
     ]
   },
-  "enabledPlugins": {
-    "claude-code-setup@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
-    "code-simplifier@claude-plugins-official": true,
-    "explanatory-output-style@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
-  },
-  "effortLevel": "high",
-  "autoUpdatesChannel": "latest",
-  "minimumVersion": "2.1.50",
-  "skipDangerousModePermissionPrompt": true,
-  "showClearContextOnPlanAccept": true,
   "hooks": {
     "SessionStart": [
       {
@@ -92,14 +75,14 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
         "hooks": [
           {
             "type": "command",
             "command": "node \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
-        ],
-        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task"
+        ]
       }
     ],
     "PreToolUse": [
@@ -118,5 +101,22 @@
   "statusLine": {
     "type": "command",
     "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
-  }
+  },
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "showClearContextOnPlanAccept": true,
+  "autoUpdatesChannel": "latest",
+  "minimumVersion": "2.1.50",
+  "skipDangerousModePermissionPrompt": true
 }
