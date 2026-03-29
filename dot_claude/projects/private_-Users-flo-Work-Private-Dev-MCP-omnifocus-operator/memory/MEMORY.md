@@ -41,3 +41,5 @@
 - [No token/time optimization](feedback_no-token-time-optimization.md) — review skills prioritize comprehensiveness, not speed or cost
 - [NEVER touch files you didn't change](feedback_never-touch-unowned-files.md) — no checkout/discard/commit on unowned files, even if they look wrong
 - [Careful worktree merges](feedback_careful-worktree-merges.md) — don't blindly --theirs on code files; read conflicts and combine both sides
+- [Thorough post-execution review](feedback_thorough-post-execution-review.md) — cross-reference summaries against codebase; auto-fixes aren't "resolved by definition"
+- [Golden master snapshots are human-only](feedback_golden-master-human-only.md) — agents create test infra, never capture/refresh snapshots
