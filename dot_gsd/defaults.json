@@ -1,0 +1,22 @@
+{
+  "mode": "interactive",
+  "model_profile": "quality",
+  "commit_docs": true,
+  "parallelization": true,
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "auto_advance": false,
+    "nyquist_validation": true,
+    "ui_phase": true,
+    "ui_safety_gate": true,
+    "research_before_questions": true,
+    "skip_discuss": false
+  },
+  "git": {
+    "branching_strategy": "none"
+  },
+  "granularity": "fine",
+  "resolve_model_ids": "omit"
+}
