@@ -1,10 +1,9 @@
 # Transparency & background effects
 # See cheat sheet: window-appearance.md
 
-# Subtle transparency with macOS frosted glass blur
-# Just enough to see what's behind without losing readability
-background-opacity = 0.95
-background-blur = macos-glass-clear
+# Note: background-blur = `macos-glass-clear` and `macos-glass-regular` are look messed up 🤷‍♂️
+background-blur = 10
+background-opacity = 0.85
 
 # Allow syntax highlighting and status bars to be transparent
 background-opacity-cells = true
