@@ -13,5 +13,5 @@ font-size = 14
 font-thicken = true
 
 # Fine-tune line and character spacing (positive = more space, negative = tighter)
-adjust-cell-height = 1
+adjust-cell-height = 2
 adjust-cell-width = 0

@@ -6,12 +6,12 @@
 
 # Where new tabs appear
 # Values: current | end
-window-new-tab-position = current
+window-new-tab-position = end
 
 # Titlebar style (macOS)
 # Values: native | transparent | tabs | hidden
 # Default: transparent
-macos-titlebar-style = transparent
+macos-titlebar-style = tabs
 
 # Tab bar visibility (GTK/Linux)
 # Values: always | auto | never
