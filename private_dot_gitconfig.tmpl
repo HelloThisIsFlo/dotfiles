@@ -3,13 +3,11 @@
 	email = {{ .email }}
 [core]
     autocrlf = input
-    pager = delta --dark
-	editor = vim
+    pager = delta-autotheme
+	editor = nvim
 	excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
-[delta]
-    syntax-theme = gruvbox
 [interactive]
-    diffFilter = delta --color-only
+    diffFilter = delta-autotheme --color-only
 [magit]
 	hideCampaign = true
 [url "https://"]
