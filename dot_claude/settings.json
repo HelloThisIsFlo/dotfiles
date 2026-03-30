@@ -114,6 +114,9 @@
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
   },
+  "env": {
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
+  },
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
