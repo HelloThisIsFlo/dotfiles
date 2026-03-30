@@ -3,7 +3,7 @@
 # Browse installed fonts: ghostty +list-fonts
 
 # Primary font: Monaspace NF
-config-file = font-monaspace
+config-file = font-monaspace.toml
 
 # Font size in points
 ## 14 is ideal on 1440p (Samsung Odyssey G9)
