@@ -1,22 +1,13 @@
 # Cursor
 # See cheat sheet: behavior-input.md
-# Note: shell integration overrides cursor style at the prompt (switches to bar)
 
-# Cursor shape
-# Values: block | bar | underline | block_hollow
-# cursor-style = bar
+# Click to reposition editing cursor at shell prompt (requires shell integration)
+# Looks enabled by default
+cursor-click-to-move = true
 
-# Cursor blinking (unset = respects DEC Mode 12)
-# cursor-style-blink = false
-
-# Click to reposition cursor at shell prompt (requires shell integration)
-# cursor-click-to-move = true
-
-# Cursor color (leave unset to use theme default)
-# cursor-color = #f5e0dc
-
-# Text color under cursor
-# cursor-text = #1e1e2e
-
-# Cursor opacity
-# cursor-opacity = 1
+# --- Don't touch ---
+# cursor-style / cursor-style-blink: shell integration already manages this
+#   (bar in insert mode, block in normal mode). Overriding here would just
+#   get stomped, and blinking can interact weirdly with cursor shaders.
+# cursor-color / cursor-text: theme handles these (Selenized). No need to override.
+# cursor-opacity: leave at 1.0 — lower values + cursor shaders = visual jank.
