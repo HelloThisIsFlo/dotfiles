@@ -4,8 +4,7 @@
 # - Fish keybinds (~/.config/fish/conf.d/00-keybinds-and-vi-mode.fish)
 # - Ghostty keybinds cheat sheet (keybinds.md)
 
-# Quick terminal — system-wide hotkey (global: prefix is essential)
-# keybind = global:ctrl+grave_accent=toggle_quick_terminal
+# Quick terminal — see features/quick-terminal for keybind
 
 # Copy only if there's a selection, otherwise send Ctrl+C to the program
 # keybind = performable:ctrl+c=copy_to_clipboard

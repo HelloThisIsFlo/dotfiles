@@ -1,25 +1,22 @@
 # Quick terminal (dropdown/Quake-style terminal)
 # See cheat sheet: quick-terminal.md
-# No default keybind — set one in features/keybinds first:
-#   keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
-# Which screen edge it slides in from
+# System-wide hotkey (global: prefix makes it work even when Ghostty is unfocused)
+keybind = global:super+shift+y=toggle_quick_terminal
+
+# Position and size
 # Values: top | bottom | left | right | center
-# quick-terminal-position = top
+quick-terminal-position = top
+quick-terminal-size = 40%
 
-# How much screen it covers (percentage or pixels)
-# quick-terminal-size = 40%
-
-# Which monitor
-# Values: main | mouse | macos-menu-bar
-# quick-terminal-screen = main
-
-# Hide when you click away
-# quick-terminal-autohide = true
+# Which monitor — follow the mouse
+quick-terminal-screen = mouse
 
 # Slide animation speed (0 for instant)
-# quick-terminal-animation-duration = 0
+quick-terminal-animation-duration = 0.2
 
-# Follow across macOS Spaces or stay put
-# Values: move | remain
-# quick-terminal-space-behavior = move
+# Hide when clicking away
+quick-terminal-autohide = true
+
+# Follow across macOS Spaces
+quick-terminal-space-behavior = move
