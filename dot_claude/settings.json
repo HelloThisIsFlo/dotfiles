@@ -114,7 +114,7 @@
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.50",
