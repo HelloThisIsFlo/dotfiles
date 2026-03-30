@@ -5,9 +5,10 @@
 
 # Master toggle — detect auto-injects for your shell
 # Values: detect | none | bash | zsh | fish | elvish
-# shell-integration = detect
+shell-integration = detect
 
-# Fine-grained feature control (all ON by default)
+# Fine-grained feature control
 # Comma-separated, prefix no- to disable
-# Features: cursor, sudo, title, ssh-env, ssh-terminfo
-# shell-integration-features = no-cursor,no-sudo
+# Features: cursor, sudo, title, ssh-env, ssh-terminfo, path
+# Defaults: cursor, no-sudo, title, no-ssh-env, no-ssh-terminfo, path
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo,path
