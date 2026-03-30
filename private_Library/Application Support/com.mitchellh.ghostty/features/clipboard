@@ -1,20 +1,22 @@
 # Clipboard
 # See cheat sheet: behavior-input.md
 
-# Allow programs to read your clipboard via OSC 52 (tmux, nvim clipboard sync)
+# OSC 52 — lets terminal programs (tmux, nvim) read/write system clipboard
 # Values: ask | allow | deny
-# clipboard-read = ask
+clipboard-read = allow
+clipboard-write = allow
 
-# Allow programs to write to your clipboard via OSC 52
-# Values: ask | allow | deny
-# clipboard-write = allow
+# Paste safety
+# paste-protection: shows a confirmation dialog when pasting multiline or
+#   suspicious content (e.g. commands with trailing newlines that auto-execute)
+# paste-bracketed-safe: strips escape sequences inside pasted text that could
+#   fake the end of a bracketed paste and inject commands
+clipboard-paste-protection = true
+clipboard-paste-bracketed-safe = true
 
-# Confirm when pasting potentially dangerous text (multiline, suspicious content)
-# clipboard-paste-protection = true
-
-# Auto-copy selected text
-# Values: true (primary selection) | clipboard (system clipboard) | false
-# copy-on-select = clipboard
+# Auto-copy selected text to clipboard (just select, no Cmd+C needed)
+# Values: true (selection clipboard) | clipboard (system clipboard) | false
+copy-on-select = false
 
 # Strip trailing whitespace when copying
-# clipboard-trim-trailing-spaces = false
+clipboard-trim-trailing-spaces = true
