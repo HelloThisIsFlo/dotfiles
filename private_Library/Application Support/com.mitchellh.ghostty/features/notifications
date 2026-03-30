@@ -1,30 +1,27 @@
 # Notifications, bell & close behavior
 # See cheat sheet: behavior-input.md
 
+# Note: Claude Code sends its own notifications (not through Ghostty's system).
+# They still appear as Ghostty notifications since they come from the same app.
+#
+# Tip: In macOS Settings > Notifications > Ghostty, set:
+#  - Notification style to "Persistent"
+#  - Grouping to "Off".
+# This gives a clear stack of individual Claude Code instances waiting for input in Notification Centre.
+
 # Notify when a long-running command finishes (requires shell integration)
-# Values: never | unfocused (only when Ghostty isn't active) | always
-# notify-on-command-finish = unfocused
-
-# Minimum command duration before notification triggers
-# notify-on-command-finish-after = 10s
-
-# Notification method
-# Values: bell | notify (system notification) — comma-separated for both
-# notify-on-command-finish-action = notify
+# System notification when switching away during a build, install, etc.
+notify-on-command-finish = unfocused
+notify-on-command-finish-after = 10s
+# Actions: bell (terminal bell), notify (system notification) — prefix no- to disable
+notify-on-command-finish-action = no-bell,notify
 
 # Bell features (comma-separated, prefix no- to disable)
-# Values: system, audio, visual, unfocused-window-badge, unfocused-window-flash
-# bell-features = no-audio
+# Defaults: attention=on, title=on, system=off, audio=off, border=off
+bell-features = no-audio,no-system,no-attention,title
 
-# Custom bell sound file
-# bell-audio-path = /path/to/sound.wav
+# Don't ask before closing a tab/split with a running process
+confirm-close-surface = false
 
-# Bell volume
-# bell-audio-volume = 0.5
-
-# Confirm before closing a terminal with a running process
-# Values: true | false | always (even at idle prompt)
-# confirm-close-surface = false
-
-# Quit Ghostty when the last window closes
-# quit-after-last-window-closed = false
+# Keep Ghostty running after last window closes
+quit-after-last-window-closed = false
