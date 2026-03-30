@@ -36,7 +36,7 @@ chezmoi re-add <target-path>   # sync target → source (ONLY for non-template p
 chezmoi doctor                 # diagnostic check
 ```
 
-Git autoCommit is enabled — every `chezmoi add`/`chezmoi apply` creates a git commit automatically. autoPush is disabled.
+Git autoCommit is **disabled** (off by default — group related changes into semantic commits).
 
 ### `chezmoi status` — how to read it (agents get this wrong constantly)
 
@@ -63,28 +63,22 @@ Output is `XY path/to/file`. The columns are **NOT** source vs target. They are:
 ## Repo structure
 
 ```
-.chezmoi.toml.tmpl              # chezmoi config template (data prompts, secrets=error, autoCommit, delta diff, VS Code merge, rbw hook)
-.ensure-password-manager-installed.sh  # pre-hook: installs rbw if missing (runs on every chezmoi command)
-run_onchange_after_brew-bundle.sh.tmpl  # re-runs `brew bundle` when dot_Brewfile changes (darwin only)
+.chezmoi.toml.tmpl              # chezmoi config (data prompts, secrets=error, delta diff, VS Code merge, hooks)
+.chezmoiignore                  # files chezmoi should not manage
+.chezmoidata/                   # template data files (watch_dirs.yaml)
 
-dot_Brewfile                    # Homebrew bundle (taps, brews, casks)
-dot_bashrc                      # bash → zsh trampoline
-dot_vimrc                       # vim config
-private_dot_zshrc               # main shell config (zsh, large, uses vim foldmarkers)
-private_dot_zsh/                # zsh completions (docker, poetry)
-dot_config/direnv/              # direnv config (load_dotenv = true)
-dot_hierarchy                   # repo manifest (yaml, lists git repos and paths)
+.chezmoiscripts/                # run_onchange scripts (numbered for ordering)
+  01-macos/                     # brew bundle (runs first — installs fish, etc.)
+  02-fish/                      # Fisher plugin install + Tide config
 
-private_Library/                # macOS app preferences (Bartender, iStat Menus, Moom, Raycast, Clocker, etc.)
-  Preferences/                  # plist files for app settings
-  Application Support/          # Bartender menu bar image configs
+.hooks/                         # chezmoi hook scripts (folder-based dispatcher)
+  run-hooks.sh                  # dispatcher — runs all executable scripts in hook subdirs
+  read-source-state.pre/        # runs before reading source (password manager check)
+  status.pre/                   # runs before status (watch-dirs scan)
 
 .research/                      # reference material (not deployed by chezmoi)
-  MIGRATION.md                  # living migration tracker — start here for current status
-  README.md                     # master index with quick links
-  cheatsheets/                  # 10 topic cheatsheets + INDEX.md
-  2026-02-17/                   # session notes: migration assessment, original CLAUDE.md, plist tutorial
-  2026-02-25/                   # session notes: decisions, next-actions, assistant-skill-rationale
+  MIGRATION.md                  # living migration tracker
+  cheatsheets/                  # topic cheatsheets + INDEX.md
 ```
 
 ## Chezmoi naming conventions (critical for this repo)
@@ -103,6 +97,6 @@ private_Library/                # macOS app preferences (Bartender, iStat Menus,
 - **Never use `chezmoi re-add` on `.tmpl` files** — it replaces template logic with rendered output.
 - **Plist files use textconv** — the config converts plists to XML via `plutil` for readable diffs. When editing plists, prefer `defaults write` in run scripts over directly managing plist files.
 - **The `.research/` directory is reference material** — not deployed to target. Start with `MIGRATION.md` for current migration status. Contains cheatsheets (`cheatsheets/`) and session notes (`2026-02-17/`, `2026-02-25/`). Consult `2026-02-25/decisions.md` before changing secrets strategy or adding encryption.
-- **The `.ensure-password-manager-installed.sh` hook runs on every chezmoi command** — keep it fast and idempotent.
+- **The `.hooks/` dispatcher runs on every chezmoi command** (configured in `.chezmoi.toml.tmpl`) — hook scripts in subdirs like `read-source-state.pre/` must be fast and idempotent.
 - **`dot_Brewfile` triggers brew bundle** — the run_onchange script includes a sha256sum of the Brewfile, so any edit causes `brew bundle` to re-run on next apply.
 - **To add a Fish plugin** — add the plugin line to `dot_config/private_fish/fish_plugins` and run `chezmoi apply`. Fisher picks it up automatically.
