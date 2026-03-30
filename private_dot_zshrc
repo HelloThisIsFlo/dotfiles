@@ -49,7 +49,17 @@ export LANG=en_US.UTF-8
 
 # Fix for commits from command line
 export ALTERNATE_EDITOR=""
+# Let Ghostty set TERM=xterm-ghostty for full feature support (undercurl, etc.)
+# Only fall back to xterm-256color for other terminals that don't set TERM
+if [[ "$TERM_PROGRAM" != "ghostty" ]]; then
 export TERM=xterm-256color
+  export COLORTERM=truecolor
+fi
+
+# Colored man pages via bat
+if command -v bat &>/dev/null; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 #  ----- Fixes ---------------------------------------------------------- }}}
 # ----- Init --------------------------------------------------------------- }}}
 
