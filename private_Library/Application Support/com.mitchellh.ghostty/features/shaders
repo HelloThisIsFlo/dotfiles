@@ -1,11 +1,161 @@
 # Custom shaders
-# See cheat sheet: window-appearance.md
-# GPU-powered visual effects — CRT scanlines, bloom, chromatic aberration
-# Community shader collections on GitHub: search "ghostty shaders"
-
-# Path to GLSL shader file (repeatable — stack multiple shaders)
-# custom-shader = /path/to/shader.glsl
+# GPU-powered post-processing via GLSL (Shadertoy-compatible)
+# Shaders are managed via chezmoi externals (.chezmoiexternal.toml)
+# Uncomment to enable — multiple shaders stack in order
 
 # Enable animated shader effects (may use more GPU)
 # Values: true | false | always (animate even when terminal isn't updating)
-# custom-shader-animation = false
+custom-shader-animation = true
+
+
+# --- Subtle / daily-driver ---
+
+# Soft glow around bright text
+# Review: looks amazing in dark mode, but completely broken in light mode — dealbreaker
+# custom-shader = ../shaders/community/bloom.glsl
+
+# Dynamic spotlight follows cursor area
+# custom-shader = ../shaders/community/spotlight.glsl
+
+# Dithering — retro color reduction
+# custom-shader = ../shaders/community/dither.glsl
+
+# Color inversion
+# custom-shader = ../shaders/community/negative.glsl
+
+# Animated gradient background
+# custom-shader = ../shaders/community/animated-gradient-shader.glsl
+
+# Static gradient background
+# custom-shader = ../shaders/community/gradient-background.glsl
+
+# TFT display simulation
+# custom-shader = ../shaders/community/tft.glsl
+
+
+# --- Retro / CRT ---
+
+# Classic CRT scanlines + curvature
+# custom-shader = ../shaders/community/crt.glsl
+
+# Enhanced CRT with more options
+# custom-shader = ../shaders/community/bettercrt.glsl
+
+# CRT like a monitor inside a video game
+# custom-shader = ../shaders/community/in-game-crt.glsl
+
+# In-game CRT with cursor styling
+# custom-shader = ../shaders/community/in-game-crt-cursor.glsl
+
+# Vintage terminal aesthetics
+# custom-shader = ../shaders/community/retro-terminal.glsl
+
+
+# --- Eye candy ---
+
+# Matrix digital rain
+# custom-shader = ../shaders/community/inside-the-matrix.glsl
+
+# Matrix environment hallway
+# custom-shader = ../shaders/community/matrix-hallway.glsl
+
+# Falling snow particles
+# custom-shader = ../shaders/community/just-snow.glsl
+
+# Underwater caustics
+# custom-shader = ../shaders/community/underwater.glsl
+
+# Water ripples
+# custom-shader = ../shaders/community/water.glsl
+
+# Star field animation
+# custom-shader = ../shaders/community/starfield.glsl
+
+# Colorful star field
+# custom-shader = ../shaders/community/starfield-colors.glsl
+
+# Galaxy background
+# custom-shader = ../shaders/community/galaxy.glsl
+
+# Fireworks particles
+# custom-shader = ../shaders/community/fireworks.glsl
+
+# Fireworks with rockets
+# custom-shader = ../shaders/community/fireworks-rockets.glsl
+
+# Fire sparks
+# custom-shader = ../shaders/community/sparks-from-fire.glsl
+
+# Smoke and ghost particles
+# custom-shader = ../shaders/community/smoke-and-ghost.glsl
+
+# Lava cinematic shader
+# custom-shader = ../shaders/community/cineShader-Lava.glsl
+
+# 3D cube geometry
+# custom-shader = ../shaders/community/cubes.glsl
+
+# Mechanical gears animation
+# custom-shader = ../shaders/community/gears-and-belts.glsl
+
+# Wave interference patterns
+# custom-shader = ../shaders/community/sin-interference.glsl
+
+
+# --- Glitch / distortion ---
+
+# Digital glitch effects
+# custom-shader = ../shaders/community/glitchy.glsl
+
+# RGB split with twitchy glow
+# custom-shader = ../shaders/community/glow-rgbsplit-twitchy.glsl
+
+# Drunk warping distortion
+# custom-shader = ../shaders/community/drunkard.glsl
+
+# Perlin/simplex noise
+# custom-shader = ../shaders/community/mnoise.glsl
+
+
+# --- Cursor effects ---
+# Trails activate on cursor movement, booms activate on mode change (block <-> line)
+
+# Neovide-like smooth cursor trail (most customizable)
+# Review: the winner — smooth, satisfying, not too much
+custom-shader = ../shaders/cursor/cursor_warp.glsl
+
+# Comet-like trail (kitty-style)
+# custom-shader = ../shaders/cursor/cursor_tail.glsl
+
+# Shrinking trail from previous to current position
+# Review: too basic
+# custom-shader = ../shaders/cursor/cursor_sweep.glsl
+
+# Blazing cursor trail — fire effect behind cursor
+# Review: cool but a bit much for daily use
+# custom-shader = ../shaders/community/cursor_blaze.glsl
+
+# Expanding filled circle on mode change
+# custom-shader = ../shaders/cursor/sonic_boom_cursor.glsl
+
+# Circular ring ripple on mode change
+custom-shader = ../shaders/cursor/ripple_cursor.glsl
+
+# Rectangular boom on mode change
+# custom-shader = ../shaders/cursor/rectangle_boom_cursor.glsl
+
+# Rectangular ripple on mode change
+# custom-shader = ../shaders/cursor/ripple_rectangle_cursor.glsl
+
+# --- Cursor trails (hced/ghostty-cursor-trails) ---
+# Tuned to feel snappy. Wisp = pre-configured tinkle.
+
+# Tinkle — configurable trail with nice defaults
+# custom-shader = ../shaders/trails/tinkle-cursor.glsl
+
+# Wisp — pre-tuned version of tinkle (author's recommendation)
+# custom-shader = ../shaders/trails/wisp-cursor.glsl
+
+# Boo — lagging shadow/silhouette of cursor, subtle
+# Review: nice and subtle, not incredible. Like a shadow that lags behind, not flashy enough
+# custom-shader = ../shaders/trails/boo-cursor.glsl

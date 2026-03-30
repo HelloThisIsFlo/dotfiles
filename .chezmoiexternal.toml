@@ -1,0 +1,25 @@
+# External sources — downloaded on `chezmoi apply`, cached locally
+# Docs: https://www.chezmoi.io/user-guide/include-files-from-elsewhere/
+
+# --- Ghostty shaders ---
+
+["Library/Application Support/com.mitchellh.ghostty/shaders/community"]
+    type = "archive"
+    url = "https://github.com/0xhckr/ghostty-shaders/archive/main.tar.gz"
+    stripComponents = 1
+    refreshPeriod = "168h"
+    exact = true
+
+["Library/Application Support/com.mitchellh.ghostty/shaders/cursor"]
+    type = "archive"
+    url = "https://github.com/sahaj-b/ghostty-cursor-shaders/archive/main.tar.gz"
+    stripComponents = 1
+    refreshPeriod = "168h"
+    exact = true
+
+["Library/Application Support/com.mitchellh.ghostty/shaders/trails"]
+    type = "archive"
+    url = "https://github.com/hced/ghostty-cursor-trails/archive/main.tar.gz"
+    stripComponents = 1
+    refreshPeriod = "168h"
+    exact = true
