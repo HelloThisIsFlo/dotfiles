@@ -1,24 +1,15 @@
 # Mouse
 # See cheat sheet: behavior-input.md
 
-# Hide mouse cursor while typing
-# mouse-hide-while-typing = true
+# Hide mouse cursor while typing — reappears on mouse movement
+mouse-hide-while-typing = true
 
-# Scroll speed multiplier (prefix precision: or discrete: for specific input types)
-# mouse-scroll-multiplier = 1
+# Focus split on mouse hover (no click needed)
+focus-follows-mouse = true
 
-# Right-click behavior
-# Values: context-menu | paste | copy-or-paste | ignore
-# right-click-action = context-menu
-
-# Allow terminal programs to receive mouse events
-# mouse-reporting = true
-
-# Characters that break double-click word selection
-# selection-word-chars = \t'"│`|:;,()[]{}<>$
-
-# Clear selection when you start typing
-# selection-clear-on-typing = true
-
-# Clear selection after copying
-# selection-clear-on-copy = false
+# --- Don't touch ---
+# mouse-reporting: leave true — apps need mouse events.
+# mouse-shift-capture: leave false — Shift+click is the escape hatch to select
+#   text when an app (NeoVim, htop) has mouse reporting enabled.
+# mouse-scroll-multiplier: default is precision:1,discrete:3 (trackpad vs wheel).
+# selection-word-chars / selection-clear-on-typing / selection-clear-on-copy: defaults are fine.
