@@ -1,11 +1,13 @@
 #!/usr/bin/env fish
 
+# fish_plugins hash: {{ include "dot_config/private_fish/fish_plugins" | sha256sum }}
+
 # Bootstrap Fisher if not present
 if not functions -q fisher
   curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
 end
 
-# Plugins
-fisher install IlanCosman/tide@v6
+# Install/update plugins from fish_plugins
+fisher update
 
 echo "Fisher plugins installed successfully."

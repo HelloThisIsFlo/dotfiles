@@ -105,3 +105,4 @@ private_Library/                # macOS app preferences (Bartender, iStat Menus,
 - **The `.research/` directory is reference material** — not deployed to target. Start with `MIGRATION.md` for current migration status. Contains cheatsheets (`cheatsheets/`) and session notes (`2026-02-17/`, `2026-02-25/`). Consult `2026-02-25/decisions.md` before changing secrets strategy or adding encryption.
 - **The `.ensure-password-manager-installed.sh` hook runs on every chezmoi command** — keep it fast and idempotent.
 - **`dot_Brewfile` triggers brew bundle** — the run_onchange script includes a sha256sum of the Brewfile, so any edit causes `brew bundle` to re-run on next apply.
+- **To add a Fish plugin** — add the plugin line to `dot_config/private_fish/fish_plugins` and run `chezmoi apply`. Fisher picks it up automatically.
