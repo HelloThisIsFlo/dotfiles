@@ -40,6 +40,13 @@ window-padding-color = extend
 window-colorspace = display-p3
 
 
+# --- Session ---
+
+# Restore tabs, splits, positions, and working directories on restart
+# Values: default (follow macOS system setting) | always | never
+window-save-state = always
+
+
 # --- Misc ---
 
 # New tabs/windows inherit font size from current window
