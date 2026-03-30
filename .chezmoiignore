@@ -38,3 +38,11 @@
 .config/nvim/lazy-lock.json
 .config/nvim/LICENSE
 .config/nvim/README.md
+
+
+# Claude Skills & Hooks - EXTERNAL ONES
+.claude/skills/copywriting
+.claude/skills/find-skills
+.claude/skills/review-panel-workspace
+.claude/skills/visual-explainer
+.claude/hooks/gsd*

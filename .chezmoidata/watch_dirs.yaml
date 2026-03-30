@@ -7,8 +7,9 @@ watch_dirs:
     # UI Apps
     - "Library/Application Support/com.mitchellh.ghostty"
 
-    # Claude Skills
-    - ".claude/skills/review-panel/"
+    # Claude Skills & Hooks
+    - ".claude/skills"
+    - ".claude/hooks"
 
     # Claude Project Memories
     - ".claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/memory"
