@@ -96,6 +96,17 @@
           }
         ]
       }
+    ],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/flo/.claude/hooks/worktree-from-head.sh",
+            "timeout": 30
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
