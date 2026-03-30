@@ -15,105 +15,136 @@ custom-shader-animation = true
 # custom-shader = ../shaders/community/bloom.glsl
 
 # Dynamic spotlight follows cursor area
+# Review: detective show vibes, completely unusable, fun for 20 seconds
 # custom-shader = ../shaders/community/spotlight.glsl
 
 # Dithering — retro color reduction
+# Review: does what it says, looks horrible
 # custom-shader = ../shaders/community/dither.glsl
 
 # Color inversion
+# Review: does what it says. Accessibility use case, otherwise why?
 # custom-shader = ../shaders/community/negative.glsl
 
 # Animated gradient background
+# Review: does what it says, whatever
 # custom-shader = ../shaders/community/animated-gradient-shader.glsl
 
 # Static gradient background
+# Review: same as animated, whatever
 # custom-shader = ../shaders/community/gradient-background.glsl
 
 # TFT display simulation
+# Review: screen door effect with giant pixels, looks horrible
 # custom-shader = ../shaders/community/tft.glsl
 
 
 # --- Retro / CRT ---
 
 # Classic CRT scanlines + curvature
+# Review: completely broken — pixelated and unreadable
 # custom-shader = ../shaders/community/crt.glsl
 
 # Enhanced CRT with more options
+# Review: very very cool! Not for daily use but really fun
 # custom-shader = ../shaders/community/bettercrt.glsl
 
 # CRT like a monitor inside a video game
+# Review: super fun to show off, maybe even cooler than bettercrt, but dark mode only
 # custom-shader = ../shaders/community/in-game-crt.glsl
 
 # In-game CRT with cursor styling
+# Review: doesn't seem to do anything visible, maybe needs the in-game-crt shader too
 # custom-shader = ../shaders/community/in-game-crt-cursor.glsl
 
 # Vintage terminal aesthetics
+# Review: greenish CRT, inferior to bettercrt and in-game-crt
 # custom-shader = ../shaders/community/retro-terminal.glsl
 
 
 # --- Eye candy ---
 
 # Matrix digital rain
+# Review: really really like it! Too distracting for work, great for a fun evening
 # custom-shader = ../shaders/community/inside-the-matrix.glsl
 
 # Matrix environment hallway
+# Review: okay, dark mode only, not as impressive as the digital rain
 # custom-shader = ../shaders/community/matrix-hallway.glsl
 
 # Falling snow particles
+# Review: very fun! Perfect for Christmas time 🎄
 # custom-shader = ../shaders/community/just-snow.glsl
 
 # Underwater caustics
+# Review: doesn't seem to do anything visible
 # custom-shader = ../shaders/community/underwater.glsl
 
 # Water ripples
+# Review: very fun! Looks like filming the ocean floor. Usable but too distracting for daily use
 # custom-shader = ../shaders/community/water.glsl
 
+# Star field / galaxy shaders — dark-pixel replacement
+## These shaders check pixel brightness and only apply to pixels below a threshold (~0.1).
+## Clever: keeps text readable by only replacing dark background areas.
+## Result: works in dark-themed apps (NeoVim dark), invisible in light themes/shell, or in themes that are not quite dark enough.
 # Star field animation
+# Review: trippy! Pretty nice in neovim. But probably would never _actually_ it.
 # custom-shader = ../shaders/community/starfield.glsl
-
-# Colorful star field
+# Colorful star field — same as above but with colored stars
 # custom-shader = ../shaders/community/starfield-colors.glsl
-
 # Galaxy background
 # custom-shader = ../shaders/community/galaxy.glsl
 
 # Fireworks particles
+# Review: works but looks cheap
 # custom-shader = ../shaders/community/fireworks.glsl
 
 # Fireworks with rockets
+# Review: even worse than fireworks
 # custom-shader = ../shaders/community/fireworks-rockets.glsl
 
 # Fire sparks
+# Review: basic, like flint sparks. Okay but nothing special
 # custom-shader = ../shaders/community/sparks-from-fire.glsl
 
 # Smoke and ghost particles
+# Review: no! Looks terrible 🤮!
 # custom-shader = ../shaders/community/smoke-and-ghost.glsl
 
 # Lava cinematic shader
+# Review: cool concept but buggy — freezes on tab switch, color shifts. GPU killer.
 # custom-shader = ../shaders/community/cineShader-Lava.glsl
 
 # 3D cube geometry
+# Review: actually subtle! Doesn't change existing colors, just a light overlay. Potential daily driver candidate.
 # custom-shader = ../shaders/community/cubes.glsl
 
 # Mechanical gears animation
+# Review: subtle, reuses terminal colors. Nice but a bit distracting
 # custom-shader = ../shaders/community/gears-and-belts.glsl
 
 # Wave interference patterns
+# Review: too distracting
 # custom-shader = ../shaders/community/sin-interference.glsl
 
 
 # --- Glitch / distortion ---
 
 # Digital glitch effects
+# Review: fun! Never for real use, but entertaining
 # custom-shader = ../shaders/community/glitchy.glsl
 
 # RGB split with twitchy glow
+# Review: no! Makes me dizzy! 🤮
 # custom-shader = ../shaders/community/glow-rgbsplit-twitchy.glsl
 
 # Drunk warping distortion
+# Review: looks like the water ripple shader but less interesting
 # custom-shader = ../shaders/community/drunkard.glsl
 
 # Perlin/simplex noise
+# Review: meh
 # custom-shader = ../shaders/community/mnoise.glsl
 
 
