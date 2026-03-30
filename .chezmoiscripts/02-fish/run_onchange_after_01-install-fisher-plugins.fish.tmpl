@@ -2,12 +2,19 @@
 
 # fish_plugins hash: {{ include "dot_config/private_fish/fish_plugins" | sha256sum }}
 
+# We use lengyijun/fisher (fork) instead of jorgebucaran/fisher (upstream).
+# Upstream has a long-standing bug where `fisher update` silently deletes fish_plugins
+# when it encounters conflicting files or missing fish_variables (issues #790, #823).
+# The fork fixes this and adds --overwrite support for dotfiles workflows.
+# See: https://github.com/lengyijun/fisher?tab=readme-ov-file#improvement-of-httpsgithubcomjorgebucaranfisher
+# Fork reliability: https://github.com/lengyijun/fisher/issues/17
+
 # Bootstrap Fisher if not present
 if not functions -q fisher
-  curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+  curl -sL https://raw.githubusercontent.com/lengyijun/fisher/fishest/functions/fisher.fish | source && fisher install lengyijun/fisher --overwrite
 end
 
 # Install/update plugins from fish_plugins
-fisher update
+fisher update --overwrite
 
 echo "Fisher plugins installed successfully."
