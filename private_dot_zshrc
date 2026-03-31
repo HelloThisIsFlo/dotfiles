@@ -726,9 +726,13 @@ export CURL=http # httpie
 
 #  ----- Keybindings ---------------------------------------------------- {{{
 #   ----- General ---------------------------------------------------- {{{
-# Word navigation (Option+Arrow)
-bindkey '^[[1;3D' backward-word
+# Word navigation (Option+Arrow / Alt+Arrow)
+bindkey '^[[1;3D' backward-word                        # xterm-style (iTerm2)
 bindkey '^[[1;3C' forward-word
+bindkey '\e[1;3D' backward-word                        # explicit ESC variant
+bindkey '\e[1;3C' forward-word
+bindkey '\eb' backward-word                            # Alt+B / Alt+F fallback
+bindkey '\ef' forward-word
 
 # Word deletion — matches fish keybinds (01__keybinds-and-vi-mode.fish)
 #   soft = backward-kill-word (stops at punctuation)
