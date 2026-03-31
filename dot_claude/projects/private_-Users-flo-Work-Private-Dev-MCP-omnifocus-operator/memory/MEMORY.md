@@ -43,3 +43,4 @@
 - [Careful worktree merges](feedback_careful-worktree-merges.md) — don't blindly --theirs on code files; read conflicts and combine both sides
 - [Thorough post-execution review](feedback_thorough-post-execution-review.md) — cross-reference summaries against codebase; auto-fixes aren't "resolved by definition"
 - [Golden master snapshots are human-only](feedback_golden-master-human-only.md) — agents create test infra, never capture/refresh snapshots
+- [Check worktrees before deleting](feedback_worktree-cleanup.md) — verify branches are merged into main; report unmerged ones, don't delete
