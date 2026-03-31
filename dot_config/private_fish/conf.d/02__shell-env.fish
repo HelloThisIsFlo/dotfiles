@@ -3,7 +3,7 @@
 set -gx LC_ALL en_US.UTF-8
 set -gx LANG en_US.UTF-8
 
-set -gx EDITOR vim
+set -gx EDITOR nvim
 
 # Let Ghostty set TERM=xterm-ghostty for full feature support (undercurl, etc.)
 # Only fall back to xterm-256color for other terminals
