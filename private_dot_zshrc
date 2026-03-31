@@ -729,6 +729,15 @@ export CURL=http # httpie
 # Word navigation (Option+Arrow)
 bindkey '^[[1;3D' backward-word
 bindkey '^[[1;3C' forward-word
+
+# Word deletion — matches fish keybinds (01__keybinds-and-vi-mode.fish)
+#   soft = backward-kill-word (stops at punctuation)
+#   hard = backward-kill-word with WORDCHARS='' (stops at whitespace-ish boundaries)
+# macOS: alt = soft, ctrl = hard
+bindkey '\e\x7f' backward-kill-word                    # Alt+Backspace  → soft delete
+bindkey '\b'     vi-backward-kill-word                  # Ctrl+Backspace → hard delete (vi-style, whitespace boundaries)
+bindkey '\e[3;3~' kill-word                             # Alt+Delete     → soft forward delete
+bindkey '\e[3;5~' kill-word                             # Ctrl+Delete    → hard forward delete
 #   ----- General ---------------------------------------------------- }}}
 
 #   ----- History Substring Search ----------------------------------- {{{
