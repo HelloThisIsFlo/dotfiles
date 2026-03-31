@@ -1,2 +1,2 @@
-# Placeholder: Go env vars (GOPATH)
-# Note: Go binaries on PATH ($GOPATH/bin) go in 82__language-paths.fish
+# Go env vars — $GOPATH/bin added to PATH in 82__language-paths.fish
+set -gx GOPATH $HOME/.go
