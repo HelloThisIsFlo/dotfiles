@@ -1,9 +1,10 @@
 # eza — modern ls replacement
 set -gx EZA_ICONS_AUTO 1
 
-alias ls  'eza --group-directories-first --hyperlink'
-alias ll  'ls -l --git --header --color-scale=all --time-style=relative'
+alias ls  'eza --group-directories-first --hyperlink --no-quotes'
+alias ll  'ls -l --git --header --color-scale=all --time-style=relative --mounts'
 alias la  'll -a'
+alias lao 'la --octal-permissions'
 
 alias lt    'eza --tree --level=2 --group-directories-first --hyperlink --git-ignore'
 alias lt1   'lt --level=1'
