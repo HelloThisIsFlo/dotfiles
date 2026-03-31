@@ -47,6 +47,17 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 
 - [LazyVim Configuration](neovim/lazyvim-config.md) — file-by-file guide to the LazyVim config directory, layering model, what to track
 
+## Fish
+
+- [Syntax Rosetta Stone](fish/syntax-rosetta.md) — zsh/bash to fish translation table for config migration
+- [Variables & PATH](fish/variables-and-path.md) — scopes, `set -gx`, `fish_add_path`, universal variable anti-pattern
+- [Config Structure](fish/config-structure.md) — conf.d numbering, functions/, Fisher, chezmoi source tree
+- [Aliases & Abbreviations](fish/aliases-and-abbreviations.md) — abbr vs alias vs function, translating every zshrc alias
+- [Functions](fish/functions.md) — writing functions, argument validation, translating complex zsh functions
+- [Completions](fish/completions.md) — `complete` builtin, CLI-generated completions, custom completions
+- [Keybindings & Vi Mode](fish/keybindings-and-vi-mode.md) — bind syntax, vi mode, platform-aware deletion tiers
+- [Sourcing, Secrets & Tools](fish/sourcing-secrets-and-tools.md) — sourcing bash files, rbw secrets, tool init patterns
+
 ## Zsh Plugins
 
 - [fzf-tab](zsh-plugins/fzf-tab.md) — fuzzy completion menu, path drilling, previews, config

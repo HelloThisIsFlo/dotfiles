@@ -62,7 +62,7 @@ Word-movement (Option+Arrow) works via Fish presets — no custom config needed.
 
 Line navigation (`Ctrl+A`/`Ctrl+E`) is re-added for vi insert mode (emacs presets don't carry over):
 
-```fish
+```bash
 bind -M insert ctrl-a beginning-of-line
 bind -M insert ctrl-e end-of-line
 ```
@@ -83,7 +83,7 @@ Only needed in insert mode — normal mode has `b`, `w`, `dB`, `0`, `$`, etc.
 
 Not yet configured. When needed:
 
-```zsh
+```bash
 # In ~/.zshrc
 WORDCHARS=''   # Every non-alphanumeric char is a word boundary
 ```

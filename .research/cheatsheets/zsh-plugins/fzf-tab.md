@@ -46,7 +46,7 @@ For custom completions (like `cma <tab>` with chezmoi managed files), path drill
 
 fzf-tab can show previews alongside completions. These are configured per-context with `zstyle`:
 
-```zsh
+```bash
 # Preview directory contents when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color=always $realpath'
 
@@ -70,7 +70,7 @@ Previews are optional — fzf-tab works fine without any `zstyle` configuration.
 
 All config is via `zstyle` under the `:fzf-tab:` namespace. None of this is required — defaults are sane.
 
-```zsh
+```bash
 # Switch between groups with < and > instead of F1/F2
 zstyle ':fzf-tab:*' switch-group '<' '>'
 

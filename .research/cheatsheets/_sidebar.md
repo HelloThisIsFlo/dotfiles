@@ -32,5 +32,14 @@
 - [macOS](ghostty/macos.md)
 - **NeoVim**
 - [LazyVim Configuration](neovim/lazyvim-config.md)
+- **Fish**
+- [Syntax Rosetta Stone](fish/syntax-rosetta.md)
+- [Variables & PATH](fish/variables-and-path.md)
+- [Config Structure](fish/config-structure.md)
+- [Aliases & Abbreviations](fish/aliases-and-abbreviations.md)
+- [Functions](fish/functions.md)
+- [Completions](fish/completions.md)
+- [Keybindings & Vi Mode](fish/keybindings-and-vi-mode.md)
+- [Sourcing, Secrets & Tools](fish/sourcing-secrets-and-tools.md)
 - **Zsh Plugins**
 - [fzf-tab](zsh-plugins/fzf-tab.md)
