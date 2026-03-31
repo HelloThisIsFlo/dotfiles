@@ -52,7 +52,7 @@ export ALTERNATE_EDITOR=""
 # Let Ghostty set TERM=xterm-ghostty for full feature support (undercurl, etc.)
 # Only fall back to xterm-256color for other terminals that don't set TERM
 if [[ "$TERM_PROGRAM" != "ghostty" ]]; then
-export TERM=xterm-256color
+  export TERM=xterm-256color
   export COLORTERM=truecolor
 fi
 
@@ -97,6 +97,11 @@ function _chezmoi_managed_files() {
   managed_files=(${(f)"$(chezmoi managed 2>/dev/null)"})
   _wanted files expl 'managed file' _multi_parts / managed_files
 }
+
+# fzf-tab: use bat as default previewer (fzf-tab-source's command-specific previews still take priority)
+zstyle ':fzf-tab:complete:*' fzf-preview 'bat --color=always --style=plain $realpath 2>/dev/null || echo $word'
+# chezmoi shortcuts need ~/$word since completion returns relative paths
+zstyle ':fzf-tab:complete:(cma|cmd|cme|cmm|cmc|cmra):*' fzf-preview 'bat --color=always --style=plain ~/$word 2>/dev/null || echo "no preview"'
 
 #   ----- Chezmoi ---------------------------------------------------- }}}
 
@@ -651,9 +656,11 @@ source ~/.antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
+antigen bundle zsh-users/zsh-completions
+antigen bundle Aloxaf/fzf-tab
+antigen bundle Freed-Wu/fzf-tab-source@main
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
 #antigen bundle robbyrussell/oh-my-zsh plugins/aws            # Cmd: TODO - (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aws)
 antigen bundle robbyrussell/oh-my-zsh plugins/git            # Cmd: See `zshgit` cheatsheet | Credits: Alvaro Castellanos
 antigen bundle robbyrussell/oh-my-zsh plugins/asdf
