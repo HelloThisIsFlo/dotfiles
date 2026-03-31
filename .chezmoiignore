@@ -53,5 +53,9 @@
 # Fish Plugin: Git Abbr
 .config/fish/conf.d/git_abbr.fish
 .config/fish/functions/git_*
+# Fish Plugin: Fzf
+.config/fish/conf.d/fzf.fish
+.config/fish/functions/_fzf*
+.config/fish/functions/fzf_configure_bindings.fish
 
 # v-- To Sort --v
