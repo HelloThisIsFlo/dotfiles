@@ -15,7 +15,29 @@
 [push]
 	default = simple
 [pull]
-	rebase = true
+  # rebase = merges (not "true", not "false")
+  #
+  # This is still rebase — not the default merge-on-pull strategy.
+  # Claude Code agents work in git worktrees on separate branches,
+  # then get merged back to main. We want to preserve that topology:
+  #
+  #        * Merge branch 'agent-abc'    ← preserved with "merges"
+  #        |\
+  #        | * commit C
+  #        | * commit B
+  #        | * commit A
+  #        |/
+  #        * previous main
+  #
+  # - "false" (default): pull merges — no rebase at all
+  # - "true": rebases but flattens merges → loses agent grouping, causes conflicts
+  # - "merges": rebases onto origin, but recreates local merge commits ✓
+  #
+  # This matters because GUI editors (Cursor, VS Code) often pull before
+  # pushing — so even an immediate push can flatten local merges.
+  #
+  # Changed 2026-03-31 after pull flattened two agent merge commits
+	rebase = merges
 [branch]
 	autosetupmerge = always
 [init]
