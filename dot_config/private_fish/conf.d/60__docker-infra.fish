@@ -1,1 +1,0 @@
-# Placeholder: Docker droplets & infrastructure
