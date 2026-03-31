@@ -7,7 +7,7 @@
 #   2. If shims are already in PATH (e.g. inherited from parent zsh), the guard
 #      skips the prepend entirely.
 #
-# Fix: fish_add_path --move (fights fire with fire), load last (99-) so asdf wins.
+# Fix: fish_add_path --move (fights fire with fire), load after homebrew so asdf wins.
 # ASDF_DATA_DIR set explicitly (it's the default, but avoids implicit behavior).
 set -gx ASDF_DATA_DIR "$HOME/.asdf"
 fish_add_path --global --move --path $ASDF_DATA_DIR/shims

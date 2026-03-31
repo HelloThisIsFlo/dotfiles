@@ -1,0 +1,1 @@
+# Placeholder: Go environment (GOPATH)
