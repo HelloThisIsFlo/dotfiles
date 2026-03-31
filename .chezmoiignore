@@ -19,6 +19,22 @@
 
 # ── watch-dirs: auto-ignored (new entries appended below) ──
 
+# ──── ".config/nvim"
+# Lazy.nvim
+.config/nvim/lazy-lock.json
+.config/nvim/LICENSE
+.config/nvim/README.md
+
+
+# ──── ".claude"
+# Claude Skills & Hooks - EXTERNAL ONES
+.claude/skills/copywriting
+.claude/skills/find-skills
+.claude/skills/review-panel-workspace
+.claude/skills/visual-explainer
+.claude/hooks/gsd*
+
+
 # ──── ".config/fish"
 .config/fish/conf.d/fish_frozen_theme.fish.bak
 .config/fish/fish_variables
@@ -34,15 +50,8 @@
 # Fish Plugin: Sponge
 .config/fish/conf.d/sponge.fish
 .config/fish/functions/*sponge*
-# Lazy.nvim
-.config/nvim/lazy-lock.json
-.config/nvim/LICENSE
-.config/nvim/README.md
+# Fish Plugin: Git Abbr
+.config/fish/conf.d/git_abbr.fish
+.config/fish/functions/git_*
 
-
-# Claude Skills & Hooks - EXTERNAL ONES
-.claude/skills/copywriting
-.claude/skills/find-skills
-.claude/skills/review-panel-workspace
-.claude/skills/visual-explainer
-.claude/hooks/gsd*
+# v-- To Sort --v
