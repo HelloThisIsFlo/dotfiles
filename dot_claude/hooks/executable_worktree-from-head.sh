@@ -29,7 +29,7 @@ BRANCH_NAME="worktree-$AGENT_ID"
 
 # Create worktree from local HEAD
 mkdir -p "$(dirname "$WORKTREE_PATH")"
-git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" HEAD 2>&1 >&2
+git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME" HEAD >/dev/null 2>&1
 
 # Return the path to Claude Code
 echo "$WORKTREE_PATH"
