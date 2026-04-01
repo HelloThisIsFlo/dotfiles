@@ -1,0 +1,23 @@
+{{- if eq .os "macos" -}}
+#!/bin/sh
+set -eu
+
+fish_path="$(command -v fish)"
+
+if [ -z "$fish_path" ]; then
+  echo "fish not found, skipping"
+  exit 0
+fi
+
+# Ensure fish is in /etc/shells
+if ! grep -qx "$fish_path" /etc/shells 2>/dev/null; then
+  echo "Adding $fish_path to /etc/shells (requires sudo)"
+  echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+fi
+
+# Set fish as default shell if needed
+if [ "${SHELL:-}" != "$fish_path" ]; then
+  echo "Changing default shell to $fish_path"
+  chsh -s "$fish_path"
+fi
+{{ end -}}
