@@ -21,6 +21,10 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 
 **For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes. **After completing any migration work, update the Progress Checklist in `.research/MIGRATION.md` — check off finished items, update the Current State table, and add an entry to the Completed Items log.**
 
+## CLI exploration (parallel track)
+
+Separate from the migration: evaluating and adopting modern CLI tools for an upgraded terminal experience. Tracker: `.research/CLI-EXPLORATION.md`. This is an ongoing list — when the user mentions wanting to try a new tool, add it there. When a tool is configured and decided on, move it to the "Integrated" section. Don't confuse exploration work with migration work.
+
 ## Key commands
 
 ```bash
