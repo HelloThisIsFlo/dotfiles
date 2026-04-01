@@ -57,5 +57,16 @@
 .config/fish/conf.d/fzf.fish
 .config/fish/functions/_fzf*
 .config/fish/functions/fzf_configure_bindings.fish
+# Fish Plugin: Fish-AWS
+.config/fish/conf.d/fish-aws.fish
+.config/fish/functions/_aws_clear_state.fish
+.config/fish/functions/_aws_update_state.fish
+.config/fish/functions/acp.fish
+.config/fish/functions/agp.fish
+.config/fish/functions/agr.fish
+.config/fish/functions/asp.fish
+.config/fish/functions/asr.fish
+.config/fish/functions/aws_profiles.fish
+.config/fish/functions/aws_regions.fish
 
 # v-- To Sort --v
