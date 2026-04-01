@@ -197,6 +197,15 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 - [ ] Archive MIGRATION.md
 - [ ] Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
 
+### Phase 8: Replace Docker Droplet TLS with Docker Contexts ⬜
+
+- [ ] Replace custom TLS cert setup (`52__droplets.fish` + `~/config-in-the-cloud/secrets/tlscertificates-*`) with native `docker context` (SSH-based)
+- [ ] For each droplet (awesometeam, thesandbox, floriankempenich, thehome, dadhome): create `docker context create <name> --docker "host=ssh://user@host"`
+- [ ] Ensure SSH user has Docker socket access on each droplet (`docker` group or root)
+- [ ] Verify: `docker context use <name>` + `docker ps` works for each
+- [ ] Delete `52__droplets.fish` from chezmoi
+- [ ] Archive TLS certificates from `~/config-in-the-cloud/secrets/tlscertificates-*`
+
 ---
 
 ## Target End State
@@ -429,6 +438,22 @@ Design pattern: tool lists in `.chezmoi.toml.tmpl` `[data.tools]` tables, run sc
 - Rewrite CLAUDE.md — remove migration section, add maintenance guidance
 - Archive MIGRATION.md
 - Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
+
+### Phase 8: Replace Docker Droplet TLS with Docker Contexts
+
+> Goal: replace custom TLS certificate-based remote Docker setup with native `docker context` (SSH-based). Eliminates cert management, activate/deactivate functions, and env var juggling.
+
+Current setup: `52__droplets.fish` defines `activate-<name>` functions that source TLS certs from `~/config-in-the-cloud/secrets/tlscertificates-<name>/activate.sh`, setting `DOCKER_TLS_VERIFY`, `DOCKER_HOST`, `DOCKER_CERT_PATH`. Five droplets: awesometeam, thesandbox, floriankempenich, thehome, dadhome.
+
+Replacement: `docker context create <name> --docker "host=ssh://user@host"` for each droplet. Uses existing SSH config (already in chezmoi). Switch with `docker context use <name>` or per-command with `docker --context <name> ps`.
+
+Prerequisites: SSH user must have Docker socket access on each droplet (member of `docker` group or root).
+
+Steps:
+- Create a `docker context` for each of the 5 droplets
+- Verify connectivity and Docker access for each
+- Remove `52__droplets.fish` from chezmoi
+- Archive TLS certificates from `~/config-in-the-cloud/secrets/tlscertificates-*`
 
 ---
 
