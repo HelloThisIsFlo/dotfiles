@@ -1,5 +1,8 @@
 # Base shell environment — locale, editor, TERM
 
+# Disable fish greeting
+set -g fish_greeting ""
+
 set -gx LC_ALL en_US.UTF-8
 set -gx LANG en_US.UTF-8
 
