@@ -65,5 +65,8 @@
 .config/fish/functions/asr.fish
 .config/fish/functions/aws_profiles.fish
 .config/fish/functions/aws_regions.fish
+# Fish Plugin: Puffer-Fish
+.config/fish/conf.d/puffer_fish_key_bindings.fish
+.config/fish/functions/_puffer_fish*
 
 # v-- To Sort --v

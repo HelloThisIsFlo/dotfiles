@@ -4,11 +4,11 @@ alias vim nvim
 
 # ── Navigation ───────────────────────────────────────────────────────
 
-# Dynamic multi-dot: .. → cd ../, ... → cd ../../, .... → cd ../../../, etc.
-function _multicd
-    echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)
-end
-abbr -a dotdot --regex '^\.\.+$' --function _multicd
+# Inline expansions provided by puffer-fish plugin (nickeb96/puffer-fish):
+#   ...  ->  ../..    (works with any command, tab-completes mid-path)
+#   !!   ->  last command  (e.g. sudo !!)
+#   !$   ->  last argument of previous command
+#   !*   ->  all arguments of previous command
 
 # ── File operations ──────────────────────────────────────────────────
 
