@@ -29,3 +29,15 @@ end
 function x --description "chmod +x the most recently created file in cwd"
     chmod u+x (command ls -tr | tail -1)
 end
+
+abbr -a rm    'rm -r'
+abbr -a cp    'cp -r'
+abbr -a ln    'ln -s'
+abbr -a md    'mkdir -p'
+abbr -a mkdir 'mkdir -p'
+
+# ── Clipboard ────────────────────────────────────────────────────────
+
+abbr -a y --position anywhere '| pbcopy'
+abbr -a p  'pbpaste |'
+abbr -a pp 'pbpaste >'
