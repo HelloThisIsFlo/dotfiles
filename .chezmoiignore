@@ -50,9 +50,6 @@
 # Fish Plugin: Sponge
 .config/fish/conf.d/sponge.fish
 .config/fish/functions/*sponge*
-# Fish Plugin: Git Abbr
-.config/fish/conf.d/git_abbr.fish
-.config/fish/functions/git_*
 # Fish Plugin: Fzf
 .config/fish/conf.d/fzf.fish
 .config/fish/functions/_fzf*
