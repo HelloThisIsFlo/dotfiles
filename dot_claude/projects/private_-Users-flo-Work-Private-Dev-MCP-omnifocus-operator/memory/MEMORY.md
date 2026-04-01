@@ -18,6 +18,9 @@
 - [You-did-good document](project_you-did-good-document.md) — personal imposter syndrome document, V14 final, in `.sandbox/portfolio/you-did-good/`
 - [Portfolio next iteration](project_portfolio-next-iteration.md) — queued improvements: failure story (v1.2→v1.2.1), problem-first framing, tradeoffs from research
 
+## Reminders
+- [Todos 11 & 12 queued](project_todos-11-12-queued.md) — Literal/Annotated boundary + centralize descriptions; remind Flo next session
+
 ## Memory-only decisions
 - Versioning: v1.x series (v1.1→v1.5), reserve v2.0 for workflow logic
 
