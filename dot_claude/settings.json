@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(cat:*)",
@@ -49,7 +52,67 @@
       "WebSearch",
       "WebFetch(domain:www.tech-invite.com)",
       "WebFetch(domain:www.muonics.com)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "mcp__omnifocus-operator__list_all",
+      "WebFetch(domain:omni-automation.com)",
+      "WebFetch(domain:www.omni-automation.com)",
+      "WebFetch(domain:discourse.omnigroup.com)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(SNAPSHOT=\"/Users/flo/.claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/8e504203-cc65-48dd-bf68-4c0146a5b703/tool-results/mcp-omnifocus-operator-list_all-1772797698621.txt\")",
+      "Read(//Users/flo/Work/Private/Dev/MCP/omnifocus-operator/**)",
+      "Bash(node:*)",
+      "WebFetch(domain:support.omnigroup.com)",
+      "WebFetch(domain:forums.omnigroup.com)",
+      "WebFetch(domain:www.omnigroup.com)",
+      "Bash(RESULT_FILE=\"/Users/flo/.claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/7c980107-b8a8-41df-adbe-62f4a28f5e76/tool-results/mcp-omnifocus-operator-list_all-1772881002050.txt\")",
+      "Bash(sqlite3 -readonly:*)",
+      "mcp__omnifocus-operator__get_tag",
+      "mcp__omnifocus-operator__add_tasks",
+      "mcp__omnifocus-operator__get_all",
+      "Bash(python3:*)",
+      "mcp__omnifocus-operator__get_task",
+      "mcp__omnifocus-operator__get_project",
+      "mcp__omnifocus-operator__edit_tasks",
+      "Skill(gsd:execute-phase)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.pydantic.dev)",
+      "WebFetch(domain:www.cosmicpython.com)",
+      "Bash(uv run:*)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(git mv:*)",
+      "Bash(ruff check:*)",
+      "Bash(python -m pytest --collect-only)",
+      "Bash(gh run:*)",
+      "Bash(find . -name *.py -path */uat/* -type f)",
+      "mcp__fastmcp-spike__log_all_levels",
+      "WebFetch(domain:gofastmcp.com)",
+      "mcp__fastmcp-spike__format_showcase",
+      "mcp__fastmcp-spike__all_ctx_levels",
+      "Bash(python:*)",
+      "mcp__fastmcp-spike__process_batch",
+      "mcp__fastmcp-spike__process_with_messages",
+      "mcp__fastmcp-spike__process_unknown_total",
+      "mcp__fastmcp-spike__delete_task",
+      "mcp__fastmcp-spike__edit_completed_task",
+      "mcp__fastmcp-spike__confirm_action",
+      "mcp__fastmcp-spike__ask_string",
+      "mcp__fastmcp-spike__ask_number",
+      "mcp__fastmcp-spike__ask_boolean",
+      "mcp__fastmcp-spike__ask_choice",
+      "mcp__fastmcp-spike__ask_multi_select",
+      "mcp__fastmcp-spike__ask_structured",
+      "mcp__fastmcp-spike__ask_with_defaults",
+      "mcp__fastmcp-spike__multi_turn",
+      "Bash(git:*)",
+      "Bash(gh search:*)",
+      "Bash(find /Users/flo/Work/Private/Dev/MCP/omnifocus-operator/.research -type f -name *.md)",
+      "Bash(find /Users/flo/Work/Private/Dev/MCP/omnifocus-operator/src -type f -name *.py)",
+      "Bash(gh issue:*)",
+      "Skill(gsd:new-milestone)",
+      "Bash(find ~/.claude -maxdepth 2 -type f -name *.json -newer ~/.claude/settings.json)",
+      "Skill(gsd:add-todo)"
     ],
     "deny": [
       "Read(.env)",
@@ -60,7 +123,8 @@
       "Read(**/*credential*)",
       "Read(**/*.pem)",
       "Read(**/*.key)"
-    ]
+    ],
+    "defaultMode": "default"
   },
   "hooks": {
     "SessionStart": [
@@ -124,9 +188,6 @@
     "github@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
-  },
-  "env": {
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
   },
   "effortLevel": "medium",
   "showClearContextOnPlanAccept": true,

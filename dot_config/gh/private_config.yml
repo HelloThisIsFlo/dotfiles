@@ -1,24 +1,17 @@
 version: 1
-
 # Supported values: ssh, https
 git_protocol: https
-
 # If blank, will refer to environment.
 editor:
-
 # Ask interactive questions when flags are missing? (e.g. pr title, reviewers)
 prompt: enabled
 # Open $EDITOR for multi-line inputs? (e.g. PR body, issue body, release notes)
 prefer_editor_prompt: enabled
-
 # Set here rather than globally ($PAGER) — bat adds syntax highlighting for PR bodies/JSON but can cause issues as a global pager (breaks some tools' expectations, noisy for plain text).
 pager: bat
-
 aliases:
     co: pr checkout
-
 # Route HTTP via a unix socket (enterprise proxies/Docker). See: https://cli.github.com/manual/gh_help_environment
 http_unix_socket:
-
 # What web browser gh should use when opening URLs. If blank, will refer to environment.
 browser:
