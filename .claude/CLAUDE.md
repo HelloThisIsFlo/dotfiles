@@ -25,6 +25,10 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 
 Separate from the migration: evaluating and adopting modern CLI tools for an upgraded terminal experience. Tracker: `.research/CLI-EXPLORATION.md`. This is an ongoing list — when the user mentions wanting to try a new tool, add it there. When a tool is configured and decided on, move it to the "Integrated" section. Don't confuse exploration work with migration work.
 
+## Zsh → Fish migration (parallel track)
+
+Porting the interactive shell from zsh (oh-my-zsh + antigen) to fish. Tracker: `.research/FISH-MIGRATION.md`. The bulk of aliases/functions/abbreviations are already migrated. Remaining work is mostly filling placeholders and completions. Don't confuse with the chezmoi migration (which is about *how* files are managed) or CLI exploration (which is about *which* tools to use) — this track is about translating the zsh shell config to fish equivalents.
+
 ## Key commands
 
 ```bash
