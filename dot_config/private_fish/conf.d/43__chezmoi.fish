@@ -8,5 +8,5 @@ abbr cmc   chezmoi cat
 abbr cmra  'chezmoi re-add'
 abbr cms   chezmoi status
 
-abbr cmbrew 'chezmoi edit --apply ~/.Brewfile && chezmoi apply ~/brew-bundle.sh'
+abbr cmbrew 'chezmoi edit --apply ~/.Brewfile && chezmoi apply ~/.chezmoiscripts/01-macos/brew-bundle.sh'
 abbr cmfish 'chezmoi apply ~/.config/fish && exec fish'
