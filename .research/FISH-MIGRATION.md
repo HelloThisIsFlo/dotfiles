@@ -82,7 +82,7 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 - [ ] **mise** (`12__mise.fish`) — placeholder for asdf→mise switch. Not blocking
 
 ### Missing env vars
-- [ ] `HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile` — quick win, one-liner in any conf.d
+- [x] `HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile` — added to `11__homebrew.fish`
 - [ ] `ALTERNATE_EDITOR=""` (needed for emacsclient fallback — skip if not using emacs)
 
 ### Completions (`99__completions.fish`)
