@@ -19,10 +19,10 @@
 - [Portfolio next iteration](project_portfolio-next-iteration.md) — queued improvements: failure story (v1.2→v1.2.1), problem-first framing, tradeoffs from research
 
 ## Reminders
-- [Todos 11 & 12 queued](project_todos-11-12-queued.md) — Literal/Annotated boundary + centralize descriptions; remind Flo next session
 
 ## Memory-only decisions
 - Versioning: v1.x series (v1.1→v1.5), reserve v2.0 for workflow logic
+- [RRULE boundary decision](project_rrule-boundary-decision.md) — repository owns RRULE both directions (Option C), not yet implemented
 
 ## Feedback
 - [Don't close milestones autonomously](feedback_dont-close-milestones.md)
@@ -47,3 +47,4 @@
 - [Thorough post-execution review](feedback_thorough-post-execution-review.md) — cross-reference summaries against codebase; auto-fixes aren't "resolved by definition"
 - [Golden master snapshots are human-only](feedback_golden-master-human-only.md) — agents create test infra, never capture/refresh snapshots
 - [Check worktrees before deleting](feedback_worktree-cleanup.md) — verify branches are merged into main; report unmerged ones, don't delete
+- [Contracts are pure data](feedback_contracts-are-pure-data.md) — no model_serializer or transformation logic in contracts/; only field definitions and validators
