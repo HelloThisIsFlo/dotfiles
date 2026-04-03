@@ -1,6 +1,6 @@
 # Machine classification axes (all orthogonal):
 #
-#   OS            — automatic via .chezmoi.os (darwin / linux)
+#   os            — macos vs linux (automatic via .chezmoi.os)
 #   is_headless   — GUI (false) vs terminal-only (true)
 #   trust_level   — what credentials/secrets to place on this machine:
 #                     personal  = everything (personal keys, API tokens, .secrets.env)
@@ -15,14 +15,20 @@
 
 
 [data]
+    # ID
     email = {{ $email | quote }}
+    
+    # Machine Settings
     trust_level = {{ $trust_level | quote }}
     is_headless = {{ $is_headless }}
-{{ if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.os "darwin" }}
     os = "macos"
-{{ else if eq .chezmoi.os "linux" }}
+{{- else if eq .chezmoi.os "linux" }}
     os = "linux"
-{{ end }}
+{{- end }}
+
+    # Config
+    mise_bin = "{{ joinPath .chezmoi.homeDir ".local/bin/mise" }}"
 
 
 [add]

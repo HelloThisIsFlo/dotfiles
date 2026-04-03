@@ -1,2 +1,0 @@
-# Relative to $HOME — use with {{ .chezmoi.homeDir }} in templates
-mise_install_path: ".local/bin/mise"

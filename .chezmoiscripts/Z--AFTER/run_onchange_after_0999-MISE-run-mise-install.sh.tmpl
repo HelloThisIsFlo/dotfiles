@@ -1,7 +1,4 @@
 #!/bin/bash
 # config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 
-# Ensure mise is on PATH
-export PATH="{{ joinPath .chezmoi.homeDir .mise_install_path | dir }}:$PATH"
-
-mise install
+{{ .mise_bin }} install
