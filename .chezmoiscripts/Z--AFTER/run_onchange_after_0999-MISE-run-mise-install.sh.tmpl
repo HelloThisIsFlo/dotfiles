@@ -1,7 +1,7 @@
 #!/bin/bash
 # config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 
-# Ensure mise is on PATH (may not be in bash during chezmoi apply on fresh machines)
+# Ensure mise is on PATH
 export PATH="{{ joinPath .chezmoi.homeDir .mise_install_path | dir }}:$PATH"
 
 mise install

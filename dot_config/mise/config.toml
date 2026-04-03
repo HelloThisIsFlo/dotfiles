@@ -38,12 +38,30 @@ terraform = "1"
 
 
 # == CLI Tools (aqua) ===
-# aqua downloads pre-built binaries from GitHub releases — fast, cross-platform, no compilation.
-# Preferred over cargo:/go: backends which compile from source.
-"aqua:dandavison/delta" = "latest"
-"aqua:cheat/cheat" = "latest"
+#
+# By default, for most tools, mise prioritizes aqua over cargo/go/npm/[...]. 
+# This is great because aqua downloads are pre-built binaries from GitHub releases — fast, cross-platform, no compilation.
+# 
+# However, the actually priority depends on each tool. 
+# To find out which backend will be used by default (1st in the list), use:
+#
+#     mise registry | grep <tool>
+# 
+# To force a specific backend, use the fully qualified name from `mise registry`. For instance:
+#  - "cargo:git-delta"
+#  - "npm:@ls-lint/ls-lint"
+#  - "aqua:XAMPPRocky/tokei"
+# 
+# 
+# For more details, see: https://mise.jdx.dev/registry.html#backends
+# 
+delta = "latest"
+cheat = "latest"
+
+
 
 [settings]
+#
 # Allow mise to read .python-version, .node-version, .ruby-version, .java-version files.
 # 
 # Disabled by default since 2025.10.0 to avoid mise auto-managing tools from unrelated files like go.mod or Gemfile. 
