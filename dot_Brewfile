@@ -1,5 +1,4 @@
 brew "aria2"
-brew "asdf"
 brew "awscli"
 brew "bat"
 brew "bfg"

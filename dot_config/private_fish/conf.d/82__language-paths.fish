@@ -3,4 +3,3 @@
 # Those load before 80s, so variables like $GOPATH are available here.
 fish_add_path --global --path $GOPATH/bin
 fish_add_path --global --path $HOME/.krew/bin
-fish_add_path --global --path $ASDF_DATA_DIR/installs/rust/stable/bin

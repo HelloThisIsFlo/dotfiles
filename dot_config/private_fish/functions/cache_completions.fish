@@ -1,7 +1,7 @@
 # Generate and cache Fish completions for a CLI tool.
 #
 # Usage: cache_completions <tool> <command-that-generates-completions>
-# Example: cache_completions asdf "asdf completion fish"
+# Example: cache_completions chezmoi "chezmoi completion fish"
 #
 # On first run (or fresh machine): generates completions and saves the tool's
 # version. On subsequent runs: compares the current version against the cached
