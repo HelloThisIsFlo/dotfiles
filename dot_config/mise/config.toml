@@ -55,6 +55,7 @@ terraform = '1'
 # 
 # For more details, see: https://mise.jdx.dev/registry.html#backends
 # 
+usage = 'latest'
 delta = 'latest'
 cheat = 'latest'
 
