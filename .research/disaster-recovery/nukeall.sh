@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd "$DIR"
 
-mise implode -y 2>/dev/null || echo "mise already uninstalled"
+mise implode -y 2>/dev/null || true
 chezmoi state reset --force
 rm -rf ~/.config/fish
 

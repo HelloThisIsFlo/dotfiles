@@ -77,3 +77,14 @@ cheat = "latest"
 # - .java-version -> used by jenv, sdkman.
 # 
 idiomatic_version_file_enable_tools = ["python", "node", "ruby", "java"]
+
+# During initial installation, mise installs tools by batch. 
+# But later batches, start the "timeout" counter, eventhough they're just paused
+# Added on: 2026-04-03 
+# Update: Commented out, because maybe it's not needed. Just run `chezmoi apply` again if it fails.
+# 
+# fetch_remote_versions_timeout = "5min"
+# http_timeout = "5min"
+
+# Download Ruby as a pre-compiled binary
+ruby.compile = false
