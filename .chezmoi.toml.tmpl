@@ -9,7 +9,7 @@
 #
 # Re-prompt all values: `chezmoi init --prompt`
 
-{{ $email := promptStringOnce . "email" "Email address" "flo@kempenich.dev" -}}
+{{ $email := promptStringOnce . "email" "Email address" "flo@kempenich.ai" -}}
 {{ $trust_level := promptChoiceOnce . "trust_level" "Trust level (personal = all secrets, work = work only, untrusted = none)" (list "personal" "work" "untrusted") -}}
 {{ $is_headless := promptBoolOnce . "is_headless" "Is this a headless machine (no GUI)" false -}}
 
