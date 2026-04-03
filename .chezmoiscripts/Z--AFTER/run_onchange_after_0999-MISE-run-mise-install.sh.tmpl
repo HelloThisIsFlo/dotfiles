@@ -1,0 +1,14 @@
+#!/bin/bash
+# config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+
+
+# There's a bug where tools from aqua are not found after a fresh install, and clearing the cache fixes it.
+# I couldn't find any open issues about this, but the workaround ... works, sort of. 
+# It still fails from time to time, but a subsequent `mise cache clear` fixes it.
+# So I'm bundling this just before `mise install`, so it runs on `chezmoi apply` everytime `mise install` runs (as opposed to once during installation)
+#
+# Added on: 2026-04-03 
+# => I may want to revisit this later, to see if it's still needed
+#
+{{ .mise_bin }} cache clear 
+{{ .mise_bin }} install

@@ -119,9 +119,6 @@ repos:
 
   # ------- TOOCS ---------------------------------------------------- {{{
   - path: ~/Work/Private/Dev/DevOps/TOOCS
-    url: git@github.com:TOOCS/asdf.git
-
-  - path: ~/Work/Private/Dev/DevOps/TOOCS
     url: git@github.com:TOOCS/diffsofancy.git
 
   - path: ~/Work/Private/Dev/DevOps/TOOCS

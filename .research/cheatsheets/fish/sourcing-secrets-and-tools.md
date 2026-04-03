@@ -214,53 +214,31 @@ curl -L https://iterm2.com/shell_integration/fish -o ~/.iterm2_shell_integration
 
 ---
 
-## asdf vs mise
+## mise (version manager)
 
-Your zshrc uses asdf via an antigen plugin. Fish needs explicit setup for either tool, and this is a good time to consider the migration to mise.
+mise replaced asdf as the polyglot version manager (April 2026). It manages tool versions, PATH, and per-directory environments.
 
-### Current asdf setup
-
-```bash
-# conf.d/13__asdf.fish
-set -gx ASDF_DATA_DIR "$HOME/.asdf"
-fish_add_path --global --move --path $ASDF_DATA_DIR/shims
-```
-
-This is a simplified version of the official asdf fish integration. The key insight is `--move`: it fights Homebrew's `--move` trick by re-hoisting asdf shims to the front of PATH after Homebrew has had its turn.
-
-### The PATH ordering fight
-
-The loading order matters because both Homebrew and asdf try to own the front of PATH:
-
-1. `11__homebrew.fish` runs `brew shellenv` which uses `fish_add_path --move` — Homebrew wins PATH
-2. `13__asdf.fish` runs `fish_add_path --move` — asdf shims overtake Homebrew
-
-If asdf loaded first, Homebrew would push it down and you'd get Homebrew's Python instead of asdf's. The `--move` on both sides and the numbering scheme (`11` before `13`) guarantee the right order. See [variables-and-path.md](variables-and-path.md) for full details on `fish_add_path` flags.
-
-### mise migration path
-
-mise is a drop-in replacement for asdf. Same `.tool-versions` files, same plugin ecosystem, better performance, native fish support.
+### Current setup
 
 ```bash
-# Replace 13__asdf.fish with 12__mise.fish:
+# conf.d/12__mise.fish
 mise activate fish | source
 ```
 
-Why mise is better for fish:
-- No shim PATH fights — mise modifies PATH dynamically per directory, like direnv
-- No `--move` hacks needed
+That's it — no shim PATH manipulation, no `--move` hacks. mise hooks into the shell directly and manages PATH dynamically per directory. This eliminated the old asdf vs Homebrew PATH ordering fight entirely.
+
+### Why mise over asdf
+
+- No shim PATH fights — mise modifies PATH dynamically, like direnv
 - `mise activate` does everything: PATH management, version switching, completions
-- Reads existing `.tool-versions` files (backward compatible)
-- Also reads `mise.toml` for richer config (env vars, tasks, etc.)
+- Reads `.tool-versions` (asdf compat) and `mise.toml` (richer: env vars, tasks, comments)
+- Faster (~5ms vs asdf's ~120ms per invocation)
 
-### Migration steps
+### Global config
 
-1. Install mise: `brew install mise`
-2. Activate in fish: replace `13__asdf.fish` content with `mise activate fish | source`
-3. Test: `mise ls` should show all your installed runtimes (reads `.tool-versions`)
-4. Gradual cleanup: keep `~/.asdf` around until you verify everything works, then `rm -rf ~/.asdf`
+Global tool versions live in `~/.config/mise/config.toml` (managed by chezmoi). Per-project configs use `.mise.toml` or `.tool-versions`.
 
-> **Gotcha:** mise uses its own shim directory (`~/.local/share/mise/shims`). If you have scripts that hardcode `~/.asdf/shims`, update them. But if you use `mise activate` (not shim mode), there are no shims at all — mise manages PATH directly.
+> **Gotcha:** mise uses its own install directory (`~/.local/share/mise/`). If you use `mise activate` (not shim mode), there are no shims at all — mise manages PATH directly.
 
 ---
 
@@ -312,8 +290,7 @@ eval set -gx $varname "some-value"
 | `eval "$(direnv hook zsh)"` | `direnv hook fish \| source` | `conf.d/21__direnv.fish` |
 | `eval "$(zoxide init zsh)"` | `zoxide init fish \| source` | `conf.d/22__zoxide.fish` |
 | `source ~/.travis/travis.sh` | `bass source ~/.travis/travis.sh` | `conf.d/` (if still needed) |
-| `antigen bundle asdf` | `mise activate fish \| source` | `conf.d/12__mise.fish` |
-| `export PATH="$ASDF/.../shims:$PATH"` | `fish_add_path --global --move --path $ASDF_DATA_DIR/shims` | `conf.d/13__asdf.fish` |
+| `eval "$(mise activate bash)"` | `mise activate fish \| source` | `conf.d/12__mise.fish` |
 | `export KEY=value` | `set -gx KEY value` | Relevant `conf.d/` file |
 | `eval "$dynamic_code"` | `eval $dynamic_code` or refactor to `\| source` | Avoid if possible |
 

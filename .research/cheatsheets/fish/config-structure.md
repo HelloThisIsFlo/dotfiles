@@ -45,7 +45,7 @@ Without a naming convention, conf.d becomes a junk drawer. The numbering scheme 
 | Range | Category | What goes here |
 |-------|----------|----------------|
 | `0x` | Shell fundamentals | Keybinds, env vars, secrets — things everything else depends on |
-| `1x` | Package managers | Homebrew, mise, asdf — tool version managers and package sources |
+| `1x` | Package managers | Homebrew, mise — tool version managers and package sources |
 | `2x` | Tool integrations | direnv, zoxide, language setups — tools that hook into the shell |
 | `4x` | Commands and aliases | Abbreviations, functions, custom commands — the stuff you type |
 | `8x` | PATH | Path construction — runs late so tools are already configured |
@@ -70,7 +70,6 @@ conf.d/
   10======PACKAGE-MANAGERS======19
   11__homebrew.fish
   12__mise.fish
-  13__asdf.fish
   20=====TOOL-INTEGRATIONS======39
   21__direnv.fish
   22__zoxide.fish

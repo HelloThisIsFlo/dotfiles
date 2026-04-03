@@ -216,28 +216,6 @@ function mkcd { # Credits: Edu Saborit ;)
 }
 #   ----- Ubuntu-like commands --------------------------------------- }}}
 
-#   ----- CliTools --------------------------------------------------- {{{
-function clitool-cat {
-    # Display content of cli tool.
-    # Useful to check on which version of python/node/etc... the bin is
-    # available => It'll be written as:
-    # ```
-    # # asdf-plugin: python
-    # # asdf-plugin-version: 2.6.6
-    # # asdf-plugin-version: 3.7.0
-    # ```
-    clitool=$1
-    if command -v $clitool 1>/dev/null 2>&1; then
-        cat $(which $clitool)
-    else
-        echo "'$clitool' doesn't seem to be installed!"
-        echo ""
-        echo "If you just installed it, don't forget to run 'asdf reshim PLUGIN'"
-        echo "ex: 'asdf reshim python' after installing a PYTHON cli tool"
-    fi
-}
-#   ----- CliTools --------------------------------------------------- }}}
-
 #   ----- TADL ------------------------------------------------------- {{{
 function tadl {
   TADL_PASS=$(cat $HOME/.tadl-pass)
@@ -292,14 +270,6 @@ function scratch-list {
 }
 #   ----- Scratch ---------------------------------------------------- }}}
 
-#   ----- Java ------------------------------------------------------- {{{
-function list-all-java-versions {
-    for version in $(asdf list java)
-    do
-        echo "$version: $(file -b ~/.asdf/installs/java/$version/bin/java)"
-    done
-}
-#   ----- Java ------------------------------------------------------- }}}
 
 #   ----- Unify Ubuntu & Mac Tools ----------------------------------- {{{
 function bat() {
@@ -613,7 +583,6 @@ export GOPATH="$HOME/.go"
 # ----- Export PATH -------------------------------------------------------- {{{
 export PATH="$PATH:/usr/local/sbin" # TODO: See if can remove
 export PATH="$PATH:$HOME/.bin" # For all my custom scripts - TODO: Backup in mackup
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 
 export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS" # Obsidian CLI
@@ -634,8 +603,7 @@ export PATH="$PATH:$HOME/Dev/SDK/android-platform-tools" # Android tools (adb, f
 export PATH="$PATH:${GOPATH//://bin:}/bin" # Go
 export PATH="$HOME/.jenv/bin:$PATH"        # Java - Jenv
 
-export PATH="$ASDF_DATA_DIR/installs/rust/stable/bin:$PATH" # asdf - Rust
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" # asdf - krew
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH" # krew
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:$HOME/.lmstudio/bin"
@@ -663,7 +631,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-autosuggestions
 #antigen bundle robbyrussell/oh-my-zsh plugins/aws            # Cmd: TODO - (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/aws)
 antigen bundle robbyrussell/oh-my-zsh plugins/git            # Cmd: See `zshgit` cheatsheet | Credits: Alvaro Castellanos
-antigen bundle robbyrussell/oh-my-zsh plugins/asdf
 antigen bundle robbyrussell/oh-my-zsh plugins/kubectl        # Cmd: See `zshk` cheatsheet
 antigen bundle robbyrussell/oh-my-zsh plugins/python         # Cmd: `pyclean`/`pyfind`/`pygrep`
 antigen bundle robbyrussell/oh-my-zsh plugins/battery

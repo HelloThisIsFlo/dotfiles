@@ -17,7 +17,7 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 
 ### Package managers & version managers
 - [x] Homebrew (`11__homebrew.fish`)
-- [x] asdf shims (`13__asdf.fish`) — `fish_add_path --move` to win over Homebrew
+- [x] ~~asdf shims (`13__asdf.fish`)~~ — removed, replaced by mise (`12__mise.fish`)
 
 ### Tool integrations
 - [x] direnv (`21__direnv.fish`) — **want to replace with mise** (only using direnv for `.env` loading, not `.envrc`)
@@ -30,8 +30,9 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 ### PATH
 - [x] Core paths (`81__core-paths.fish`) — `~/.local/bin`, `~/.bin`
   - ⚠️ Missing from zshrc: `$HOME/Dev/Scripts` (still have scripts there?), `/usr/local/sbin` (likely not needed on Apple Silicon)
-- [x] Language paths (`82__language-paths.fish`) — Go, krew, Rust
-  - ⚠️ `$ASDF_DATA_DIR/installs/rust/stable/bin` hardcodes `stable` — fragile, revisit with mise migration
+- [ ] Language paths (`82__language-paths.fish`) — review: Go and krew paths may no longer be needed
+  - Rust PATH removed (mise handles this via `mise activate`)
+  - ⚠️ `$GOPATH/bin` and `$HOME/.krew/bin` — still relevant? Review before re-checking
 - [x] App paths (`83__app-paths.fish`) — LM Studio, Obsidian, VS Code, Windsurf
   - Garmin SDK & Android platform-tools from zshrc not ported (likely stale)
 
@@ -70,7 +71,7 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 - [x] `z` → zoxide
 - [x] `sudo` (Esc×2) → puffer-fish `!!` covers the main use case
 - [x] `brew` → abbreviations as needed
-- [x] `asdf` → shims on PATH
+- [x] ~~`asdf`~~ → replaced by mise
 
 
 ## Remaining
@@ -79,7 +80,7 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 - [ ] **Secrets** (`03__secrets.fish`) — decide: `bass source ~/.secrets.env` or fish-native `~/.secrets.fish`
 - [ ] **Home Assistant** (`26__home-assistant.fish`) — `HASS_SERVER`, `HASS_TOKEN` (depends on secrets)
 - [ ] **tmux** (`49__tmux.fish`) — `ta`, `ts`, `td`, `tl`, `tk` + session completions. Or drop if not using tmux anymore
-- [ ] **mise** (`12__mise.fish`) — placeholder for asdf→mise switch. Not blocking
+- [ ] **mise** (`12__mise.fish`) — asdf removed, mise activation pending (using `mise activate fish | source`)
 
 ### Missing env vars
 - [x] `HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile` — added to `11__homebrew.fish`
@@ -116,7 +117,7 @@ Not migrating — confirmed dead or irrelevant:
 - Clear Mind service — old project, hardcoded paths
 - Serveo SSH tunnels
 - `arm`/`intel` arch switch — launches zsh specifically
-- `clitool-cat` (asdf shim inspector)
+- `clitool-cat` (asdf shim inspector — asdf removed, no longer relevant)
 - `singlechar` plugin env vars
 - `OPENAI_ENGINE_ID=davinci` — ancient
 - `QMK_HOME` — keyboard firmware

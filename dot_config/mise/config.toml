@@ -1,0 +1,90 @@
+# Note: This can be migrated to a `.config/mise/conf.d/*.toml` format,
+#       if need more flexibility in the future.
+
+[tools]
+# == Languages ==========
+node = "lts"
+golang = "1"
+ruby = "3"
+rust = "stable"
+
+# -- Python -------------
+# See: https://mise.jdx.dev/lang/python.html
+python = "3.13"
+uv = "latest"
+
+# -- Java ---------------
+# See: https://mise.jdx.dev/lang/java.html
+# Don't use java = "21" shorthand — defaults to OpenJDK which stops getting updates after 6 months.
+# Temurin (Eclipse Adoptium) provides long-term updates. See: https://whichjdk.com
+# See: https://mise.jdx.dev/lang/java.html#usage
+java = "temurin-21"  # LTS
+# Gotcha: Gradle can't auto-detect mise JDKs for toolchains.
+# See: https://mise.jdx.dev/lang/java.html#gradle-toolchains-detection
+gradle = "9"
+maven = "3"
+
+# -- Clojure ------------
+clojure = "1"
+babashka = "1"
+
+# -- Elixir -------------
+erlang = "28"
+elixir = "1.19.5-otp-28"  # must match erlang OTP version
+
+
+# == Infrastructure =====
+terraform = "1"
+
+
+# == CLI Tools (aqua) ===
+#
+# By default, for most tools, mise prioritizes aqua over cargo/go/npm/[...]. 
+# This is great because aqua downloads are pre-built binaries from GitHub releases — fast, cross-platform, no compilation.
+# 
+# However, the actually priority depends on each tool. 
+# To find out which backend will be used by default (1st in the list), use:
+#
+#     mise registry | grep <tool>
+# 
+# To force a specific backend, use the fully qualified name from `mise registry`. For instance:
+#  - "cargo:git-delta"
+#  - "npm:@ls-lint/ls-lint"
+#  - "aqua:XAMPPRocky/tokei"
+# 
+# 
+# For more details, see: https://mise.jdx.dev/registry.html#backends
+# 
+delta = "latest"
+cheat = "latest"
+
+
+
+[settings]
+#
+# Allow mise to read .python-version, .node-version, .ruby-version, .java-version files.
+# 
+# Disabled by default since 2025.10.0 to avoid mise auto-managing tools from unrelated files like go.mod or Gemfile. 
+# See: https://github.com/jdx/mise/discussions/4345
+# 
+# Why Opt-In?
+# -----------
+# We opt in only for tools with a dedicated .{tool}-version convention.
+# For instance:
+# - .python-version -> used by uv, pyenv, and most CI platforms.
+# - .node-version -> used by nvm, fnm, Vercel, Netlify.
+# - .ruby-version -> used by rbenv, chruby.
+# - .java-version -> used by jenv, sdkman.
+# 
+idiomatic_version_file_enable_tools = ["python", "node", "ruby", "java"]
+
+# During initial installation, mise installs tools by batch. 
+# But later batches, start the "timeout" counter, eventhough they're just paused
+# Added on: 2026-04-03 
+# Update: Commented out, because maybe it's not needed. Just run `chezmoi apply` again if it fails.
+# 
+# fetch_remote_versions_timeout = "5min"
+# http_timeout = "5min"
+
+# Download Ruby as a pre-compiled binary
+ruby.compile = false

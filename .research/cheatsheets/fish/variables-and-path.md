@@ -144,7 +144,7 @@ This is the right way to manage PATH in fish. It is idempotent — adding the sa
 | Flag | What it does | When to use |
 |------|-------------|-------------|
 | `--global` | Store in global scope (session) | Always. Without this, defaults to universal scope. |
-| `--move` | If path already exists, move it to front | When ordering matters (homebrew, asdf shims) |
+| `--move` | If path already exists, move it to front | When ordering matters (homebrew, personal overrides) |
 | `--path` | Add to end of PATH instead of beginning | Low-priority paths that should not override system tools |
 | `--prepend` | Add to beginning of PATH (the default) | High-priority paths — default behavior, rarely spelled out |
 | `--append` | Same as `--path` | Alias for `--path` |
@@ -175,23 +175,22 @@ PATH order determines which binary wins when the same name exists in multiple lo
 ```
 conf.d/
   02__shell-env.fish        # base env vars (no PATH)
-  13__asdf.fish             # asdf shims — needs to be early + --move
+  12__mise.fish             # mise activation — manages tool PATHs dynamically
   23__python.fish           # python env vars (no PATH)
   24__go.fish               # go env vars (no PATH)
   81__core-paths.fish       # ~/.local/bin, ~/.bin — highest priority
-  82__language-paths.fish   # go, krew, rust — after core
+  82__language-paths.fish   # go, krew — after core
   83__app-paths.fish        # GUI app CLIs — lowest priority
 ```
 
 ### How the actual files work
 
 ```bash
-# 13__asdf.fish — must win over system binaries
-set -gx ASDF_DATA_DIR "$HOME/.asdf"
-fish_add_path --global --move --path $ASDF_DATA_DIR/shims
+# 12__mise.fish — manages tool PATHs dynamically (no shim PATH needed)
+mise activate fish | source
 ```
 
-asdf uses `--move` because plugins and other conf.d files might also add shim paths. `--move` guarantees asdf shims land where you want them regardless of load order.
+mise uses `activate` mode which manages PATH directly per-directory — no shim PATH hacks or `--move` fights needed. This is simpler than the old asdf shim approach.
 
 ```bash
 # 81__core-paths.fish — personal scripts override everything
@@ -205,10 +204,9 @@ Core paths use `--move` for the same reason — these are your personal override
 # 82__language-paths.fish — language toolchains
 fish_add_path --global --path $GOPATH/bin
 fish_add_path --global --path $HOME/.krew/bin
-fish_add_path --global --path $ASDF_DATA_DIR/installs/rust/stable/bin
 ```
 
-Language paths use `--path` (append) without `--move` — they don't need to override system tools, just be available.
+Language paths use `--path` (append) without `--move` — they don't need to override system tools, just be available. Rust is managed by mise (no manual PATH entry needed).
 
 ```bash
 # 83__app-paths.fish — GUI app command-line interfaces
@@ -223,9 +221,9 @@ App paths are lowest priority — you want `code` to resolve to VS Code, but nev
 ### Resulting PATH priority (highest to lowest)
 
 1. `~/.local/bin`, `~/.bin` (core, `--move`)
-2. asdf shims (toolchain manager, `--move`)
+2. mise-managed tools (dynamically injected by `mise activate`)
 3. System paths (from `/etc/paths`, `/etc/paths.d/`)
-4. `$GOPATH/bin`, `~/.krew/bin`, rust stable (language tools, `--path`)
+4. `$GOPATH/bin`, `~/.krew/bin` (language tools, `--path`)
 5. App bundles like Obsidian, VS Code, LM Studio (GUI CLIs, `--path`)
 
 ### Translating zsh PATH manipulation
@@ -234,7 +232,7 @@ App paths are lowest priority — you want `code` to resolve to VS Code, but nev
 |---|---|
 | `export PATH="$HOME/.bin:$PATH"` (prepend) | `fish_add_path --global --move $HOME/.bin` |
 | `export PATH="$PATH:$HOME/.bin"` (append) | `fish_add_path --global --path $HOME/.bin` |
-| `export PATH="${ASDF_DATA_DIR}/shims:$PATH"` (prepend) | `fish_add_path --global --move $ASDF_DATA_DIR/shims` |
+| `eval "$(mise activate bash)"` | `mise activate fish \| source` |
 | `export PATH="$PATH:${GOPATH}/bin"` (append) | `fish_add_path --global --path $GOPATH/bin` |
 
 > **Gotcha:** `fish_add_path` silently skips directories that don't exist. If `$GOPATH/bin` hasn't been created yet, it won't appear in PATH. This is usually what you want, but can be confusing when debugging.
