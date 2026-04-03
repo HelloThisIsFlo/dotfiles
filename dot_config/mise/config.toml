@@ -3,38 +3,38 @@
 
 [tools]
 # == Languages ==========
-node = "lts"
-golang = "1"
-ruby = "3"
-rust = "stable"
+node = 'lts'
+golang = '1'
+ruby = '3'
+rust = 'stable'
 
 # -- Python -------------
 # See: https://mise.jdx.dev/lang/python.html
-python = "3.13"
-uv = "latest"
+python = '3.13'
+uv = 'latest'
 
 # -- Java ---------------
 # See: https://mise.jdx.dev/lang/java.html
-# Don't use java = "21" shorthand — defaults to OpenJDK which stops getting updates after 6 months.
+# Don't use java = '21' shorthand — defaults to OpenJDK which stops getting updates after 6 months.
 # Temurin (Eclipse Adoptium) provides long-term updates. See: https://whichjdk.com
 # See: https://mise.jdx.dev/lang/java.html#usage
-java = "temurin-21"  # LTS
+java = 'temurin-21' # LTS
 # Gotcha: Gradle can't auto-detect mise JDKs for toolchains.
 # See: https://mise.jdx.dev/lang/java.html#gradle-toolchains-detection
-gradle = "9"
-maven = "3"
+gradle = '9'
+maven = '3'
 
 # -- Clojure ------------
-clojure = "1"
-babashka = "1"
+clojure = '1'
+babashka = '1'
 
 # -- Elixir -------------
-erlang = "28"
-elixir = "1.19.5-otp-28"  # must match erlang OTP version
+erlang = '28'
+elixir = '1.19.5-otp-28' # must match erlang OTP version
 
 
 # == Infrastructure =====
-terraform = "1"
+terraform = '1'
 
 
 # == CLI Tools (aqua) ===
@@ -48,16 +48,15 @@ terraform = "1"
 #     mise registry | grep <tool>
 # 
 # To force a specific backend, use the fully qualified name from `mise registry`. For instance:
-#  - "cargo:git-delta"
-#  - "npm:@ls-lint/ls-lint"
-#  - "aqua:XAMPPRocky/tokei"
+#  - 'cargo:git-delta'
+#  - 'npm:@ls-lint/ls-lint'
+#  - 'aqua:XAMPPRocky/tokei'
 # 
 # 
 # For more details, see: https://mise.jdx.dev/registry.html#backends
 # 
-delta = "latest"
-cheat = "latest"
-
+delta = 'latest'
+cheat = 'latest'
 
 
 [settings]
@@ -76,15 +75,15 @@ cheat = "latest"
 # - .ruby-version -> used by rbenv, chruby.
 # - .java-version -> used by jenv, sdkman.
 # 
-idiomatic_version_file_enable_tools = ["python", "node", "ruby", "java"]
+idiomatic_version_file_enable_tools = ['python', 'node', 'ruby', 'java']
 
 # During initial installation, mise installs tools by batch. 
-# But later batches, start the "timeout" counter, eventhough they're just paused
+# But later batches, start the 'timeout' counter, eventhough they're just paused
 # Added on: 2026-04-03 
 # Update: Commented out, because maybe it's not needed. Just run `chezmoi apply` again if it fails.
 # 
-# fetch_remote_versions_timeout = "5min"
-# http_timeout = "5min"
+# fetch_remote_versions_timeout = '5min'
+# http_timeout = '5min'
 
 # Download Ruby as a pre-compiled binary
 ruby.compile = false
