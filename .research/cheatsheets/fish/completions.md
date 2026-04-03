@@ -60,8 +60,8 @@ This is what the `cache_completions` function does — it generates completions 
 ```bash
 # In conf.d/99__completions.fish
 if status is-interactive
-    cache_completions asdf "asdf completion fish"
     cache_completions chezmoi "chezmoi completion fish"
+    cache_completions mise "mise completion fish"
 end
 ```
 

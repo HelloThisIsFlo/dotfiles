@@ -25,7 +25,7 @@ Parallel track to the Mackup → chezmoi migration. Evaluating, learning, and in
 - **tmux vs zellij** — Evaluate whether to switch. tmux is current (with iTerm2 integration), zellij has discoverable keybinds and floating panes
 
 ### Version management
-- **mise** — asdf replacement, 12__mise.fish is a placeholder. Reads existing `.tool-versions`, faster, built-in env vars and task runner
+- ~~**mise**~~ — moved to Integrated (see below)
 
 ### Text & data processing
 - **sd** — Intuitive sed replacement, sane regex syntax. Not installed
@@ -67,6 +67,7 @@ Parallel track to the Mackup → chezmoi migration. Evaluating, learning, and in
 - **fzf.fish** (PatrickF1/fzf.fish) — fzf integration for fish. Basic config done
 
 ### CLI tools (fully set up)
+- **mise** — Polyglot version manager, replaced asdf. Config: `12__mise.fish` (activation pending), global tools in `~/.config/mise/config.toml`. Decided 2026-04-03
 - **eza** — ls replacement. Configured in `51__eza.fish` with curated aliases
 - **git-delta** — Diff pager. Configured in `.gitconfig`
 - **fish** — Daily shell, conf.d fully organized

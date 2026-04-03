@@ -139,60 +139,36 @@ All data is encrypted client-side before sync. The server never sees plaintext c
 
 ---
 
-## mise — polyglot version manager
+## mise — polyglot version manager — INTEGRATED (April 2026)
+
+> **Decided.** mise replaced asdf. Keeping the full writeup here as a reference for why and how.
 
 **Replaces:** asdf (+ partially direnv) | `brew install mise`
 
-The pitch: mise is a drop-in replacement for asdf, written in Rust. It reads your existing `.tool-versions` files, uses asdf plugins, but runs 10x faster and adds built-in environment variables and a task runner. One tool instead of asdf + direnv + Make.
+mise is a drop-in replacement for asdf, written in Rust. It reads `.tool-versions` files, uses asdf plugins, but runs 10x faster and adds built-in environment variables and a task runner. One tool instead of asdf + direnv + Make.
 
 ### Shell integration
 
 ```bash
-# Add to config.fish (replaces asdf's shell integration)
+# conf.d/12__mise.fish
 mise activate fish | source
-```
-
-### Migration from asdf
-
-```bash
-# mise reads .tool-versions files — no rewrite needed
-# Your existing project configs just work
-
-# Check what asdf has installed
-asdf list
-
-# Install same versions via mise
-mise install          # reads .tool-versions in current dir
-mise ls               # list installed versions
 ```
 
 ### Usage
 
 ```bash
-# Install and activate a tool (one command vs asdf's three-step dance)
 mise use node@20                    # project-local (.mise.toml)
 mise use --global node@20           # global default
 mise use node@20 python@3.12        # multiple tools at once
-
-# The asdf way (for comparison)
-asdf plugin add node
-asdf install node 20.11.0
-asdf local node 20.11.0
-# Three commands, exact version required, plugin step easy to forget
-
-# Run with a specific version without installing globally
-mise exec node@22 -- node -v
-
-# List what's installed
+mise exec node@22 -- node -v        # run with specific version without installing globally
 mise ls                             # all tools and versions
-mise ls node                        # just node versions
+mise install                        # install everything from config
 ```
 
 ### Environment variables (replaces direnv for simple cases)
 
-In `mise.toml` (or `.mise.toml`):
-
 ```toml
+# mise.toml
 [env]
 DATABASE_URL = "postgres://localhost/mydb"
 NODE_ENV = "development"
@@ -228,13 +204,21 @@ mise run dev           # start dev server
 mise tasks             # list available tasks
 ```
 
-### vs asdf — honest assessment
+### vs asdf — why we switched
 
-- **mise wins:** Speed (5-10ms vs asdf's ~120ms per command invocation). Single-command UX (`mise use` vs plugin-add/install/local). Built-in env vars and tasks mean fewer tools. Reads `.tool-versions` so migration is zero-effort.
-- **asdf wins:** Established ecosystem, more community plugins, battle-tested since 2014. If you're on a team that standardises on asdf, switching tools adds friction.
-- **mise vs direnv:** mise handles simple `KEY=VALUE` env vars. For complex cases (sourcing files, conditional logic, `layout python`), direnv is still more powerful. They can coexist — mise for tool versions + simple env, direnv for complex env logic.
-- **mise vs just:** mise's task runner is basic — fine for `run = "npm test"`. For anything with arguments, dependencies, recipes, conditionals — just is significantly more capable. They coexist well.
-- **Caveat:** Still young-ish. Some obscure asdf plugins may not work perfectly. The task runner is intentionally simple (not trying to replace Make/just).
+- **Speed:** 5-10ms vs asdf's ~120ms per command invocation
+- **UX:** `mise use` vs asdf's three-step plugin-add/install/local dance
+- **Fewer tools:** Built-in env vars and tasks mean you don't need direnv + Make for simple cases
+- **Zero migration:** Reads `.tool-versions` natively, same plugin ecosystem
+- **No PATH hacks:** `mise activate` manages PATH dynamically — no shim fights with Homebrew
+
+### vs direnv
+
+mise handles simple `KEY=VALUE` env vars. For complex cases (sourcing files, conditional logic, `layout python`), direnv is still more powerful. They can coexist — mise for tool versions + simple env, direnv for complex env logic.
+
+### vs just
+
+mise's task runner is basic — fine for `run = "npm test"`. For anything with arguments, dependencies, recipes, conditionals — just is significantly more capable. They coexist well.
 
 ---
 

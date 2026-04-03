@@ -174,8 +174,8 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 
 - [ ] Add `[data.tools]` tables to `.chezmoi.toml.tmpl`
 - [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
-- [ ] Verify asdf deps are in `dot_Brewfile` (tcl-tk, pkg-config, readline, etc.)
-- [ ] `run_onchange_after_install-asdf-tools.sh.tmpl` — reads `.tool-versions`, installs plugins + versions
+- [ ] ~~Verify asdf deps are in `dot_Brewfile`~~ — asdf removed, mise handles tool installation
+- [ ] `run_onchange_after_install-mise-tools.sh.tmpl` — runs `mise install` (reads `config.toml` or `.tool-versions`)
 - [ ] `run_onchange_after_install-pip-tools.sh.tmpl` — iterates `{{ range .tools.pip }}`, hash includes list
 - [ ] `run_onchange_after_install-npm-tools.sh.tmpl` — iterates `{{ range .tools.npm }}`
 - [ ] `run_onchange_after_install-cargo-tools.sh.tmpl` — iterates `{{ range .tools.cargo }}` (**must include `git-delta`** — it's a hard requirement for `.gitconfig` and chezmoi diff, no `lookPath` guards)
