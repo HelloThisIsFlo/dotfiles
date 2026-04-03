@@ -88,3 +88,6 @@ idiomatic_version_file_enable_tools = ['python', 'node', 'ruby', 'java']
 
 # Download Ruby as a pre-compiled binary
 ruby.compile = false
+
+# Automatically source .env files
+env_file = '.env'
