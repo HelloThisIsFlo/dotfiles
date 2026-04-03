@@ -35,6 +35,10 @@ See `.research/MIGRATION.md` for full details. Quick reference:
 - [Hooks dispatcher architecture](hooks_architecture.md) — folder-based dispatcher pattern for chezmoi hooks
 - [Watch-dirs feature design](watch_dirs_design.md) — auto-detect new files in watched directories
 
+## Mise (version manager) — session 2026-04-03
+
+- [Mise migration status & pending work](mise_migration.md) — asdf removed, mise architecture decisions, cargo/go tools to migrate
+
 ## File migration pattern (established with .gitconfig)
 
 1. Break symlink: `target=$(readlink ~/.file) && rm ~/.file && cp "$target" ~/.file`
