@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "No filler phrases like 'it is important to note', 'in this document we will', 'in conclusion', 'it is worth mentioning'",
+      "passed": true,
+      "evidence": "No filler phrases found"
+    },
+    {
+      "text": "Contains at least 2 Obsidian-style callouts using '> [!type]' syntax (e.g., [!important], [!warning], [!tip], [!note])",
+      "passed": false,
+      "evidence": "Found 0 callouts. Types: {}"
+    },
+    {
+      "text": "The three strategies (fixed window, sliding window, token bucket) each have a consistent emoji assigned",
+      "passed": false,
+      "evidence": "Emoji found: {'fixed window': [], 'sliding window': [], 'token bucket': []}"
+    },
+    {
+      "text": "Contains at least one markdown comparison table",
+      "passed": true,
+      "evidence": "Found 3 table(s)"
+    },
+    {
+      "text": "Callout content uses bullet points, not prose paragraphs (no multi-sentence blocks inside > lines without bullet markers)",
+      "passed": true,
+      "evidence": "All callout content uses bullets"
+    },
+    {
+      "text": "Uses bullet points extensively \u2014 the majority of explanatory content is bulleted, not in paragraph form",
+      "passed": true,
+      "evidence": "9 bullet lines, 7 paragraph lines, ratio=0.56"
+    },
+    {
+      "text": "Uses inline code formatting for technical terms like field names, config values, and strategy names",
+      "passed": false,
+      "evidence": "Found 1 inline code spans"
+    },
+    {
+      "text": "The recommendation (token bucket for public, fixed window for internal) appears in a prominent [!important] callout, not buried in a paragraph",
+      "passed": false,
+      "evidence": "[!important] present: False, contains recommendation: False"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 4,
+    "total": 8,
+    "pass_rate": 0.5
+  },
+  "timing": {
+    "total_duration_seconds": 42.2
+  }
+}

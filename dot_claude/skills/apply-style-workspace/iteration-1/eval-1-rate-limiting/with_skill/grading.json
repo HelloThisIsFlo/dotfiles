@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "No filler phrases like 'it is important to note', 'in this document we will', 'in conclusion', 'it is worth mentioning'",
+      "passed": true,
+      "evidence": "No filler phrases found"
+    },
+    {
+      "text": "Contains at least 2 Obsidian-style callouts using '> [!type]' syntax (e.g., [!important], [!warning], [!tip], [!note])",
+      "passed": true,
+      "evidence": "Found 4 callouts. Types: {'important': 1, 'warning': 2, 'tip': 1}"
+    },
+    {
+      "text": "The three strategies (fixed window, sliding window, token bucket) each have a consistent emoji assigned",
+      "passed": true,
+      "evidence": "Emoji found: {'fixed window': ['\ud83d\udd04', '\u2705'], 'sliding window': ['\u2705'], 'token bucket': ['\u26a1']}"
+    },
+    {
+      "text": "Contains at least one markdown comparison table",
+      "passed": true,
+      "evidence": "Found 1 table(s)"
+    },
+    {
+      "text": "Callout content uses bullet points, not prose paragraphs (no multi-sentence blocks inside > lines without bullet markers)",
+      "passed": true,
+      "evidence": "All callout content uses bullets"
+    },
+    {
+      "text": "Uses bullet points extensively \u2014 the majority of explanatory content is bulleted, not in paragraph form",
+      "passed": true,
+      "evidence": "10 bullet lines, 5 paragraph lines, ratio=0.67"
+    },
+    {
+      "text": "Uses inline code formatting for technical terms like field names, config values, and strategy names",
+      "passed": true,
+      "evidence": "Found 9 inline code spans"
+    },
+    {
+      "text": "The recommendation (token bucket for public, fixed window for internal) appears in a prominent [!important] callout, not buried in a paragraph",
+      "passed": true,
+      "evidence": "[!important] present: True, contains recommendation: True"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 45.7
+  }
+}

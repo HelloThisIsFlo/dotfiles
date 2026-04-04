@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "The three deploy modes (blue-green, rolling, canary) each have a consistent emoji assigned that appears in tables and bullet lists",
+      "passed": true,
+      "evidence": "Emoji: {'blue-green': ['\ud83d\udfe6', '\ud83d\udd04'], 'rolling': ['\ud83d\udfe6', '\ud83d\udd04'], 'canary': ['\ud83d\udc24']}"
+    },
+    {
+      "text": "Contains a comparison/summary table for the deploy modes",
+      "passed": true,
+      "evidence": "Found 1 table(s)"
+    },
+    {
+      "text": "The 'never use rolling deploy for shared state' warning appears in a [!warning] callout, not a paragraph",
+      "passed": true,
+      "evidence": "Warning callout: True, mentions shared state/rolling: True"
+    },
+    {
+      "text": "No trailing conclusion paragraph \u2014 the document does not end with 'in conclusion' or a summary restating what was already said",
+      "passed": true,
+      "evidence": "No trailing conclusion"
+    },
+    {
+      "text": "No filler phrases like 'it is important to note', 'in this section we will', 'in conclusion', 'it is worth mentioning'",
+      "passed": true,
+      "evidence": "No filler"
+    },
+    {
+      "text": "The recommendation section uses an [!important] callout with bullet points mapping scenarios to modes",
+      "passed": true,
+      "evidence": "[!important] found with bullets: True"
+    },
+    {
+      "text": "Uses bullet points extensively \u2014 deploy mode descriptions are bulleted, not multi-paragraph prose",
+      "passed": true,
+      "evidence": "19 bullets, 4 paragraphs, ratio=0.83"
+    },
+    {
+      "text": "Reference to docs/deploy-migration-runbook.md uses one of the two-tier reference styles (either [!tip] callout or italic footnote)",
+      "passed": true,
+      "evidence": "Tip callout ref: True, italic ref: False, tier2: False"
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_duration_seconds": 54.3
+  }
+}

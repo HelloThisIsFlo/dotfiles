@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "The [!important] callout about TTL modes contains bullet points, not the original prose paragraph",
+      "passed": true,
+      "evidence": "[!important] callout found, bullets inside: True"
+    },
+    {
+      "text": "The [!warning] about write-through + sliding TTL uses Pattern C structure: opening statement, detail bullets, bolded action item",
+      "passed": true,
+      "evidence": "Warning has bullets: True, has bold action item: True"
+    },
+    {
+      "text": "Edge cases have expressive emoji (e.g., thundering herd, race condition, partial invalidation each get a distinct emoji)",
+      "passed": true,
+      "evidence": "Emoji near edge cases: {'thundering herd': ['\u26a1'], 'race condition': ['\ud83e\udd2f'], 'partial invalidation': ['\ud83d\ude24'], 'nested object': ['\ud83d\ude24']} (4/4 have emoji)"
+    },
+    {
+      "text": "Uses hierarchical (nested) bullet points \u2014 at least 3 instances of indented sub-bullets",
+      "passed": false,
+      "evidence": "Found 2 nested bullet lines"
+    },
+    {
+      "text": "No filler phrases like 'it is important to note', 'in conclusion', 'it is worth mentioning'",
+      "passed": true,
+      "evidence": "No filler"
+    },
+    {
+      "text": "Contains at least 3 Obsidian-style callouts using '> [!type]' syntax",
+      "passed": true,
+      "evidence": "Found 3 callouts: {'important': 2, 'warning': 1}"
+    },
+    {
+      "text": "The three nested-object approaches (eager invalidation, version tags, short TTL) are presented in a structured format, not numbered prose paragraphs",
+      "passed": true,
+      "evidence": "Tables: 2, nested bullets: 2"
+    },
+    {
+      "text": "Reference to docs/cache-benchmarks.md uses Tier 2 style (italic footnote below horizontal rule), not an inline link",
+      "passed": true,
+      "evidence": "Found italic reference below horizontal rule"
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 1,
+    "total": 8,
+    "pass_rate": 0.88
+  },
+  "timing": {
+    "total_duration_seconds": 54.6
+  }
+}

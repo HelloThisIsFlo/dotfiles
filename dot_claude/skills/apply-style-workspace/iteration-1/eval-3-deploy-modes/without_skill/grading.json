@@ -1,0 +1,53 @@
+{
+  "expectations": [
+    {
+      "text": "The three deploy modes (blue-green, rolling, canary) each have a consistent emoji assigned that appears in tables and bullet lists",
+      "passed": false,
+      "evidence": "Emoji: {'blue-green': [], 'rolling': [], 'canary': []}"
+    },
+    {
+      "text": "Contains a comparison/summary table for the deploy modes",
+      "passed": true,
+      "evidence": "Found 5 table(s)"
+    },
+    {
+      "text": "The 'never use rolling deploy for shared state' warning appears in a [!warning] callout, not a paragraph",
+      "passed": false,
+      "evidence": "Warning callout: False, mentions shared state/rolling: False"
+    },
+    {
+      "text": "No trailing conclusion paragraph \u2014 the document does not end with 'in conclusion' or a summary restating what was already said",
+      "passed": true,
+      "evidence": "No trailing conclusion"
+    },
+    {
+      "text": "No filler phrases like 'it is important to note', 'in this section we will', 'in conclusion', 'it is worth mentioning'",
+      "passed": true,
+      "evidence": "No filler"
+    },
+    {
+      "text": "The recommendation section uses an [!important] callout with bullet points mapping scenarios to modes",
+      "passed": false,
+      "evidence": "No [!important] callout found"
+    },
+    {
+      "text": "Uses bullet points extensively \u2014 deploy mode descriptions are bulleted, not multi-paragraph prose",
+      "passed": false,
+      "evidence": "2 bullets, 5 paragraphs, ratio=0.29"
+    },
+    {
+      "text": "Reference to docs/deploy-migration-runbook.md uses one of the two-tier reference styles (either [!tip] callout or italic footnote)",
+      "passed": false,
+      "evidence": "Tip callout ref: False, italic ref: False, tier2: False"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 5,
+    "total": 8,
+    "pass_rate": 0.38
+  },
+  "timing": {
+    "total_duration_seconds": 43.9
+  }
+}

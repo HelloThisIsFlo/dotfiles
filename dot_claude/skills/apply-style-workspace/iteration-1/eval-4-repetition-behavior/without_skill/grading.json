@@ -1,0 +1,63 @@
+{
+  "expectations": [
+    {
+      "text": "The three schedule types use consistent emoji identity throughout: catch-up gets a positive/recommended emoji, regularly gets a neutral emoji, from-completion gets a caution emoji",
+      "passed": false,
+      "evidence": "Emoji: catch-up=[], regularly=[], from-completion=[]"
+    },
+    {
+      "text": "The fundamental asymmetry rule (Part 3) appears in an [!important] callout, not just as a plain table under a heading",
+      "passed": false,
+      "evidence": "Found 0 [!important] callouts, asymmetry rule present: False"
+    },
+    {
+      "text": "The 14-day divergence finding (Part 5) appears in a [!warning] callout \u2014 this is a dramatic gotcha that deserves Pattern C treatment",
+      "passed": false,
+      "evidence": "Found 0 [!warning] callouts, 14-day mentioned: False"
+    },
+    {
+      "text": "The MCP Server Warning section (Part 7) uses a [!warning] callout for the incorrect warning text",
+      "passed": false,
+      "evidence": "MCP warning in callout: False, total warnings: 0"
+    },
+    {
+      "text": "The decision guide (Part 8) uses bullet points with emoji identity matching the schedule types",
+      "passed": false,
+      "evidence": "Decision guide section not found"
+    },
+    {
+      "text": "No multi-sentence prose paragraphs used where bullets would work \u2014 intro paragraphs are 1-2 sentences max before switching to structured content",
+      "passed": false,
+      "evidence": "33 paragraph lines, 48 bullet lines, prose ratio=0.41"
+    },
+    {
+      "text": "Technical terms like schedule type names, field names, and config values use inline code formatting",
+      "passed": true,
+      "evidence": "Found 16 inline code spans"
+    },
+    {
+      "text": "The methodology section is de-emphasized relative to the findings \u2014 either moved to a secondary reference position or clearly separated as supplementary material",
+      "passed": true,
+      "evidence": "Methodology at line 269/293 (0.92), separator: True"
+    },
+    {
+      "text": "All existing tables are preserved or improved \u2014 no tables removed or converted to less scannable formats",
+      "passed": true,
+      "evidence": "Found 7 tables (original had ~7)"
+    },
+    {
+      "text": "All technical facts and empirical findings are preserved \u2014 no content lost, no claims changed or softened",
+      "passed": true,
+      "evidence": "Found 7/7 key facts: ['10 PM', 'Apr 3', '14', 'BYDAY', 'INTERVAL', 'completion date', 'from scratch']"
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 6,
+    "total": 10,
+    "pass_rate": 0.4
+  },
+  "timing": {
+    "total_duration_seconds": 134.8
+  }
+}
