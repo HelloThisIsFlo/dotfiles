@@ -1,0 +1,13 @@
+#!/usr/bin/env fish
+
+# dotenv function hash: {{ include "dot_config/private_fish/functions/_tide_item_dotenv.fish" | sha256sum }}
+
+# Style variables
+set -U tide_dotenv_icon ⚡
+set -U tide_dotenv_color D7AF00
+set -U tide_dotenv_bg_color normal
+
+# Add to right prompt if not already present
+if not contains dotenv $tide_right_prompt_items
+    set --append -U tide_right_prompt_items dotenv
+end

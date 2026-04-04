@@ -47,6 +47,8 @@
 .config/fish/**/*tide*
 .config/fish/functions/fish_mode_prompt.fish
 .config/fish/functions/fish_prompt.fish
+# Fish Plugin: Tide Prompt - EXCEPTION: My own Tide plugins
+!.config/fish/functions/_tide_item_dotenv.fish
 # Fish Plugin: Sponge
 .config/fish/conf.d/sponge.fish
 .config/fish/functions/*sponge*
