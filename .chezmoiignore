@@ -33,6 +33,7 @@
 .claude/skills/find-skills
 .claude/skills/review-panel-workspace
 .claude/skills/visual-explainer
+.claude/skills/gsd*
 .claude/hooks/gsd*
 
 
