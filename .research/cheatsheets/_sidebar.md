@@ -20,6 +20,9 @@
 - [Merge Simulator ↗](chezmoi/chezmoi-merge-interactive.html)
 - [Status Columns](chezmoi/chezmoi-status.md)
 - [Tips & Escape Hatches](chezmoi/tips.md)
+- [Features to Explore](chezmoi/features-to-explore.md)
+- **Mise**
+- [Features to Explore](mise/features-to-explore.md)
 - **Ghostty**
 - [Getting Started](ghostty/getting-started.md)
 - [Shell Integration](ghostty/shell-integration.md)

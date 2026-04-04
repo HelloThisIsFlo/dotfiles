@@ -30,6 +30,11 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 - [Merge Simulator ↗](chezmoi/chezmoi-merge-interactive.html) — interactive merge sandbox
 - [Status Columns](chezmoi/chezmoi-status.md) — what `MM`, ` M`, `M ` actually mean
 - [Tips & Escape Hatches](chezmoi/tips.md) — doctor, merge, forget, debug templates
+- [Features to Explore](chezmoi/features-to-explore.md) — modify_, remove_, create_, .chezmoitemplates/, output, .chezmoiversion
+
+## Mise
+
+- [Features to Explore](mise/features-to-explore.md) — mise lock, watch, hooks, shebang trick
 
 ## Ghostty
 
