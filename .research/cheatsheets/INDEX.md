@@ -34,7 +34,16 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 
 ## Mise
 
-- [Features to Explore](mise/features-to-explore.md) — mise lock, watch, hooks, shebang trick
+- [Tool Management](mise/tool-management.md) — use, install, ls, upgrade, prune, outdated, exec, version specifiers
+- [Config Hierarchy](mise/config-hierarchy.md) — file search order, merge semantics, profiles, local overrides, conf.d
+- [Environment](mise/environment.md) — [env] section, dotenv, PATH manipulation, sourcing, templates, venv
+- [Tasks](mise/tasks.md) — TOML tasks, file tasks, dependencies, args, caching, watch, vs Just
+- [Backends](mise/backends.md) — registry, aqua, cargo, npm, pipx, fully qualified names, decision guide
+- [Shims vs Activation](mise/shims-vs-activation.md) — two models, trade-offs, IDE integration, fish setup
+- [Security & Trust](mise/security-trust.md) — trust model, paranoid mode, lockfile checksums, supply chain
+- [Language Features](mise/language-features.md) — Python/Node/Ruby/Java/Go/Rust/Erlang-specific settings
+- [Settings](mise/settings.md) — curated top 40 settings by category, CLI, env var overrides
+- [CI & Bootstrap](mise/ci-bootstrap.md) — GitHub Actions, Docker, lockfile strictness, self-bootstrapping
 
 ## Ghostty
 

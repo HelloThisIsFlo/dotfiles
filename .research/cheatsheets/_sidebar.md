@@ -22,7 +22,16 @@
 - [Tips & Escape Hatches](chezmoi/tips.md)
 - [Features to Explore](chezmoi/features-to-explore.md)
 - **Mise**
-- [Features to Explore](mise/features-to-explore.md)
+- [Tool Management](mise/tool-management.md)
+- [Config Hierarchy](mise/config-hierarchy.md)
+- [Environment](mise/environment.md)
+- [Tasks](mise/tasks.md)
+- [Backends](mise/backends.md)
+- [Shims vs Activation](mise/shims-vs-activation.md)
+- [Security & Trust](mise/security-trust.md)
+- [Language Features](mise/language-features.md)
+- [Settings](mise/settings.md)
+- [CI & Bootstrap](mise/ci-bootstrap.md)
 - **Ghostty**
 - [Getting Started](ghostty/getting-started.md)
 - [Shell Integration](ghostty/shell-integration.md)
