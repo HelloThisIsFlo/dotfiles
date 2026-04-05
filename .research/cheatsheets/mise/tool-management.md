@@ -152,9 +152,55 @@ With `--bump`: upgrades to absolute latest AND rewrites `mise.toml` to match. Pr
 
 ### Lockfile interaction
 
-When `lockfile = true` in settings, `mise upgrade` updates `mise.lock` (analogous to `package-lock.json`). The lockfile pins the exact resolved version so other machines get the same build, even with fuzzy specs in `mise.toml`.
+See [`mise lock`](#mise-lock--pin-versions-for-reproducible-installs) below. When `lockfile = true`, `mise upgrade` auto-updates `mise.lock`.
 
 **Good for:** Routine updates. Run `mise upgrade` weekly/monthly. Use `--bump` when you're ready for a major version jump.
+
+---
+
+## `mise lock` — pin versions for reproducible installs
+
+**The problem:** Fuzzy specs like `node = 'lts'` and `python = '3.13'` resolve to whatever the latest matching release is *today*. Tomorrow a new patch ships, and your teammate gets a different binary. `mise lock` freezes the resolution.
+
+```bash
+mise lock                     # generate/update mise.lock from current mise.toml
+```
+
+### What `mise.lock` contains
+
+```toml
+[tools.node]
+version = "22.14.0"
+
+[tools.node.assets."macos-arm64"]
+checksum = "sha256:abc123..."
+url = "https://nodejs.org/dist/v22.14.0/node-v22.14.0-darwin-arm64.tar.gz"
+```
+
+Each entry pins the **exact version**, **download URL**, and **checksum** — per platform. With a lockfile present, `mise install` skips all version resolution and API calls entirely.
+
+### The workflow
+
+1. `mise use node@lts` — writes fuzzy spec to `mise.toml`
+2. `mise lock` — resolves and freezes to `mise.lock`
+3. Commit both `mise.toml` + `mise.lock`
+4. On another machine: `mise install` reads `mise.lock` — no resolution, no API calls, same binary
+
+### Auto-locking
+
+```toml
+# In ~/.config/mise/config.toml or project mise.toml
+[settings]
+lockfile = true
+```
+
+With `lockfile = true`, `mise use`, `mise upgrade`, and `mise install` all auto-update `mise.lock` — no need to run `mise lock` manually.
+
+### Strict mode (`MISE_LOCKED=1`)
+
+Refuses to install any tool not in the lockfile. Zero network resolution. Ideal for CI where you want fully reproducible, offline-capable installs.
+
+**Verdict: Use it.** Commit `mise.lock` alongside `mise.toml` — it's your `package-lock.json` equivalent. See [Security & Trust](security-trust.md) for checksums, provenance verification, and strict mode details.
 
 ---
 
@@ -292,6 +338,7 @@ Set `MISE_ENV=production` and mise also loads `mise.production.toml`, which over
 | Find where a tool is installed | `mise where node` |
 | Debug PATH issues | `mise bin-paths` |
 | See what version would be used here | `mise ls --current` |
+| Pin exact versions for reproducible installs | `mise lock` (commit `mise.lock`) |
 
 ---
 
@@ -300,4 +347,5 @@ Set `MISE_ENV=production` and mise also loads `mise.production.toml`, which over
 - [Backends](backends.md) — aqua, cargo, npm, and other install backends
 - [Config Hierarchy](config-hierarchy.md) — config file resolution and merge semantics
 - [Language Features](language-features.md) — Python, Node, Ruby, Java-specific settings
+- [Security & Trust](security-trust.md) — lockfile checksums, provenance verification, strict mode
 - [Settings](settings.md) — auto_install, pin, and other tool management settings

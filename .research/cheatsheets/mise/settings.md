@@ -13,7 +13,7 @@ Mise settings control tool installation behavior, environment handling, network 
 2. **Project config** — `[settings]` section in `mise.toml` (or `mise.local.toml` for untracked overrides)
 3. **Global config** — `~/.config/mise/config.toml` under `[settings]`. Lowest priority.
 
-There is no separate `settings.toml` file -- settings always go in `[settings]` inside `config.toml` or `mise.toml`.
+There is no separate `settings.toml` file — settings always go in `[settings]` inside `config.toml` or `mise.toml`.
 
 **Flo's current global settings** (in `~/.config/mise/config.toml`):
 

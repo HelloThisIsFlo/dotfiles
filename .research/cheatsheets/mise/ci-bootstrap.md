@@ -1,4 +1,4 @@
-# Mise CI & Bootstrap --- Cheat Sheet
+# Mise CI & Bootstrap — Cheat Sheet
 
 Mise works in CI the same way it works locally: install tools from a config file, run tasks. The main difference is that CI has no interactive shell, so you skip activation and use shims, `mise exec`, or `mise run` instead.
 
@@ -39,10 +39,10 @@ chmod +x ./bin/mise
 ```
 
 Flags:
-- `-w, --write <PATH>` -- write to file and make executable
-- `-l, --localize` -- isolate `MISE_DATA_DIR` and `MISE_CACHE_DIR` into `.mise/` (avoids version conflicts)
-- `-V, --version <VERSION>` -- pin the mise version the script downloads
-- `--localized-dir <DIR>` -- custom directory for localized data (default: `.mise`)
+- `-w, --write <PATH>` — write to file and make executable
+- `-l, --localize` — isolate `MISE_DATA_DIR` and `MISE_CACHE_DIR` into `.mise/` (avoids version conflicts)
+- `-V, --version <VERSION>` — pin the mise version the script downloads
+- `--localized-dir <DIR>` — custom directory for localized data (default: `.mise`)
 
 **Verdict:** Bootstrap script is best for open-source repos where you can't assume contributors have mise. Curl installer is simpler for private CI.
 
@@ -77,8 +77,8 @@ Key inputs:
 | `install_args` | `""` | Extra args passed to `mise install` |
 | `cache` | `true` | Caches mise tool installations |
 | `experimental` | `false` | Enable experimental features |
-| `tool_versions` | -- | Inline tool specs (overrides config files) |
-| `mise_toml` | -- | Inline TOML config |
+| `tool_versions` | — | Inline tool specs (overrides config files) |
+| `mise_toml` | — | Inline TOML config |
 | `working_directory` | `.` | Where mise runs |
 | `github_token` | `${{ github.token }}` | For GitHub API calls (rate limit) |
 
@@ -96,9 +96,9 @@ mise generate github-action --write --task=ci
 ```
 
 Flags:
-- `-t, --task <TASK>` -- task to run (default: `ci`)
-- `-w, --write` -- write to `.github/workflows/$name.yml`
-- `--name <NAME>` -- workflow filename (default: `ci`)
+- `-t, --task <TASK>` — task to run (default: `ci`)
+- `-w, --write` — write to `.github/workflows/$name.yml`
+- `--name <NAME>` — workflow filename (default: `ci`)
 
 The generated workflow uses `jdx/mise-action` internally, then runs `mise run <task>`.
 
@@ -232,7 +232,7 @@ Tasks defined in `mise.toml` run with mise's environment automatically loaded. D
 | `mise exec` | None | One-off commands, scripts |
 | Shims on PATH | One `export` | Multi-step CI where many commands need tools |
 | `mise run` | Task definitions in `mise.toml` | Structured CI pipelines with dependencies |
-| `mise activate` | Shell hook | **Not for CI** -- requires interactive shell |
+| `mise activate` | Shell hook | **Not for CI** — requires interactive shell |
 
 **Verdict:** Use `mise run` for structured CI tasks. Use shims for simple workflows where you just need tools on PATH. Avoid `mise activate` in CI entirely.
 
@@ -273,7 +273,7 @@ env:
 
 ---
 
-## `mise generate` -- code generation utilities
+## `mise generate` — code generation utilities
 
 **The problem:** You want to generate boilerplate for CI, hooks, and docs from your mise config.
 
@@ -308,14 +308,14 @@ chezmoi apply
   -> run_once_before_0001: curl-install mise (no dependencies)
   -> chezmoi applies all config files (mise.toml lands on disk)
   -> run_onchange_after_0010: brew bundle (macOS packages)
-  -> run_onchange_after_0999: mise install (last -- all config in place)
+  -> run_onchange_after_0999: mise install (last — all config in place)
 ```
 
 Key design decisions:
 - **Mise self-bootstraps** via curl installer in a `run_once_before` script (no Homebrew dependency)
 - **`mise install` runs last** (`0999`) because it needs `mise.toml` and potentially Homebrew-installed dependencies in place first
-- **`run_onchange_after`** keyed on config sha256 -- re-runs when config changes, not on every apply
-- **`mise_install_path` in chezmoidata** -- single source of truth shared by bootstrap scripts and fish config
+- **`run_onchange_after`** keyed on config sha256 — re-runs when config changes, not on every apply
+- **`mise_install_path` in chezmoidata** — single source of truth shared by bootstrap scripts and fish config
 
 ### General pattern for any bootstrap system
 

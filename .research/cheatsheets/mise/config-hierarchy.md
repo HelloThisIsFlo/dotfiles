@@ -107,7 +107,7 @@ Different sections have different merge behavior:
 
 | Section | Merge strategy | Example |
 |---------|---------------|---------|
-| `[tools]` | Additive + override | Project says `node = '20'`, global says `node = 'lts'` and `python = '3.13'` -- result: `node = '20'`, `python = '3.13'` |
+| `[tools]` | Additive + override | Project says `node = '20'`, global says `node = 'lts'` and `python = '3.13'` — result: `node = '20'`, `python = '3.13'` |
 | `[env]` | Additive + override | Same as tools — child values override, parent values preserved |
 | `[settings]` | Additive + override | Project settings override global settings |
 | `[tasks]` | Full replacement per task | If project defines task `test`, it completely replaces any parent `test` task |

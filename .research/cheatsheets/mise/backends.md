@@ -1,10 +1,10 @@
-# Mise Backends -- Cheat Sheet
+# Mise Backends — Cheat Sheet
 
 Backends are how mise actually installs tools. Each backend is a different package ecosystem (aqua, cargo, npm, etc.) with different trade-offs around speed, platform support, and what's available. When you `mise use delta`, the registry decides which backend handles it.
 
 ---
 
-## The Registry -- How `mise use delta` knows what to do
+## The Registry — How `mise use delta` knows what to do
 
 **The problem:** There are 18+ backends. You don't want to type `aqua:dandavison/delta` every time.
 
@@ -26,7 +26,7 @@ black                          pipx:black
 
 ---
 
-## Fully Qualified Names -- Forcing a specific backend
+## Fully Qualified Names — Forcing a specific backend
 
 **The problem:** The registry default isn't always what you want. Maybe you want to compile delta from source with custom features, or the registry picks a backend you don't prefer.
 
@@ -56,7 +56,7 @@ Each backend has its own identifier format:
 
 ---
 
-## Backend Priority -- Which one wins
+## Backend Priority — Which one wins
 
 **The problem:** Multiple backends can install the same tool. Which one does the registry prefer?
 
@@ -67,7 +67,7 @@ The registry defines a single preferred backend per tool. The general priority p
 3. **github** — fallback for tools not in aqua registry
 4. **pipx/npm/cargo/go** — language-specific tools that only exist in those ecosystems
 
-In practice, for CLI tools like `delta`, `eza`, `cheat`, `ripgrep`, `fd`, `bat` -- aqua is the default. For language runtimes like `node`, `python`, `ruby` -- core handles them natively.
+In practice, for CLI tools like `delta`, `eza`, `cheat`, `ripgrep`, `fd`, `bat` — aqua is the default. For language runtimes like `node`, `python`, `ruby` — core handles them natively.
 
 You can override defaults:
 - **Per-tool:** use fully qualified names in config
@@ -78,23 +78,23 @@ You can override defaults:
 
 ## All Backends
 
-### core -- Language runtimes
+### core — Language runtimes
 
 Mise's built-in runtime manager. Handles major languages natively without any external backend.
 
 - **Covers:** node, python, ruby, go, java, erlang, elixir, rust, bun, deno, and more
 - **How it works:** Downloads pre-built binaries from official sources (node-build, python-build, etc.)
-- **When to use:** Automatically used for language runtimes. You don't choose this -- it's the default for supported languages.
+- **When to use:** Automatically used for language runtimes. You don't choose this — it's the default for supported languages.
 
 **Verdict:** You're already using it. `node = "22"` and `ruby = "3.3"` go through core.
 
-### aqua -- Pre-built binaries from GitHub Releases
+### aqua — Pre-built binaries from GitHub Releases
 
 The registry that mise compiles directly into its binary. Downloads pre-built platform-specific binaries from GitHub releases.
 
 - **How it works:** Aqua registry YAML files are baked into the mise binary at release. No aqua CLI needed. Mise reads the registry to find the right binary for your OS/arch and downloads it.
 - **Syntax:** `aqua:owner/repo` (e.g., `aqua:dandavison/delta`, `aqua:XAMPPRocky/tokei`)
-- **Security:** Native verification -- checksums, cosign signatures, SLSA provenance, GitHub Artifact Attestations. All built into mise, no external tools.
+- **Security:** Native verification — checksums, cosign signatures, SLSA provenance, GitHub Artifact Attestations. All built into mise, no external tools.
 - **Limitation:** Only handles binary downloads. Can't set environment variables or run post-install scripts.
 
 ```toml
@@ -114,7 +114,7 @@ The registry that mise compiles directly into its binary. Downloads pre-built pl
 
 **Verdict:** Your go-to for CLI tools. Fast (download, not compile), secure (multiple verification methods), huge catalog. Already your preferred backend.
 
-### github -- GitHub Releases (no aqua registry needed)
+### github — GitHub Releases (no aqua registry needed)
 
 Downloads release assets directly from GitHub repositories. Intelligently scores assets to pick the right one for your platform.
 
@@ -130,11 +130,11 @@ Downloads release assets directly from GitHub repositories. Intelligently scores
 
 **Verdict:** Fallback for tools not in aqua. Also useful for private repos or GitHub Enterprise (supports custom `api_url`).
 
-### cargo -- Rust ecosystem
+### cargo — Rust ecosystem
 
 Installs from crates.io. Compiles from source by default, but uses `cargo-binstall` when available for pre-built binaries.
 
-- **Syntax:** `cargo:crate-name` (the crate name, which may differ from the repo name -- `git-delta` not `delta`)
+- **Syntax:** `cargo:crate-name` (the crate name, which may differ from the repo name — `git-delta` not `delta`)
 - **Performance:** With `cargo-binstall`: fast (downloads pre-built). Without: slow (compiles from source, can take minutes).
 - **Requires:** `cargo` on PATH (install via mise or rustup).
 
@@ -151,7 +151,7 @@ Installs from crates.io. Compiles from source by default, but uses `cargo-binsta
 
 **Verdict:** Only when aqua doesn't have the tool AND you need crate-specific features/flags. For most Rust CLI tools, aqua is faster and simpler.
 
-### go -- Go ecosystem
+### go — Go ecosystem
 
 Installs via `go install`. Always compiles from source.
 
@@ -166,7 +166,7 @@ Installs via `go install`. Always compiles from source.
 
 **Verdict:** Only when aqua doesn't have the tool, or you need build tags. Most Go CLI tools are in aqua.
 
-### npm -- Node.js packages
+### npm — Node.js packages
 
 Installs from npmjs.org.
 
@@ -183,9 +183,9 @@ Installs from npmjs.org.
 |---------|---------|---------|
 | `npm.package_manager` | `npm` | Which package manager to use (npm/bun/pnpm) |
 
-**Verdict:** For Node.js tools that are npm-only. Many popular ones (prettier, eslint) are also in aqua -- check `mise registry | grep <tool>` first.
+**Verdict:** For Node.js tools that are npm-only. Many popular ones (prettier, eslint) are also in aqua — check `mise registry | grep <tool>` first.
 
-### pipx -- Python tools in isolated venvs
+### pipx — Python tools in isolated venvs
 
 Uses `uvx` (preferred) or `pipx` to install Python CLI tools with isolated dependencies.
 
@@ -206,7 +206,7 @@ Uses `uvx` (preferred) or `pipx` to install Python CLI tools with isolated depen
 
 **Verdict:** For Python-only CLI tools (black, ruff, mypy, etc.). Some are also in aqua.
 
-### asdf -- Plugin ecosystem
+### asdf — Plugin ecosystem
 
 The original plugin system. Thousands of community plugins.
 
@@ -215,7 +215,7 @@ The original plugin system. Thousands of community plugins.
 
 **Verdict:** Legacy fallback. Use aqua/core first. Only needed for obscure tools with an asdf plugin but no aqua entry.
 
-### vfox -- Cross-platform plugin system
+### vfox — Cross-platform plugin system
 
 Similar to asdf but designed for Windows compatibility.
 
@@ -223,7 +223,7 @@ Similar to asdf but designed for Windows compatibility.
 
 **Verdict:** Mainly relevant if you need Windows support for a tool that only has a vfox plugin.
 
-### spm -- Swift Package Manager (experimental)
+### spm — Swift Package Manager (experimental)
 
 Installs Swift executables from GitHub/GitLab.
 
@@ -232,7 +232,7 @@ Installs Swift executables from GitHub/GitLab.
 
 **Verdict:** Niche. Only for Swift CLI tools distributed as Swift packages.
 
-### ubi -- Universal Binary Installer (deprecated)
+### ubi — Universal Binary Installer (deprecated)
 
 Downloads from GitHub/GitLab releases. **Deprecated in favor of the github backend.**
 
@@ -243,17 +243,17 @@ Downloads from GitHub/GitLab releases. **Deprecated in favor of the github backe
 
 ### Other backends
 
-- **forgejo** -- like github but for Forgejo/Gitea instances
-- **gitlab** -- like github but for GitLab
-- **conda** (experimental) -- Conda packages
-- **dotnet** (experimental) -- .NET tools
-- **gem** -- Ruby gems
-- **http** -- download from arbitrary URLs
-- **s3** (experimental) -- download from S3 buckets
+- **forgejo** — like github but for Forgejo/Gitea instances
+- **gitlab** — like github but for GitLab
+- **conda** (experimental) — Conda packages
+- **dotnet** (experimental) — .NET tools
+- **gem** — Ruby gems
+- **http** — download from arbitrary URLs
+- **s3** (experimental) — download from S3 buckets
 
 ---
 
-## Decision Guide
+## Decision guide
 
 | Situation | Backend | Why |
 |-----------|---------|-----|

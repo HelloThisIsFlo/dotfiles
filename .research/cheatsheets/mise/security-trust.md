@@ -92,6 +92,8 @@ export MISE_PARANOID=1
 
 ## `mise.lock` — supply chain verification
 
+> **Basic lockfile workflow** (pinning versions, committing `mise.lock`) is covered in [Tool Management](tool-management.md#mise-lock--pin-versions-for-reproducible-installs). This section covers the security layer: checksums, provenance, and strict mode.
+
 **The problem:** `mise install` resolves version ranges by hitting GitHub APIs, then downloads tarballs. A compromised registry or MITM could serve a different binary.
 
 ```bash
