@@ -4,6 +4,30 @@ Managing tool versions with mise: installing, upgrading, pinning, pruning, and r
 
 ---
 
+## Daily workflow (opinionated)
+
+**One-time setup:** enable auto-locking so `mise.lock` stays in sync automatically.
+
+```toml
+# ~/.config/mise/config.toml (or project mise.toml)
+[settings]
+lockfile = true
+```
+
+**From here, the core loop is three commands:**
+
+| What | Command | What happens |
+|---|---|---|
+| Install everything from config | `mise install` | Reads `mise.toml`, installs missing tools, auto-updates `mise.lock` |
+| Upgrade within constraints | `mise upgrade` | e.g. `python = '3.13'` gets latest 3.13.x, lockfile updates |
+| Upgrade past constraints | `mise upgrade --bump` | Jumps to latest major/minor, rewrites `mise.toml` + lockfile |
+| Try a version temporarily | `mise x node@22 -- node -v` | Uses node 22 for one command, touches nothing |
+| Add a new tool | `mise use eza@latest` | Installs + writes to `mise.toml` + updates lockfile |
+
+After any change, commit both `mise.toml` and `mise.lock`. On another machine, `mise install` reproduces the exact same versions — no resolution, no API calls.
+
+---
+
 ## `mise use` — declare which version you want
 
 **The problem:** You want to add a tool (or change its version) and have it tracked in config so your team/machines stay in sync.
