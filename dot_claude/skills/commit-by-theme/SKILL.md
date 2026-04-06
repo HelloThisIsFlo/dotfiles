@@ -25,7 +25,8 @@ The user's working tree is messy and they want help making sense of it. Your job
 
 1. Run `git status` and `git diff` (both staged and unstaged)
 2. Read the actual diffs — don't just list filenames
-3. Group changes into thematic clusters
+3. **Read the full file**, not just the diff. Duplication, redundancy, and missing context are invisible from diffs alone — the original and the duplicate may be in different hunks, or the issue may involve unchanged lines the diff never shows.
+4. Group changes into thematic clusters
 4. For each cluster, give a **readiness assessment** (see below)
 5. Present in **two separate tables**:
    - **Looks ready** — clusters that appear complete, with a "Reason" column explaining why
@@ -48,6 +49,8 @@ For every cluster you identify — whether in "commit this" or "what's the state
 - Partial implementations (function defined but not wired up, config added but not referenced)
 - Debug/test artifacts (print statements, hardcoded paths, temporary values)
 - A change that would logically need a companion change that's missing
+- **Duplication or redundancy** — this is a strong WIP signal. When reading the full file, actively scan for: two keybinds mapped to the same action, near-identical config blocks, repeated function definitions, or entries that do the same thing with different triggers. Duplication often spans the diff boundary (one copy was already in the file, the new one was added) so you can only catch it by reading the whole file, not just the diff. If someone intended a clean final version, they wouldn't leave duplicates.
+- **Reference/documentation files** (cheatsheets, guides, notes) — these are often still being reviewed even if they look "complete." Lean toward WIP unless the user explicitly asks to commit them.
 
 **Signals that something looks ready:**
 - Self-contained unit (config + its ignore entry, plugin + its settings)
