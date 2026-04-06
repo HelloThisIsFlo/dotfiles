@@ -17,7 +17,8 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 
 ### Package managers & version managers
 - [x] Homebrew (`11__homebrew.fish`)
-- [x] ~~asdf shims (`13__asdf.fish`)~~ — removed, replaced by mise (`12__mise.fish`)
+- [x] ~~asdf shims (`13__asdf.fish`)~~ — removed, replaced by mise
+- [x] mise (`12__mise.fish` + `89__mise-paths.fish.tmpl`) — config + activation via template
 
 ### Tool integrations
 - [x] direnv (`21__direnv.fish`) — **want to replace with mise** (only using direnv for `.env` loading, not `.envrc`)
@@ -30,10 +31,10 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 ### PATH
 - [x] Core paths (`81__core-paths.fish`) — `~/.local/bin`, `~/.bin`
   - ⚠️ Missing from zshrc: `$HOME/Dev/Scripts` (still have scripts there?), `/usr/local/sbin` (likely not needed on Apple Silicon)
-- [ ] Language paths (`82__language-paths.fish`) — review: Go and krew paths may no longer be needed
-  - Rust PATH removed (mise handles this via `mise activate`)
-  - ⚠️ `$GOPATH/bin` and `$HOME/.krew/bin` — still relevant? Review before re-checking
-- [x] App paths (`83__app-paths.fish`) — LM Studio, Obsidian, VS Code, Windsurf
+- [x] Language paths (`82__language-paths.fish`) — Go bin only (Rust removed, mise handles it)
+  - ⚠️ `$GOPATH/bin` — still relevant? Review
+- [x] CLI tool paths (`83__cli-tool-paths.fish`) — krew (split out from old `83__app-paths`)
+- [x] App paths (`84__app-paths.fish`) — LM Studio, Obsidian, VS Code, Windsurf, JetBrains Toolbox
   - Garmin SDK & Android platform-tools from zshrc not ported (likely stale)
 
 ### Aliases, functions, abbreviations
@@ -80,14 +81,15 @@ Reference: `private_dot_zshrc` (the original zsh config, still in the repo).
 - [ ] **Secrets** (`03__secrets.fish`) — decide: `bass source ~/.secrets.env` or fish-native `~/.secrets.fish`
 - [ ] **Home Assistant** (`26__home-assistant.fish`) — `HASS_SERVER`, `HASS_TOKEN` (depends on secrets)
 - [ ] **tmux** (`49__tmux.fish`) — `ta`, `ts`, `td`, `tl`, `tk` + session completions. Or drop if not using tmux anymore
-- [ ] **mise** (`12__mise.fish`) — asdf removed, mise activation pending (using `mise activate fish | source`)
+- [x] **mise** (`12__mise.fish` + `89__mise-paths.fish.tmpl`) — done, explicit activation via template
 
 ### Missing env vars
 - [x] `HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile` — added to `11__homebrew.fish`
-- [ ] `ALTERNATE_EDITOR=""` (needed for emacsclient fallback — skip if not using emacs)
+- [x] `ALTERNATE_EDITOR=""` — added to `02__shell-env.fish`
 
 ### Completions (`99__completions.fish`)
 - [x] kubectl — already working (fish built-in or man page parsing)
+- [x] mise — added to `cache_completions`
 - [ ] talosctl — verify if already working, add to `cache_completions` if not
 - [ ] poetry
 - [ ] AWS CLI (needs fish-specific completer, not just `cache_completions`)

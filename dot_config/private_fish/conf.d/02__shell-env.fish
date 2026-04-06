@@ -7,6 +7,10 @@ set -gx LC_ALL en_US.UTF-8
 set -gx LANG en_US.UTF-8
 
 set -gx EDITOR nvim
+# Used by emacsclient: when set to "", it auto-starts an Emacs daemon if none
+# is running instead of failing. Also read by some tools as a fallback when
+# $EDITOR is unavailable. Harmless to keep even if not using Emacs.
+set -gx ALTERNATE_EDITOR ""
 
 # Let Ghostty set TERM=xterm-ghostty for full feature support (undercurl, etc.)
 # Only fall back to xterm-256color for other terminals
