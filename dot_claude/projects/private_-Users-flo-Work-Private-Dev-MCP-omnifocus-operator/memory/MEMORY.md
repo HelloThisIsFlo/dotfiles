@@ -48,3 +48,5 @@
 - [Golden master snapshots are human-only](feedback_golden-master-human-only.md) — agents create test infra, never capture/refresh snapshots
 - [Check worktrees before deleting](feedback_worktree-cleanup.md) — verify branches are merged into main; report unmerged ones, don't delete
 - [Contracts are pure data](feedback_contracts-are-pure-data.md) — no model_serializer or transformation logic in contracts/; only field definitions and validators
+- [UAT walkthrough style](feedback_uat-walkthrough-style.md) — foundation phases: auto-verify mechanical checks, walk through design decisions
+- [UAT client shadows validators](feedback_uat-client-shadows-validators.md) — Claude Desktop pre-validates against schema; test in Claude Code CLI to verify custom error messages
