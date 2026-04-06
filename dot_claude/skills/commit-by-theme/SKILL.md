@@ -24,10 +24,38 @@ The user has changes ready (usually staged) and wants them committed. Your job:
 The user's working tree is messy and they want help making sense of it. Your job:
 
 1. Run `git status` and `git diff` (both staged and unstaged)
-2. Group changes into thematic clusters
-3. Present them as a table or list: what goes together, why, and suggested commit order
-4. Flag anything that looks like WIP or doesn't clearly belong to a group
-5. Wait for the user to tell you what to commit
+2. Read the actual diffs — don't just list filenames
+3. Group changes into thematic clusters
+4. For each cluster, give a **readiness assessment** (see below)
+5. Present in **two separate tables**:
+   - **Looks ready** — clusters that appear complete, with a "Reason" column explaining why
+   - **Probably WIP** — clusters that look unfinished, with a "Reason" column explaining what's incomplete
+6. Wait for the user to tell you what to commit
+
+## Readiness assessment
+
+For every cluster you identify — whether in "commit this" or "what's the state?" mode — proactively give your best guess on whether it looks ready to commit or still in progress. This is critical: the user relies on this to triage quickly without re-reading every diff themselves.
+
+**Always show your reasoning.** Don't just say "looks like WIP" — explain what you saw:
+
+- **Looks ready:** "Self-contained change — adds the bass plugin and its ignore entry. Nothing partial."
+- **Probably WIP:** "The function is half-implemented — there's a `# TODO: handle edge case` on line 42 and the error path returns `None` without handling."
+- **Uncertain:** "The config change looks complete, but it references a `watch_dirs` entry that doesn't exist yet — might be waiting on another change?"
+
+**Signals that something might be WIP:**
+- TODO/FIXME/HACK comments in the diff
+- Commented-out code that looks like it's being iterated on
+- Partial implementations (function defined but not wired up, config added but not referenced)
+- Debug/test artifacts (print statements, hardcoded paths, temporary values)
+- A change that would logically need a companion change that's missing
+
+**Signals that something looks ready:**
+- Self-contained unit (config + its ignore entry, plugin + its settings)
+- Clean diff with no loose ends
+- Matches a pattern you've seen committed before in this repo
+- Adds or removes something completely (not half-added)
+
+**Your assessment is always a guess** — you don't know what the user intends. Frame it that way: "This looks ready to me because..." or "I'd guess this is still WIP because..." The user decides. But always give the guess — don't punt with "I don't know, you tell me." The whole point is to help them triage faster.
 
 ## Commit messages
 
