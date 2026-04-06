@@ -207,6 +207,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "WorktreeCreate": [
