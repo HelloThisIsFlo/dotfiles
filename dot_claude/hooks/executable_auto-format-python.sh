@@ -20,6 +20,8 @@ fi
 file_path=$(jq -r '.tool_response.filePath // .tool_input.file_path')
 
 if [[ "$file_path" == *.py ]]; then
-    uv run ruff check --fix --quiet "$file_path" 2>/dev/null || true
+    # F401 (unused import) skipped:
+    # => Agents often add imports before the code that uses them, F401 would remove them mid-edit, causing retry loops.
+    uv run ruff check --fix --quiet --ignore F401 "$file_path" 2>/dev/null || true
     uv run ruff format --quiet "$file_path" 2>/dev/null || true
 fi
