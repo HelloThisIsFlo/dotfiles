@@ -5,15 +5,28 @@
 tide configure --auto --style=Lean --prompt_colors='True color' --show_time=No --lean_prompt_height='Two lines' --prompt_connection=Dotted --prompt_connection_andor_frame_color=Dark --prompt_spacing=Sparse --icons='Many icons' --transient=No
 # -- GENERATED CONFIG ----
 
+# Snapshot what tide considers the defaults (before we override).
+# Run `tide-diff` to compare your custom lists against these defaults.
+set -U _tide_known_defaults_right $tide_right_prompt_items
+set -U _tide_known_defaults_left $tide_left_prompt_items
+
+
+
+# -- Left prompt items ---------
+# Run `tide-diff` to see what you've changed from tide defaults.
+# Reset then append — each line is independently editable (reorder, comment out, etc.)
+set -U tide_left_prompt_items
+set -a tide_left_prompt_items os
+set -a tide_left_prompt_items pwd
+set -a tide_left_prompt_items git
+set -a tide_left_prompt_items newline
+set -a tide_left_prompt_items character
 
 
 # -- Right prompt items ---------
 # Declared explicitly (not appended) so re-runs are idempotent.
 # `clock` is added separately by 0024-FISH-configure-tide-clock.fish.
-#
-# To compare against tide defaults after a `tide configure`:
-#   set -S tide_right_prompt_items
-# Then diff against this list.
+# Run `tide-diff` to see what you've changed from tide defaults.
 # Reset then append — each line is independently editable (reorder, comment out, etc.)
 set -U tide_right_prompt_items
 

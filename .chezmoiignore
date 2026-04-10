@@ -49,9 +49,10 @@
 .config/fish/**/*tide*
 .config/fish/functions/fish_mode_prompt.fish
 .config/fish/functions/fish_prompt.fish
-# Fish Plugin: Tide Prompt - EXCEPTION: My own Tide plugins
+# Fish Plugin: Tide Prompt - EXCEPTION: My own Tide plugins & functions
 !.config/fish/functions/_tide_item_dotenv.fish
 !.config/fish/functions/_tide_item_clock.fish
+!.config/fish/functions/tide-diff.fish
 # Fish Plugin: Sponge
 .config/fish/conf.d/sponge.fish
 .config/fish/functions/*sponge*
