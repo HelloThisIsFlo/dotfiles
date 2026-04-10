@@ -1,6 +1,11 @@
 {
   "env": {
-    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1"
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "DISABLE_AUTOUPDATER": "1"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
   },
   "permissions": {
     "allow": [
@@ -124,7 +129,7 @@
       "Read(**/*.pem)",
       "Read(**/*.key)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "bypassPermissions"
   },
   "hooks": {
     "SessionStart": [
@@ -247,9 +252,10 @@
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true
   },
-  "effortLevel": "medium",
-  "showClearContextOnPlanAccept": true,
+  "alwaysThinkingEnabled": true,
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.50",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "showClearContextOnPlanAccept": true,
+  "showThinkingSummaries": true
 }
