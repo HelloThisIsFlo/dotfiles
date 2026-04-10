@@ -148,6 +148,14 @@
             "command": "bash /Users/flo/.claude/hooks/gsd-session-state.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/flo/.claude/hooks/bugfix--strip-askuserquestion-from-allowed-tools.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
