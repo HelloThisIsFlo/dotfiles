@@ -23,6 +23,7 @@
 ## Memory-only decisions
 - Versioning: v1.x series (v1.1→v1.5), reserve v2.0 for workflow logic
 - [RRULE boundary decision](project_rrule-boundary-decision.md) — repository owns RRULE both directions (Option C), not yet implemented
+- [Pre-release, no compat](project_pre-release-no-compat.md) — unreleased, one user; "breaking changes" are just cleanups, no migration paths
 
 ## Feedback
 - [Don't close milestones autonomously](feedback_dont-close-milestones.md)
@@ -50,3 +51,4 @@
 - [Contracts are pure data](feedback_contracts-are-pure-data.md) — no model_serializer or transformation logic in contracts/; only field definitions and validators
 - [UAT walkthrough style](feedback_uat-walkthrough-style.md) — foundation phases: auto-verify mechanical checks, walk through design decisions
 - [UAT client shadows validators](feedback_uat-client-shadows-validators.md) — Claude Desktop pre-validates against schema; test in Claude Code CLI to verify custom error messages
+- [UAT commands in code blocks](feedback_uat-code-blocks.md) — put runnable commands in fenced code blocks, not inline backticks
