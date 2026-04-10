@@ -10,7 +10,14 @@
 - **Outline density.** The document should read like a tight outline that happens to be the final document — not like a Wikipedia article or a blog post.
 - **Lead with decisions and results**, not the story of how we got there.
 - **Bullet points over prose.** This applies everywhere: body text, callouts, explanations. Prose paragraphs are acceptable only for brief introductions or one-liner context setters (1-2 sentences max before switching to structured content).
-- **Hierarchical bullets are encouraged** when sub-points are needed — don't flatten everything into a single level.
+- **Hierarchical bullets are the default**, not the exception. A bullet should express ONE idea — the label/category. Its implications, details, and examples go in sub-bullets. If a bullet has more than ~15 words after the bold lead, it almost certainly needs to be split. Dense single-line bullets are the #1 readability killer.
+  - **Not this:** `- 🤖 **Agent-facing contract** (spec + tool descriptions) — before and after are both inclusive. Agents echo the user's dates, no off-by-one thinking required.`
+  - **This:**
+    ```
+    - 🤖 **Agent-facing contract** (spec + tool descriptions)
+      - `before` and `after` are both **inclusive**
+      - Agents echo the user's dates — no off-by-one thinking required
+    ```
 
 ---
 
@@ -86,6 +93,24 @@ Structure of Pattern C:
 
 Structure: link + what the reader will find there, as bullets. No fluff, no "you should definitely..." — just the content.
 
+**Pattern E — Contrast/duality summary (for sections with a "X vs Y" core insight):**
+```markdown
+> [!note] The short version
+>
+> - 🤖 **Agent-facing** — **inclusive/inclusive** (`>=` and `<=`)
+>   - Per the Show-More Principle, no off-by-one surprises
+> - ⚙️ **Internal** — **inclusive/exclusive** (`>=` and `<`)
+>   - Half-open intervals compose cleanly
+> - The resolution layer bridges the gap by shifting `before` values forward
+```
+
+Structure:
+1. Each side of the contrast gets a **parent bullet with emoji + bold label + em-dash + key fact**
+2. Sub-bullets explain the *why* or implications for each side
+3. Optional closing bullet for how the two relate
+4. Emoji must match the detail section below — if the callout says 🤖 for agent-facing, the detail bullets below use the same 🤖
+5. Use `[!note]` (not `[!important]`) — this is orientation, not a rule
+
 ### 2.3 Callout Formatting Details
 
 - Always leave a blank `>` line between the title and the content (i.e., `> [!type] Title` then `>` then content)
@@ -114,6 +139,7 @@ These emojis appear in:
 - Mode tables
 - "Choosing a mode" bullet lists
 - Inline references
+- **Summary callouts that reference the same concepts** — if a `[!note]` callout summarizes a section that uses 🤖 and ⚙️, the callout must use the same emoji. Mismatched emoji between summary and detail is jarring and breaks the visual shorthand.
 
 ### 3.2 Expressive Emoji for Edge Cases / Scenarios
 
@@ -156,6 +182,8 @@ A typical section follows this flow:
 4. **Callout with the key rule** — `[!important]` with the takeaway
 
 Not every section needs all four. Small sections might just be intro + callout.
+
+**Punchline-first rule:** When a section's core insight is a contrast, duality, or non-obvious conclusion, open with a `[!note]` callout that captures it *before* the detail bullets. Don't make the reader wade through the explanation to find the point — put the point up top, then explain. This is Pattern E from §2.2.
 
 ### 4.2 Reference Links — Two Tiers of Emphasis
 
@@ -317,8 +345,12 @@ Widgets accept three configuration modes. They look similar but behave very diff
 
 When `hybrid` widgets receive their first override, the detachment is permanent and can produce surprising results:
 
-- ⚡ **Theme switch after override** — the widget keeps the OLD theme. It detached on override and never re-attaches.
-- 🤯 **Nested hybrid widgets** — parent detachment does NOT cascade. Children stay managed until THEY get an override.
+- ⚡ **Theme switch after override**
+  - The widget keeps the OLD theme
+  - It detached on override and never re-attaches
+- 🤯 **Nested hybrid widgets**
+  - Parent detachment does NOT cascade
+  - Children stay managed until THEY get an override
 
 > [!tip] Check out the widget override deep dive
 >
