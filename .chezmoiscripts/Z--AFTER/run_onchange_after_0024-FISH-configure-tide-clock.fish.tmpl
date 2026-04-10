@@ -1,0 +1,27 @@
+#!/usr/bin/env fish
+
+# clock function hash: {{ include "dot_config/private_fish/functions/_tide_item_clock.fish" | sha256sum }}
+
+# ⚠️ Needs to be run after 0022-FISH-configure-tide.fish
+
+# Add to right prompt if not already present (it should be last)
+if not contains clock $tide_right_prompt_items
+    set --append -U tide_right_prompt_items clock
+end
+
+# -- Styles -------------
+# set -U tide_clock_color 9A8ABB  # lavender
+# set -U tide_clock_color 6B8E8E  # slate teal
+# set -U tide_clock_color 8FBC8F  # sage green
+# set -U tide_clock_color 7B9EA8  # steel blue
+# set -U tide_clock_color A0A0C0  # periwinkle
+# set -U tide_clock_color C0A080  # warm sand
+# set -U tide_clock_color 80A0A0  # seafoam
+# set -U tide_clock_color 9090B0  # dusty violet
+# set -U tide_clock_color A07888  # muted rose
+# set -U tide_clock_color 7090A0  # fjord blue
+# set -U tide_clock_color B8A8C8  # wisteria
+# set -U tide_clock_color 88B0B0  # aquamarine
+# set -U tide_clock_color 8898A8  # slate
+set -U tide_clock_color 5F9EA0    # soft teal - WINNER
+set -U tide_clock_bg_color normal
