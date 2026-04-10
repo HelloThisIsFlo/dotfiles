@@ -17,30 +17,49 @@ Run `git worktree list` to see all active worktrees. The main worktree is never 
 
 For every non-main worktree, determine its status:
 
-**a) Zero-commit check** — First, check if the branch has any commits beyond main:
+**a) Unmerged commit check** — First, check if the branch has any commits beyond main:
 ```bash
 git log main..<branch> --oneline
 ```
-If this is empty, the worktree was created but no work was committed yet. This is ambiguous — it could be freshly started (actively in use right now) or abandoned before any work began. There's no way to tell from git alone.
 
-Here's why this matters: worktrees are often used as isolated snapshots for agent sessions. An agent may be 30-60 minutes into a conversation, actively reading files and reasoning about the codebase, without having committed anything yet. From git's perspective, the worktree looks "empty" — zero commits, no changes. But from the user's perspective, there's a live session with accumulated context that took significant time to build. Deleting the worktree kills that session, and while the user can recreate the worktree and restore the agent, they lose all the conversational context and have to start over. That's the real cost — not lost code, but lost time and context.
+If this is **not empty**, the branch has unmerged work. Proceed to step (b).
 
-A zero-commit branch is also technically "merged" into main (it points at a commit main already has), so step (b) below will say "safe to delete." That's a trap — the merge check is answering a meaningless question for this case.
+If this **is empty**, the branch has nothing that main doesn't have. But this could mean two very different things — "the work was merged" or "no work was ever done." To distinguish them, compare commit hashes:
 
-So for zero-commit worktrees: skip steps (b)-(d) entirely and move to the next worktree. Only the user can tell you whether it's abandoned or active — but you can help them by checking when the worktree was created:
+```bash
+git rev-parse <branch>
+git rev-parse main
+```
 
+- **Different hashes** → the branch points to an older commit that main has moved past. Everything on this branch is already on main — but the reason matters:
+
+  - The branch had work that was merged/fast-forwarded into main → genuinely merged, safe to delete.
+  - The branch was created from an older main and never used, then main moved on → no work was done, but could still be an active session.
+
+  Git can't distinguish these two sub-cases — in both, the branch tip is simply an ancestor of main. So use the **age check** (see below) to disambiguate:
+  - **Old** (created days ago): almost certainly safe to delete — whether merged or just abandoned, the work (if any) is on main. Classify as **"Safe to delete (merged/stale)"**.
+  - **Fresh** (created within the last few hours): could be an active agent session where main happened to move forward while the agent is still working. Classify as **"Needs user decision"** with a note like "branch is behind main (no unique commits), but worktree was created 2 hours ago — may be an active session."
+
+  In both cases, check for uncommitted changes (step d) before confirming. Skip steps (b) and (c).
+
+- **Same hash** → the branch is at the exact same commit as main HEAD. This is ambiguous: either just created (possibly an active session) or created long ago from this same commit and main never moved. Use the **age check** to disambiguate:
+  - **Fresh** → likely an active session. Classify as **"Needs user decision"**.
+  - **Old** → likely abandoned. Classify as **"Needs user decision"** but note the age as a signal.
+
+  Check for uncommitted changes (step d) but skip steps (b) and (c).
+
+**Age check** (used by both cases above):
 ```bash
 # macOS: filesystem birth time of the worktree directory (epoch seconds)
 stat -f '%B' <worktree-path>
 ```
-
-Compare against the current time to get the age. Use this to give the user a helpful nudge in your report:
+Compare against the current time to get the age.
 - **Fresh** (created within the last few hours): likely an active session — say something like "created 2 hours ago, you may still be working in this one"
 - **Old** (created days ago): more likely abandoned — "created 3 days ago, probably stale"
 
-This is guidance, not a verdict. Always classify as "Needs user decision" regardless of age — but the freshness signal helps the user quickly triage without having to remember which worktree is which.
+Why this matters: worktrees are often used as isolated snapshots for agent sessions. An agent may be 30-60 minutes into a conversation, actively reading files and reasoning about the codebase, without having committed anything yet. From git's perspective, the worktree looks "empty" — zero commits, no changes. But from the user's perspective, there's a live session with accumulated context that took significant time to build. Deleting the worktree kills that session, and while the user can recreate the worktree and restore the agent, they lose all the conversational context and have to start over. That's the real cost — not lost code, but lost time and context.
 
-**b) Merge check** — Only reached when step (a) found commits. `git branch --merged main` tells you if the branch's commits are reachable from main. If merged, it's safe to delete.
+**b) Merge check** — Only reached when step (a) found unmerged commits. `git branch --merged main` tells you if the branch's commits are reachable from main. If merged, it's safe to delete.
 
 **c) Rebased work check** — If not merged, the work may still be on main under different SHAs (from rebasing or cherry-picking). This is a two-level check:
 
