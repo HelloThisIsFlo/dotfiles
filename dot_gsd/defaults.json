@@ -19,7 +19,7 @@
     "branching_strategy": "none"
   },
   "hooks": {
-    "context_warnings": true
+    "context_warnings": false
   },
   "granularity": "coarse",
   "resolve_model_ids": "omit"
