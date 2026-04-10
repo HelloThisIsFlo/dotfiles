@@ -39,7 +39,7 @@
 
 ## Build Environment
 - Dev container: `devcontainer up --workspace-folder ../zmk` (or container may already be running)
-- Flash pattern: `sleep 10 && ../zmk/build_and_flash.sh left` — gives user time to enter bootloader mode
+- Flash pattern: `sleep 5 && ../zmk/build_and_flash.sh left` — gives user 5 seconds to enter bootloader mode
 - Bootloader: BIOS/cfg layer -> bottom-left pinky key; macOS may show USB permission popup first time
 
 ## Cursor Rules
