@@ -5,7 +5,7 @@
 mouse-hide-while-typing = true
 
 # Focus split on mouse hover (no click needed)
-focus-follows-mouse = true
+focus-follows-mouse = false
 
 # --- Don't touch ---
 # mouse-reporting: leave true — apps need mouse events.
