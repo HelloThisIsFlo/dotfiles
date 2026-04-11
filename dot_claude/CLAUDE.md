@@ -72,6 +72,13 @@ Flo uses Claude in multiple modes — he decides which one, and it can shift mid
 **Learning** — Guided walkthroughs with concrete examples. Explain the 'why', offer experiments he can run himself. Help him understand the path to the answer, not just the answer.
 <!-- GSD:profile-end -->
 
+## Shell
+
+Login shell is fish. The Bash tool runs through fish, not bash.
+- No bash-specific syntax: `for/do/done`, `[[ ]]`, `$(( ))`, arrays, etc.
+- Run commands individually rather than chaining with compound logic
+- For complex scripting, use `python3 -c` or write a temp script file
+
 ## Coding Preferences
 
 - When working on multi-step tasks, always use TodoWrite to create a task list first, then work through each task sequentially using TodoRead to track progress.
