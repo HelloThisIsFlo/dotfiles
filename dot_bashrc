@@ -7,18 +7,15 @@
 # case weird bugs happen, check the link:
 # https://gist.github.com/n-st/74f5ce07391bf8e95f5d8a6b452f6da8
 
-if [ -z "${NOZSH}" ] && [ $TERM = "xterm" -o $TERM = "xterm-256color" -o $TERM = "screen" ] && type zsh &> /dev/null
-then
-    export SHELL=$(which zsh)
-    if [[ -o login ]]
-    then
-        exec zsh -l
-    else
-        exec zsh
-    fi
+if [ -z "${NOZSH}" ] && [ $TERM = "xterm" -o $TERM = "xterm-256color" -o $TERM = "screen" ] && type zsh &>/dev/null; then
+  export SHELL=$(which zsh)
+  if [[ -o login ]]; then
+    exec zsh -l
+  else
+    exec zsh
+  fi
 fi
 
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/flo/.lmstudio/bin"
 # End of LM Studio CLI section
-
