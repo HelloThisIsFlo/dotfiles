@@ -37,14 +37,17 @@
 # keybind = cmd+4=goto_tab:4
 # keybind = cmd+5=goto_tab:5
 
-# Disable Cmd+Q to prevent accidental quit
-# keybind = cmd+q=ignore
-
 # Toggle transparency on/off
-# keybind = ctrl+shift+o=toggle_background_opacity
+keybind = ctrl+shift+o=toggle_background_opacity
 
 # Escape exits any key table
 # keybind = all:escape=end_key_sequence
 
 # Unbind a default — key passes through to the program
 # keybind = ctrl+shift+n=unbind
+
+# Splits — each split auto-equalizes so panes stay evenly sized
+keybind = super+d=new_split:right
+keybind = chain=equalize_splits
+keybind = super+shift+d=new_split:down
+keybind = chain=equalize_splits
