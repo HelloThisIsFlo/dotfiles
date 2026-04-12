@@ -1,12 +1,9 @@
 {{- if eq .os "macos" -}}
 #!/bin/bash
 
-# OmniFocus — prevent macOS from suspending it
-{{ template "macos-default" dict
-    "domain" "com.omnigroup.OmniFocus4"
-    "key"    "NSAppSleepDisabled"
-    "type"   "bool"
-    "value"  "YES"
-}}
+{{ range .macos_defaults }}
+# {{ .comment }}
+{{ template "macos-default" . }}
+{{ end }}
 
 {{ end -}}

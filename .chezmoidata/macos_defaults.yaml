@@ -1,0 +1,7 @@
+macos_defaults:
+  # OmniFocus — prevent macOS from suspending it
+  - domain: com.omnigroup.OmniFocus4
+    key: NSAppSleepDisabled
+    type: bool
+    value: "YES"
+    comment: "OmniFocus — prevent macOS from suspending it"
