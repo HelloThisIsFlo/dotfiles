@@ -1,0 +1,3 @@
+
+# drift-check ({{ .domain }} {{ .key }}): {{ output "bash" "-c" (printf "defaults read %s %s 2>/dev/null || echo UNSET" .domain .key) | trim | sha256sum }}
+defaults write {{ .domain }} {{ .key }} -{{ .type }} {{ .value }}

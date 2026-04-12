@@ -1,9 +1,12 @@
 {{- if eq .os "macos" -}}
 #!/bin/bash
 
-# drift-check: {{ output "bash" "-c" "defaults read com.omnigroup.OmniFocus4 NSAppSleepDisabled 2>/dev/null || echo UNSET" | trim | sha256sum }}
-
 # OmniFocus — prevent macOS from suspending it
-defaults write com.omnigroup.OmniFocus4 NSAppSleepDisabled -bool YES
+{{ template "macos-default" dict
+    "domain" "com.omnigroup.OmniFocus4"
+    "key"    "NSAppSleepDisabled"
+    "type"   "bool"
+    "value"  "YES"
+}}
 
 {{ end -}}
