@@ -277,6 +277,72 @@ The rule of thumb: if the config is in `~/Library/Preferences/*.plist`, use `def
 
 ---
 
+## Self-healing defaults (drift detection)
+
+The basic `run_onchange_` approach only re-runs when you edit the script. If an app update silently resets a preference, you won't know — the symptom is subtle (e.g. background app gets suspended, weird timeouts).
+
+### How it works
+
+Use chezmoi's `output` template function to read the current value at render time and hash it. If the value drifts, the hash changes, which triggers `run_onchange_` to re-apply.
+
+**Template fragment** (`.chezmoitemplates/macos-default`):
+
+```go-template
+# drift-check ({{ .domain }} {{ .key }}): {{ output "bash" "-c" (printf "defaults read %s %s 2>/dev/null || echo UNSET" .domain .key) | trim | sha256sum }}
+defaults write {{ .domain }} {{ .key }} -{{ .type }} {{ .value }}
+```
+
+- `defaults read` runs at template render time (every `chezmoi status`/`apply`)
+- `2>/dev/null || echo UNSET` handles apps that aren't installed yet
+- The hash is embedded in a comment — if the value changes, the script content changes, triggering `run_onchange_`
+
+**Data file** (`.chezmoidata/macos_defaults.yaml`):
+
+```yaml
+macos_defaults:
+  - domain: com.omnigroup.OmniFocus4
+    key: NSAppSleepDisabled
+    type: bool
+    value: "YES"
+    comment: "OmniFocus — prevent macOS from suspending it"
+
+  - domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: "true"
+    comment: "Auto-hide the Dock"
+```
+
+**Script** (`.chezmoiscripts/Z--AFTER/run_onchange_after_0011-MACOS-defaults.sh.tmpl`):
+
+```go-template
+{{- if eq .os "macos" -}}
+#!/bin/bash
+
+{{ range .macos_defaults }}
+# {{ .comment }}
+{{ template "macos-default" . }}
+{{ end }}
+
+{{ end -}}
+```
+
+### Adding a new default
+
+Just append to `macos_defaults.yaml`. No template code to touch.
+
+### Tradeoffs vs the basic approach
+
+| | Basic (static script) | Self-healing (drift detection) |
+|---|---|---|
+| Re-runs when you edit the script | Yes | Yes |
+| Re-runs when an app resets a value | No | Yes |
+| `chezmoi status` noise | Clean (unless edited) | Clean (unless drifted) |
+| Cost per `chezmoi status` | None | One `defaults read` per entry |
+| Complexity | Simple | Template fragment + data file |
+
+---
+
 ## Quick reference
 
 | Task | How |
