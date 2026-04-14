@@ -6,14 +6,19 @@ keybind = global:super+shift+y=toggle_quick_terminal
 
 # Position and size
 # Values: top | bottom | left | right | center
-quick-terminal-position = top
-quick-terminal-size = 40%
+quick-terminal-position = center
+# ⚠️ When changing 'quick-terminal-size':
+# 1. Need to set 'window-save-state = never' (otherwise the old size will always be restored)
+# 2. Then restart Ghostty
+# 3. Then set 'window-save-state = always' (if wanted)
+quick-terminal-size = 85%, 85%
 
 # Which monitor — follow the mouse
 quick-terminal-screen = mouse
 
 # Slide animation speed (0 for instant)
-quick-terminal-animation-duration = 0.2
+# Note: For position = center => No animation looks way better
+quick-terminal-animation-duration = 0
 
 # Hide when clicking away
 quick-terminal-autohide = true

@@ -40,7 +40,9 @@ macos-option-as-alt = true
 
 # Hide from Dock and Cmd+Tab (for quick-terminal-only setups)
 # Values: never | always | if-other-instances
-# macos-hidden = never
+# 'never' => Allows Cmd+Tab
+macos-hidden = never
+
 
 # What happens when dropping a file on the Dock icon
 # Values: new-tab | new-window

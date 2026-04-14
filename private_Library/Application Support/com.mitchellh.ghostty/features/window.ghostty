@@ -1,7 +1,6 @@
 # Window
 # See cheat sheet: window-appearance.md
 
-
 # --- Window & tabs ---
 
 # Where new tabs appear
@@ -17,7 +16,6 @@ macos-titlebar-style = tabs
 # Values: always | auto | never
 # window-show-tab-bar = auto
 
-
 # --- Padding ---
 
 # Padding around terminal content (points)
@@ -32,13 +30,11 @@ window-padding-balance = true
 # Values: background | extend (bleed row colors into padding) | extend-always
 window-padding-color = extend
 
-
 # --- Color space ---
 
 # Color space — display-p3 for wider gamut on macOS
 # Values: srgb | display-p3
 window-colorspace = display-p3
-
 
 # --- Session ---
 
@@ -46,6 +42,8 @@ window-colorspace = display-p3
 # Values: default (follow macOS system setting) | always | never
 window-save-state = always
 
+# Don't open an initial window, when starting fresh
+initial-window = false
 
 # --- Misc ---
 
