@@ -21,7 +21,8 @@
 ## Reminders
 
 ## Memory-only decisions
-- Versioning: v1.x series (v1.1→v1.5), reserve v2.0 for workflow logic
+- Versioning: v1.x series (v1.1→v1.7), reserve v2.0 for workflow logic
+- [Roadmap restructuring (2026-04-12)](project_roadmap-restructure.md) — dissolved v1.4.x sub-milestones, roadmap is now v1.4→v1.5→v1.6→v1.7
 - [RRULE boundary decision](project_rrule-boundary-decision.md) — repository owns RRULE both directions (Option C), not yet implemented
 - [Pre-release, no compat](project_pre-release-no-compat.md) — unreleased, one user; "breaking changes" are just cleanups, no migration paths
 
