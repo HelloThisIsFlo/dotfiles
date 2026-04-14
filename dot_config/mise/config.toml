@@ -62,6 +62,7 @@ cheat = 'latest'
 # See: https://github.com/anthropics/claude-code/issues/42796
 # TODO: After upgrading past 2.1.63, remove the 'bugfix--strip-askuserquestion-from-allowed-tools.sh' hook (.sh file & config entry).
 claude-code = "2.1.63"
+"pipx:graphifyy" = "latest"
 
 
 [settings]
