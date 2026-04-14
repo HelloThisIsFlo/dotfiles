@@ -265,7 +265,5 @@
   "minimumVersion": "2.1.50",
   "skipDangerousModePermissionPrompt": true,
   "showClearContextOnPlanAccept": true,
-  "showThinkingSummaries": true,
-  "model": "claude-opus-4-5-20251101",
-  "effortLevel": "high"
+  "showThinkingSummaries": true
 }
