@@ -27,10 +27,7 @@ Recurring check-ins with the user. This is a MANDATORY system — Flo has ADHD a
 
 ### Tasks
 
-- **ID**: `thinking-level`
-  **Ask**: "Quick routine check: are you still happy with medium thinking as your default? (Reminder: you can say 'ultrathink' in any prompt for one-off deep reasoning, or use `/effort high` to change for the session.)"
-  **Frequency**: every 4 days
-  **If change needed**: Note preference in this file or run `/effort` as requested
+_No active routine checks._
 
 <!-- GSD:profile-start -->
 ## Developer Profile
