@@ -1,0 +1,2 @@
+- [DadHome is separate](dadhome_separate_instance.md) — Parents' house is its own bigger HA instance, not a unification target.
+- [HA config already version-controlled](feedback_ha_yaml_hybrid.md) — Mirrored to HelloThisIsFlo/TheHome-HA by the HA VC add-on; don't propose migration/CI/packages.
