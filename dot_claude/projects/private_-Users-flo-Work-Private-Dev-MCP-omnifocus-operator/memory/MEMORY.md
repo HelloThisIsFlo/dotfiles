@@ -49,7 +49,8 @@
 - [Thorough post-execution review](feedback_thorough-post-execution-review.md) — cross-reference summaries against codebase; auto-fixes aren't "resolved by definition"
 - [Golden master snapshots are human-only](feedback_golden-master-human-only.md) — agents create test infra, never capture/refresh snapshots
 - [Check worktrees before deleting](feedback_worktree-cleanup.md) — verify branches are merged into main; report unmerged ones, don't delete
-- [Contracts are pure data](feedback_contracts-are-pure-data.md) — no model_serializer or transformation logic in contracts/; only field definitions and validators
+- [Contracts are pure data, @model_serializer is the real risk](feedback_contracts-are-pure-data.md) — contracts/ has zero serializers; @field_serializer allowed in models/ as documented workaround; @model_serializer erases JSON Schema under nesting (guarded by TestUnionRegressionGuard)
 - [UAT walkthrough style](feedback_uat-walkthrough-style.md) — foundation phases: auto-verify mechanical checks, walk through design decisions
 - [UAT client shadows validators](feedback_uat-client-shadows-validators.md) — Claude Desktop pre-validates against schema; test in Claude Code CLI to verify custom error messages
 - [UAT commands in code blocks](feedback_uat-code-blocks.md) — put runnable commands in fenced code blocks, not inline backticks
+- [Don't hand-wave bugs with knob tweaks](feedback_dont-hand-wave-bug-fixes.md) — mitigation ≠ fix; propose investigation plans, not "bump the threshold"; priority is Flo's call, not Claude's
