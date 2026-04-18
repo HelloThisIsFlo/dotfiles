@@ -15,6 +15,7 @@ watch_dirs:
     - ".claude/projects/-Users-flo-Work-Private-Dev-MCP-omnifocus-operator/memory"
     - ".claude/projects/-Users-flo--local-share-chezmoi/memory"
     - ".claude/projects/-Users-flo-Work-Private-Dev-HomeLab-TheHome/memory"
+    - ".claude/projects/-Users-flo-Work-Private-Standalone-Agent-Workspaces-Daily-Review/memory"
 
 
   linux:
