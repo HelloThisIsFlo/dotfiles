@@ -7,6 +7,12 @@ description: "Read a spec/design file and interview the user in depth using AskU
 
 Turn a thin spec into a thorough one by interviewing the user until the gaps are filled. The user explicitly wants to be pushed — shallow interviews are a failure mode.
 
+## Stance
+
+**Honest pushback over agreement.** When the user proposes an architecture, approach, or decision that raises concerns for you, surface those concerns with concrete tradeoffs — don't soften or capitulate because it's their spec. Users invoke this skill because they want their thinking pressure-tested; agreement that comes cheap wastes the whole interview. Offer a middle path when one exists; push back explicitly when it doesn't.
+
+**Be skeptical of garbled input.** Many users run Claude via speech-to-text, and phrases sometimes come through cut short, merged with adjacent words, or just off. If something reads as ambiguous or incongruent with the surrounding context, ask a short clarifying question instead of parsing it charitably and moving on. A ten-second clarification is cheaper than a cascade of questions built on a misread intent.
+
 ## Workflow
 
 1. **Resolve which spec first.** Before doing anything else, make sure you know exactly which file to interview on. Do not start reading until this is settled.
@@ -22,7 +28,7 @@ Turn a thin spec into a thorough one by interviewing the user until the gaps are
 4. **Gather surrounding context if the spec depends on it.** If the spec references other artifacts (related milestones, architecture docs, prior decisions, linked RFCs) or sits inside a larger project where the background matters, spawn exploration subagents — `Agent` with `subagent_type: Explore` — to pull that context back.
    - **Use as many as the work actually needs, in parallel.** Explorers are cheap: they run on a small model and return compact summaries, so if the spec touches five distinct areas, fire five explorers in one message (multiple `Agent` tool calls in the same turn) rather than serializing them or overloading one prompt. Soft cap around 10; past that you're probably re-deriving the project instead of gathering what's needed.
    - **Prefer subagents over reading files yourself** — they keep *your* context window free for the long interview ahead.
-   - **Explorers aren't only for this step.** If a new area opens up mid-interview and you'd ask sharper questions with more context, spawn another one or two right then — targeted, not sweeping. Just don't fire one between every question; use your judgment.
+   - **Spawn explorers mid-interview whenever a decision depends on unverified codebase claims.** If you catch yourself writing *"I think X works because Y does Z"*, stop and verify Y before building on it. Agents are cheap — small model, compact summary — and wrong locks are expensive because they cascade into downstream decisions that are hard to unwind. Parallel spawns work here too: three focused explorers in one turn beats one bloated explorer or three sequential ones. Targeted, not sweeping — don't fire one between every question.
    - **Skip entirely for self-contained specs.** Don't research for the sake of researching. The goal is sharper, less obvious questions — not a full re-derivation of the project.
 5. **Plan the interview before firing off the first question.** Draft the initial set of question areas/threads you want to explore and register them as tasks with `TaskCreate`. This gives the user visibility into where the interview is heading and makes progress legible as you go.
    - **The task list is a living plan, not a contract.** If a new line of questioning opens up mid-interview — a surprising answer, a tension between sections, an angle you hadn't considered — add tasks on the fly, **and tell the user why**. A one-liner like *"I've realized X might be worth exploring — adding it to the list"* keeps them in the loop about where the interview is heading. Mark tasks `in_progress` when you start them and `completed` when the area is actually covered.
@@ -68,6 +74,18 @@ Bad questions:
 - Are so broad they can't be meaningfully answered ("any other concerns?")
 - Pile on minor UI polish when the architecture is still vague
 
+## Task list discipline
+
+The task list is a live status display of the interview for the user — a visual overview of what's settled, what's open, and what's queued. It is not a personal checklist for you. Keep it scannable and honest about state.
+
+- **Cluster, don't atomize.** Create one task per thread or topic cluster, not one per question. Pack multiple sub-questions into a single `AskUserQuestion` call under that cluster. Sub-questions and settled sub-decisions belong in the task description, not as separate tasks. An exploded list of twenty tiny tasks destroys the visual overview the user was supposed to get.
+
+- **Mark status as it progresses.** Set a task `in_progress` when you actively open it, and `completed` only when *every* sub-decision in the cluster has been explicitly confirmed by the user. Partial confirmation doesn't close a task.
+
+- **Make dependencies explicit when a new task emerges mid-interview.** The direction encodes who set the priority:
+  - **Claude-initiated (default):** if *you* surface a new angle mid-discussion, create the task with `TaskUpdate` setting `newTask.blocks = [all other open tasks]`. The new task becomes the current focus; others are visibly queued behind it.
+  - **User-deferred (exception):** if the *user* says *"let's come back to this after X/Y/Z,"* set `newTask.blockedBy = [X, Y, Z]`. The new task is queued at the bottom, waiting on the user-prioritized items.
+
 ## Pacing
 
 Keep going. The user is explicitly asking to be interviewed *continually until it's complete* — one or two rounds is not enough. Treat it like a design review: every answer should suggest two more questions. When in doubt, ask one more round.
@@ -88,14 +106,32 @@ Stop altogether when:
 - The user says stop, or
 - You've genuinely run out of non-obvious questions across every angle that actually matters for this spec
 
+### Reflect back after long or reframing answers
+
+When the user gives a multi-paragraph answer — especially one that reframes earlier decisions or cascades into multiple threads — summarize your understanding back in three to five bullets before asking the next question. Flag any holes you notice in your own reflection; this is where the skepticism muscle earns its keep.
+
+The cost is cheap (one short reply); the benefit is catching misinterpretations before they get locked in as "what the user decided." Users often volunteer corrections at exactly this moment that they wouldn't have raised otherwise.
+
+## Locking decisions
+
+The file write-back has a clear gate — no write without explicit approval. The same rule applies *inside* the interview, to individual sub-decisions. Sub-decision locks cascade: one wrongly-locked item becomes the assumption the next question builds on, and by the time the error surfaces the interview has drifted.
+
+**Recommending is not locking.** An insight box, a "(Recommended)" tag, or a "my read is X" statement does not constitute confirmation. Before treating a sub-decision as settled — in the task list, in checkpoint notes, or in the running summary — you must be able to point at the user turn where they said *yes* to that specific thing. If you can't cite it, it's not locked; it's a proposal still awaiting an answer.
+
+**Locks are provisional until adjacent threads are explored.** Downstream questions regularly surface tension with earlier locks. When that happens, **don't treat reopening as a failure of the interview** — it's the interview doing its job. Acknowledge the tension, propose the reframe, and let the user decide to re-lock, adjust, or undo. Rigidly defending an early lock against later evidence is a much worse failure mode than reopening one.
+
 ## Pausing mid-interview
 
 Real interviews get long and context fills up. If the user says *"context is getting full, let's pause"*, asks to stop for now, or you judge a checkpoint is warranted:
 
 - **Do not modify the original spec file.** The spec stays untouched until the user explicitly approves the write-back. A pause is a checkpoint, not a commit — the same "confirm before writing" rule from step 6 applies here.
 - **Write a checkpoint to a sidecar file** next to the spec (e.g., `<spec-dir>/<spec-name>.interview-notes.md`). Capture:
-  - **Answers gathered so far**, organized by area — so a future session (or a future you) can reconstruct the state without re-asking.
-  - **Open threads still on the task list** — question areas not yet covered.
+  - **Items and their state**, organized by area. Every item carries exactly one of three status tags:
+    - **locked** — user gave explicit yes/no confirmation. Settled; resume can build on it.
+    - **verbally aligned** — user expressed a preference in conversation but was never asked an explicit question and never gave an explicit confirmation. **Not settled** — resumed sessions must re-confirm before treating as a decision.
+    - **untouched** — area not yet opened in the interview.
+
+    Binary locked/open framing is tempting but wrong: it collapses the "verbally aligned" middle into one of the extremes, and resumed sessions then misread verbal alignment as a lock.
   - **New angles that surfaced** during the interview and deserve future exploration, even if not yet started.
   - **A short "where we'd pick up" note** so the next session has an obvious entry point.
 - **Tell the user** where the notes live and what's in them. Let them choose: resume later, write the partial deepening back to the spec now (with confirmation), or just keep the notes as reference.
@@ -105,3 +141,9 @@ Real interviews get long and context fills up. If the user says *"context is get
 Only once the user has explicitly approved the write-back: update the original spec file in place. Before you do, summarize what you're about to change — section by section, or as a short bullet list of additions. The user should never be surprised by what lands in their file.
 
 Integrate the answers so the file reads as a coherent, deepened spec — not an appended Q&A transcript. Preserve the original structure; add detail where the interview produced it. Use `Edit` for surgical additions, `Write` only if the spec needs a full restructure.
+
+## Skill-level feedback
+
+Feedback about how this skill behaves belongs in the skill, not in per-project memory. If you catch yourself about to write a memory file capturing a recurring interview failure mode (*"don't X during interviews"* / *"always Y when the user does Z"*), stop — that's skill-level feedback, not project-level. Project memory is scoped per-project; a rule about interview behavior has to live in the skill itself to fire wherever the skill is invoked.
+
+Surface the observation to the user as a skill improvement proposal instead; they can decide whether to add it here.
