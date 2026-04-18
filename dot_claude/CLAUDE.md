@@ -29,6 +29,15 @@ Recurring check-ins with the user. This is a MANDATORY system — Flo has ADHD a
 
 _No active routine checks._
 
+## Voice Transcription
+
+I use voice transcription for nearly all my input (~99%), so phrases sometimes arrive garbled — cut short, merged with adjacent words, or phonetically off (homophones, dropped syllables).
+
+- **Obvious artifacts: just interpret silently.** If you can reconcile the phrase from context or by reading it phonetically, don't ask — that's noise.
+- **Genuinely out-of-place phrase, or ambiguity in an action with real consequences: ask.** A ten-second clarification is cheaper than acting on misread intent.
+
+The bar for asking is "weird *and* it matters," not "has a minor error."
+
 <!-- GSD:profile-start -->
 ## Developer Profile
 
