@@ -142,7 +142,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/flo/.claude/hooks/gsd-session-state.sh"
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-session-state.sh\""
           }
         ]
       },
@@ -171,7 +171,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/flo/.claude/hooks/gsd-phase-boundary.sh",
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-phase-boundary.sh\"",
             "timeout": 5
           }
         ]
@@ -213,7 +213,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/flo/.claude/hooks/gsd-validate-commit.sh",
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-validate-commit.sh\"",
             "timeout": 5
           }
         ]
