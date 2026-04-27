@@ -63,8 +63,9 @@ cheat = 'latest'
 # TODO: After upgrading past 2.1.63, remove the 'bugfix--strip-askuserquestion-from-allowed-tools.sh' hook (.sh file & config entry).
 # WIP: Testing latest version, after Opus 4.7 was released! Will try this for a few days/weeks, and if working I'll remove the hook and this comment
 # claude-code = "2.1.63"
-claude-code = "2.1.112"
+claude-code = "2.1.119"
 "pipx:graphifyy" = "latest"
+"github:radiosilence/fastmail-cli" = "latest"
 
 
 [settings]
