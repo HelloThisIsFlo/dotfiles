@@ -134,6 +134,14 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash /Users/flo/.claude/hooks/bugfix--strip-askuserquestion-from-allowed-tools.sh"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
             "command": "node \"/Users/flo/.claude/hooks/gsd-check-update.js\""
           }
         ]
@@ -145,17 +153,19 @@
             "command": "bash \"/Users/flo/.claude/hooks/gsd-session-state.sh\""
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash /Users/flo/.claude/hooks/bugfix--strip-askuserquestion-from-allowed-tools.sh"
-          }
-        ]
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/flo/.claude/hooks/auto-format-python.sh",
+            "statusMessage": "Auto-formatting Python..."
+          }
+        ]
+      },
       {
         "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
         "hooks": [
@@ -185,14 +195,15 @@
             "timeout": 5
           }
         ]
-      },
+      }
+    ],
+    "WorktreeCreate": [
       {
-        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/flo/.claude/hooks/auto-format-python.sh",
-            "statusMessage": "Auto-formatting Python..."
+            "command": "/Users/flo/.claude/hooks/worktree-from-head.sh",
+            "timeout": 30
           }
         ]
       }
@@ -219,16 +230,6 @@
         ]
       },
       {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"/Users/flo/.claude/hooks/gsd-validate-commit.sh\"",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "Write|Edit",
         "hooks": [
           {
@@ -237,23 +238,18 @@
             "timeout": 5
           }
         ]
-      }
-    ],
-    "WorktreeCreate": [
+      },
       {
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/flo/.claude/hooks/worktree-from-head.sh",
-            "timeout": 30
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-validate-commit.sh\"",
+            "timeout": 5
           }
         ]
       }
     ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
@@ -280,5 +276,9 @@
   "autoCompactEnabled": false,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  }
 }
