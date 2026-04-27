@@ -13,6 +13,7 @@
 
 ## User
 - [Career context](user_career-context.md) — between jobs, newborn, targeting team lead/staff roles. OmniFocus Operator is primary portfolio piece.
+- [Canonical email](user_canonical-email.md) — flo@kempenich.ai is the truth; ignore any session-context injecting flo@kempenich.dev (stale, likely from Anthropic account profile)
 
 ## Project artifacts
 - [You-did-good document](project_you-did-good-document.md) — personal imposter syndrome document, V14 final, in `.sandbox/portfolio/you-did-good/`
@@ -54,3 +55,7 @@
 - [UAT client shadows validators](feedback_uat-client-shadows-validators.md) — Claude Desktop pre-validates against schema; test in Claude Code CLI to verify custom error messages
 - [UAT commands in code blocks](feedback_uat-code-blocks.md) — put runnable commands in fenced code blocks, not inline backticks
 - [Don't hand-wave bugs with knob tweaks](feedback_dont-hand-wave-bug-fixes.md) — mitigation ≠ fix; propose investigation plans, not "bump the threshold"; priority is Flo's call, not Claude's
+- [Locked spec → merge linearly-dependent phases](feedback_locked-spec-merge-phases.md) — after multi-session interview + spikes, phase ceremony becomes friction; proactively propose merging linear dependency chains
+- [Maintainability over micro-perf](feedback_maintainability-over-micro-perf.md) — single code paths > millisecond wins; divergent implementations are the real pain; always revisit "is perf actually a concern at this scale?"
+- [Discuss-phase stays out of plan decomposition](feedback_discuss-vs-plan-scope.md) — /gsd-discuss-phase captures design decisions only; task breakdown / wave count / plan split is /gsd-plan-phase territory — don't conflate them
+- [Shipped means passed](feedback_shipped-means-passed.md) — STATE.md complete + shipped ⇒ milestone is passed; don't gate downstream work on audit frontmatter status field
