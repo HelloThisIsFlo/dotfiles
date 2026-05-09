@@ -197,17 +197,6 @@
         ]
       }
     ],
-    "WorktreeCreate": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/flo/.claude/hooks/worktree-from-head.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Write|Edit",
@@ -280,5 +269,8 @@
   "statusLine": {
     "type": "command",
     "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  },
+  "worktree": {
+    "baseRef": "head"
   }
 }
