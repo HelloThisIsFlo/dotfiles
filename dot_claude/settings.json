@@ -288,5 +288,6 @@
         "repo": "kepano/obsidian-skills"
       }
     }
-  }
+  },
+  "autoMemoryEnabled": false
 }
