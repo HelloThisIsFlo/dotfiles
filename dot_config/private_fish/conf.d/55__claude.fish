@@ -22,12 +22,13 @@ function daily-review --description "Start a daily review session with Claude"
     set -l daily_review_dir "/Users/flo/Work/Private/Standalone Agent Workspaces/Daily-Review"
     set -l current_date (pdate)
 
-    cd $daily_review_dir
+    pushd $daily_review_dir
     claude \
         --allow-dangerously-skip-permissions \
         --model $model \
         --effort $effort \
         "Good morning! Today is $current_date. Let's do the Daily Review! ultrathink"
+    popd
 end
 
 # function clobsidian --description "Open Obsidian vault in Claude"
