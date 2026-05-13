@@ -1,4 +1,5 @@
 {
+  "skillListingBudgetFraction": 0.03,
   "env": {},
   "attribution": {
     "commit": "",
@@ -240,6 +241,13 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "head"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -252,28 +260,6 @@
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "caveman@caveman": true
-  },
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
-  "showClearContextOnPlanAccept": true,
-  "autoUpdatesChannel": "latest",
-  "minimumVersion": "2.1.50",
-  "tui": "fullscreen",
-  "showThinkingSummaries": true,
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "auto",
-  "preferredNotifChannel": "ghostty",
-  "autoCompactEnabled": false,
-  "remoteControlAtStartup": true,
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "skillListingBudgetFraction": 0.03,
-  "statusLine": {
-    "type": "command",
-    "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
-  },
-  "worktree": {
-    "baseRef": "head"
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -289,5 +275,19 @@
       }
     }
   },
-  "autoMemoryEnabled": false
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "showClearContextOnPlanAccept": true,
+  "autoUpdatesChannel": "latest",
+  "minimumVersion": "2.1.50",
+  "tui": "fullscreen",
+  "autoMemoryEnabled": false,
+  "showThinkingSummaries": true,
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto",
+  "preferredNotifChannel": "ghostty",
+  "autoCompactEnabled": false,
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
