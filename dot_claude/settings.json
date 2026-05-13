@@ -266,6 +266,7 @@
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
+  "skillListingBudgetFraction": 0.03,
   "statusLine": {
     "type": "command",
     "command": "node \"/Users/flo/.claude/hooks/gsd-statusline.js\""
