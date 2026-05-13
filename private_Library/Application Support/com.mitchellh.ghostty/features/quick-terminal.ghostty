@@ -2,7 +2,7 @@
 # See cheat sheet: quick-terminal.md
 
 # System-wide hotkey (global: prefix makes it work even when Ghostty is unfocused)
-keybind = global:super+shift+y=toggle_quick_terminal
+keybind = global:super+shift+g=toggle_quick_terminal
 
 # Position and size
 # Values: top | bottom | left | right | center
