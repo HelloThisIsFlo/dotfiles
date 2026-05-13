@@ -281,6 +281,12 @@
         "source": "github",
         "repo": "JuliusBrussee/caveman"
       }
+    },
+    "obsidian-skills": {
+      "source": {
+        "source": "github",
+        "repo": "kepano/obsidian-skills"
+      }
     }
   }
 }
