@@ -41,3 +41,23 @@ abbr -a mkdir 'mkdir -p'
 abbr -a y --position anywhere '| pbcopy'
 abbr -a p  'pbpaste |'
 abbr -a pp 'pbpaste >'
+
+# ── Shared Utility Functions ─────────────────────────────────────────
+
+function pdate --description "Pretty date: Mon, April 16th 2026"
+    set -l day (date +%-d)  # day without leading zero
+    set -l suffix
+    switch $day
+        case 11 12 13
+            set suffix th
+        case '*1'
+            set suffix st
+        case '*2'
+            set suffix nd
+        case '*3'
+            set suffix rd
+        case '*'
+            set suffix th
+    end
+    date "+%a, %B $day$suffix %Y"
+end
