@@ -1,8 +1,11 @@
 #!/usr/bin/env fish
 
 # clock function hash: {{ include "dot_config/private_fish/functions/_tide_item_clock.fish" | sha256sum }}
+# tide config hash: {{ include ".chezmoiscripts/Z--AFTER/run_onchange_after_0022-FISH-configure-tide.fish" | sha256sum }}
 
 # ⚠️ Needs to be run after 0022-FISH-configure-tide.fish
+# The tide config hash above forces this script to re-run whenever 0022 changes
+# (0022 resets tide_right_prompt_items, wiping clock — this re-adds it).
 
 # Add to right prompt if not already present (it should be last)
 if not contains clock $tide_right_prompt_items

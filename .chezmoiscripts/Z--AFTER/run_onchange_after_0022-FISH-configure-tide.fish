@@ -51,9 +51,9 @@ set -a tide_right_prompt_items crystal
 set -a tide_right_prompt_items zig
 
 # Cloud & infra
-set -a tide_right_prompt_items aws
+# set -a tide_right_prompt_items aws       # hidden — takes too much space
 set -a tide_right_prompt_items gcloud
-set -a tide_right_prompt_items kubectl
+# set -a tide_right_prompt_items kubectl   # hidden — takes too much space
 set -a tide_right_prompt_items terraform
 set -a tide_right_prompt_items pulumi
 set -a tide_right_prompt_items nix_shell
