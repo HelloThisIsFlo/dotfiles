@@ -13,6 +13,10 @@ Reference material organised by topic. Each sheet is self-contained — start wi
 - [Modern Replacements](cli/modern-replacements.md) — drop-in replacements for classic Unix tools (eza, bat, fd, rg, sd, zoxide, lazygit, etc.)
 - [Candidates to Explore](cli/candidates.md) — television, atuin, mise, zellij — tools worth evaluating
 
+## Cloudflare
+
+- [Tunnels](cloudflare/tunnels.md) — mental model, auth (cert.pem vs UUID.json), three run modes (CLI/dashboard/embedded), ingress YAML, DNS routing (`-f` warnings), recreate dance, autostart, multi-connector HA, Access (Zero Trust auth), non-HTTP origins, debugging
+
 ## Chezmoi
 
 - [Templates](chezmoi/templates.md) — conditionals, whitespace, `lookPath`, secrets, debugging

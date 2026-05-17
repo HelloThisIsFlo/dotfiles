@@ -2,6 +2,8 @@
 - **CLI**
 - [Modern Replacements](cli/modern-replacements.md)
 - [Candidates to Explore](cli/candidates.md)
+- **Cloudflare**
+- [Tunnels](cloudflare/tunnels.md)
 - **Keybinds**
 - [macOS Movement & Deletion](keybinds/macos-movement-and-deletion.md)
 - **Chezmoi**
