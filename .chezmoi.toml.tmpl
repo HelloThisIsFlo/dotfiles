@@ -6,6 +6,8 @@
 #                     personal  = everything (personal keys, API tokens, .secrets.env)
 #                     work      = work credentials only, no personal secrets
 #                     untrusted = no credentials at all (shared VPS, Steam Deck, etc.)
+#   host_universe — logical constellation of devices this host belongs to
+#                     (TheMac / TheHome / DadHome / Other — see prompt below for full breakdown)
 #
 # Re-prompt all values: `chezmoi init --prompt`
 
@@ -13,14 +15,31 @@
 {{ $trust_level := promptChoiceOnce . "trust_level" "Trust level (personal = all secrets, work = work only, untrusted = none)" (list "personal" "work" "untrusted") -}}
 {{ $is_headless := promptBoolOnce . "is_headless" "Is this a headless machine (no GUI)" false -}}
 
+{{/*
+  host_universe — logical constellation of devices/services this host belongs to.
+  Used to gate per-machine config (e.g. cloudflared route sync runs only on TheMac).
+
+  Values:
+    TheMac  — this MacBook. Local dev services, Cloudflare Tunnel
+              (sketchpad/outpost/jay-6.kempenich.dev).
+    TheHome — thehome-* cluster. HAOS + Kubernetes + NAS + smart home + tunnels.
+    DadHome — dadhome-* cluster. HAOS + NAS + Plex + tunnels (Dad's setup).
+    Other   — orphans (DO server, phones, tablets). Default.
+
+  TheHome vs DadHome: both have HAOS + NAS + tunnels.
+    TheHome has Kubernetes; DadHome has Plex.
+*/}}
+{{ $host_universe := promptChoiceOnce . "host_universe" "Which universe does this host belong to?" (list "TheMac" "TheHome" "DadHome" "Other") "Other" -}}
+
 
 [data]
     # ID
     email = {{ $email | quote }}
-    
+
     # Machine Settings
     trust_level = {{ $trust_level | quote }}
     is_headless = {{ $is_headless }}
+    host_universe = {{ $host_universe | quote }}
 {{- if eq .chezmoi.os "darwin" }}
     os = "macos"
 {{- else if eq .chezmoi.os "linux" }}
