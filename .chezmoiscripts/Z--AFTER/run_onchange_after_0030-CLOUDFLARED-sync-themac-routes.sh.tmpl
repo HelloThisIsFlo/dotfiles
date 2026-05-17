@@ -1,0 +1,32 @@
+{{- if eq .host_universe "TheMac" -}}
+#!/bin/bash
+
+# Sync TheMac tunnel DNS routes from config-themac.yml ingress entries.
+# YAML is authoritative for the hostnames it lists: -f overwrites whatever
+# DNS record currently lives at each one (stale CNAME, prior tunnel, etc.).
+# Risk is scoped — only hostnames YOU type get touched — but remove stale
+# entries when services move elsewhere or -f will keep clobbering them.
+#
+# - Gated to TheMac (see {{`{{ if ... }}`}} above)
+# - Re-runs when config-themac.yml changes (source hash below)
+# - Numbered 0030: must run after 0010-MACOS-brew-bundle (needs yq + cloudflared)
+# - Needs ~/.cloudflared/cert.pem (Phase 4). Until then: no-ops cleanly.
+#
+# Source hash: {{ include "private_dot_cloudflared/config-themac.yml.tmpl" | sha256sum }}
+
+set -euo pipefail
+
+CONFIG="$HOME/.cloudflared/config-themac.yml"
+CERT="$HOME/.cloudflared/cert.pem"
+
+[ -f "$CERT" ]   || { echo "skip sync-themac-routes: $CERT missing"; exit 0; }
+[ -f "$CONFIG" ] || { echo "skip sync-themac-routes: $CONFIG missing"; exit 0; }
+
+echo "→ Syncing TheMac tunnel DNS routes from $CONFIG"
+yq '.ingress[].hostname | select(.)' "$CONFIG" \
+| while read -r host; do
+    echo "  • $host"
+    cloudflared tunnel route dns -f TheMac "$host" \
+      || echo "    ⚠ failed (auth / network / quota?) — continuing"
+  done
+{{ end -}}
