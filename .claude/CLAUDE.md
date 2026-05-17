@@ -8,6 +8,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A [chezmoi](https://chezmoi.io) dotfiles repository for macOS (primary) with planned Linux support. Source state lives here (`~/.local/share/chezmoi/`), target state is `~/`. Remote: `git@github.com:HelloThisIsFlo/dotfiles.git`.
 
+## ⚠️ THIS IS A PUBLIC REPO — info-leak guardrail
+
+The GitHub remote is **public** (intentionally — secrets are kept out of source via `rbw` templates and `secrets = "error"`). But info disclosure beyond credentials can still happen by accident. Before any of the following actions, **pause and check** whether the content might leak something the user wouldn't want public:
+
+- **Onboarding a new file** to chezmoi management (`chezmoi add` or hand-creating a source file)
+- **Writing a new cheatsheet or research doc** in `.research/`
+- **Committing** — even files the user added themselves. Review the diff for leaks before `git commit`.
+
+**What to actively flag and ask about:**
+- Credentials, tokens, API keys, private keys, account IDs (these should never land here — `secrets = "error"` blocks most but won't catch everything)
+- Usernames for third-party services that differ from the user's public identity (e.g. seedbox/forum/torrent accounts)
+- Hostnames / identifiers not already in public DNS
+- Candid opinions about named people, companies, or vendors
+- Health / financial / legal info
+- **Private-life context beyond names + topology.** Topology is fine ("DadHome cluster has HAOS + NAS"). Private-life narrative is not: notes describing what a family member did / said / believes, specific personal events, anecdotes that paint a portrait of the user's relationships or daily life. The test: does this read like "user's infra reference doc" or "user's personal journal that happens to be on GitHub"?
+
+**What is fine to leave (no need to ask):**
+- The user's public identity: `Flo Kempenich`, `flo@kempenich.ai`, `HelloThisIsFlo`
+- Public-DNS hostnames (`kempenich.dev`, `kempenich.ai`)
+- Tunnel UUIDs (identifiers, not credentials — the `.json` secret stays unmanaged)
+- Tailscale tailnet name (semi-public anyway)
+- Internal LAN IPs (`192.168.x.x` — non-routable)
+- Cluster codenames (TheMac, TheHome, DadHome) and the public service mappings
+- First-name-only references already in `.research/2026-02-25/`
+
+**When unsure, ASK.** Cheap to confirm, expensive to scrub from public history.
+
 ## Migration in progress
 
 > **Temporary section.** Once migration completes, this is replaced with maintenance-mode operating instructions and a Claude Code assistant skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
