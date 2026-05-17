@@ -1,0 +1,23 @@
+# TheMac tunnel — local dev services on this Mac
+#
+# Convention:
+#   .ai  = published/production (e.g. TheHome - K8S tunnel)
+#   .dev = local development    (This Macbook)
+#
+# Location prefixes (thehome-, dadhome-) only when physical location matters.
+# Location-agnostic services use just the service name as subdomain.
+
+tunnel: d5f42136-9272-4ae2-afa0-1f96eacf7dd1
+credentials-file: {{ .chezmoi.homeDir }}/.cloudflared/d5f42136-9272-4ae2-afa0-1f96eacf7dd1.json
+
+ingress:
+  - hostname: sketchpad.kempenich.dev
+    service: http://localhost:8000
+  - hostname: outpost.kempenich.dev
+    service: http://localhost:8080
+  - hostname: jay-6.kempenich.dev
+    service: http://localhost:5173
+  # Add more local services here, e.g.:
+  # - hostname: other-service.kempenich.dev
+  #   service: http://localhost:3000
+  - service: http_status:404

@@ -46,7 +46,7 @@ Last verified: 2026-03-03
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
-| `~/.cloudflared/`                             | Not managed       | Cloudflare Tunnel. 5 files: `cert.pem` (account auth token — secret), `d5f42136-...json` (tunnel credentials — secret), `config-themac.yml` (ingress rules — config, has hardcoded homedir), `config.yml` (symlink → config-themac.yml), `README.md` (plain). Phase 4 candidate. |
+| `~/.cloudflared/`                             | Partial           | Cloudflare Tunnel. Configs managed (`config-themac.yml.tmpl` homeDir-templatised, `symlink_config.yml.tmpl`, `README.md` under `private_dot_cloudflared/`). Secrets still unmanaged: `cert.pem`, `d5f42136-...json` — Phase 4 (rbw template). |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
 
@@ -131,9 +131,9 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] `~/.cloudflared/`: Cloudflare Tunnel (TheMac tunnel for kempenich.dev)
   - [ ] `cert.pem` — Argo Tunnel token (account ID + API token). Needs rbw template.
   - [ ] `d5f42136-9272-4ae2-afa0-1f96eacf7dd1.json` — tunnel credentials (AccountTag, TunnelSecret, TunnelID). Needs rbw template.
-  - [ ] `config-themac.yml` — ingress rules + credentials-file path. Template for homeDir (`/Users/flo/` hardcoded). Tunnel UUID in file too.
-  - [ ] `config.yml` — symlink → `config-themac.yml`. Manage as `symlink_` in chezmoi.
-  - [ ] `README.md` — plain file, add as-is.
+  - [x] `config-themac.yml` — managed as `private_dot_cloudflared/config-themac.yml.tmpl`, `credentials-file` path uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
+  - [x] `config.yml` — managed as `private_dot_cloudflared/symlink_config.yml.tmpl`, symlink target uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
+  - [x] `README.md` — managed as `private_dot_cloudflared/README.md`, plain file. (2026-05-17)
 - [ ] Organise Bitwarden vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
 - [ ] Verify `secrets = "error"` catches missed plaintext
@@ -499,6 +499,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl` (homeDir-templatised credentials path), `symlink_config.yml.tmpl` (homeDir-templatised target), `README.md`. Secrets (`cert.pem`, `d5f42136-...json`) still pending rbw templates. |
 | 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/chezmoi/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
