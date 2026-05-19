@@ -13,6 +13,12 @@ Turn a thin spec into a thorough one by interviewing the user until the gaps are
 
 **Be skeptical of garbled input.** Many users run Claude via speech-to-text, and phrases sometimes come through cut short, merged with adjacent words, or just off. If something reads as ambiguous or incongruent with the surrounding context, ask a short clarifying question instead of parsing it charitably and moving on. A ten-second clarification is cheaper than a cascade of questions built on a misread intent.
 
+## Communication style
+
+Long replies make the user struggle to think. Keep answers short and concise. If you have multiple questions, split them across turns instead of piling them into one reply. Format nicely — section headers (often with a leading emoji), bullets, tables. Make it pleasant to read.
+
+If the user corrects your style mid-interview, apply the correction for the rest of the interview, not just one turn.
+
 ## Workflow
 
 1. **Resolve which spec first.** Before doing anything else, make sure you know exactly which file to interview on. Do not start reading until this is settled.
@@ -119,6 +125,31 @@ The file write-back has a clear gate — no write without explicit approval. The
 **Recommending is not locking.** An insight box, a "(Recommended)" tag, or a "my read is X" statement does not constitute confirmation. Before treating a sub-decision as settled — in the task list, in checkpoint notes, or in the running summary — you must be able to point at the user turn where they said *yes* to that specific thing. If you can't cite it, it's not locked; it's a proposal still awaiting an answer.
 
 **Locks are provisional until adjacent threads are explored.** Downstream questions regularly surface tension with earlier locks. When that happens, **don't treat reopening as a failure of the interview** — it's the interview doing its job. Acknowledge the tension, propose the reframe, and let the user decide to re-lock, adjust, or undo. Rigidly defending an early lock against later evidence is a much worse failure mode than reopening one.
+
+## Visual comparison artifacts
+
+When a sub-decision has three-plus design options with non-trivial internal structure — flow shapes, pipeline reorders, alternative architectures, multi-step variants — comparing them inline in chat fails. A wall of mermaid in one reply is unscannable, and the user can't put the options side-by-side to compare. The answer is to write the options out as files the user can open in their editor.
+
+**Target location.** Write to Flo's Obsidian sandbox: `/Users/flo/Work/Private/PKM/Obsidian/TheVault/_AgentSandbox_/<topic-slug>/`. Create the topic folder if it doesn't exist. The path is hard-coded for this user's setup.
+
+**Structure.**
+- **One file per option.** Multiple options in one file is the failure mode the user keeps correcting — splits force the eye to scroll instead of pan.
+- **One folder per decision** when the topic spans more than one decision. Inside each folder: one file per option. The folder name conveys the decision (e.g., `decision-1-drain-timing/`), so option filenames drop the prefix (`A-drain-inside-compose.md` rather than `decision-1-A-drain-inside-compose.md`). When several related decisions accumulate during an interview, this folder layout stays navigable in a way that flat naming does not. Use a single folder (no subfolders) only when the topic is a single decision with multiple options.
+- **Identical section structure across every option file.** Same headers in the same order. The reader should be able to open three or four files in side-by-side panes and have the sections line up exactly — title, diagram, what changes, pros, cons. Variants in structure defeat the whole point.
+- **Diagrams: use the same skeleton across options when possible.** When comparing variants of one pipeline or flow, every diagram should show the same node sequence with only the differing nodes recolored. Use mermaid `classDef` to highlight deltas (a consistent legend, e.g., amber = addition, red = friction). If skeletons must differ (e.g., one option splits a pipeline in two), call that out explicitly.
+- **`00-overview.md`** at the top of the topic folder: how to read the option files, the color legend, the decision index (one section per decision, each listing its options with wikilinks), the recommendation. Mark locked options, recommendations, and moot decisions visibly. Comparison tables live here, not in the option files.
+
+**When to do this.** Threshold isn't option count — it's per-option weight. Sandbox if **each option needs a diagram, a non-trivial code block, or more than a sentence of explanation to make sense**. Inline (chat or `AskUserQuestion`) if each option fits in a sentence and the differences are obvious from a quick label.
+
+Examples that warrant a folder: pipeline shape variants (different diagrams per option), state-machine alternatives, file-layout choices with concrete examples, multi-step orchestration variants.
+
+Examples that don't: yes/no with a third middle ground, threshold/numeric picks with self-evident trade-offs, naming choices, simple toggles even if there are three of them. Three short options ≠ three pages of files.
+
+When unsure, ask: *"this has N options — do you want them in the sandbox or inline?"* The user will calibrate.
+
+**Heads-up before creating.** Short one-liner like *"this has four design options worth comparing — writing them to the sandbox folder so you can open them side-by-side"* lets the user redirect if they'd prefer inline. After the folder is written, point at the overview file and wait for them to look before asking the next question.
+
+**Iterating on the artifacts.** When the user asks for tweaks (re-color, re-label, normalize sizes, add a new option), apply the same change to every option file so structure stays uniform. If you add an option mid-conversation, match the existing file's structure exactly. If a decision the user makes invalidates a diagram in a previous folder, note it in that folder's overview — don't silently let stale artifacts hang around.
 
 ## Pausing mid-interview
 
