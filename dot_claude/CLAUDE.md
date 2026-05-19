@@ -1,16 +1,49 @@
 # Global Preferences
 
+## Output Style - Important
+
+Responses should feel enjoyable to read, not like a chore.
+
+- Keep things short. No long prose paragraphs.
+- Use emoji.
+- Use structure (headers, short bullets, bullet hierarchy, whitespace).
+- **Nest, don't em-dash.** Mid-line ` — ` or `: ...` → split into parent + sub-bullets.
+- **Breathe between groups, not within.** Blank line between sibling bullet groups; parent + its own sub-bullets stay glued.
+- **Emoji on headers + top-level bullets.** Don't decorate every sub-bullet.
+- Conversational tone.
+- **Outline style applies everywhere, including rationale.** "Explain why," "walk me through," "what's the reasoning" — still emoji + bullets, not essay. Caveman mode (when active) compresses words inside this structure; it does not override it.
+- This overrides the general "avoid emoji / avoid over-formatting" defaults
 
 ## Documentation Style
 
+**Goal = instant recall.** Reading the doc once should bring back the whole conversation it captures. If context has to be re-derived, the doc failed.
+
 Docs/reference/research: keep scannable.
+
 - Bullets over prose.
 - Outline structure, self-contained, not Wikipedia article.
 - Lead with decisions/results, not journey.
 - "Don't want to read this" = too verbose.
 - Tight outline density = right density.
+- Pick whatever structure fits the content — no fixed template.
+- Emoji on headers; on top-level bullets only when semantic (each one carries meaning at a glance). Sub-bullets stay clean. Lean fewer when in doubt — density should serve scannability, not signal effort.
 
+### For technical / system docs (pipelines, agents, architectures, sub-graphs)
 
+**Reader: highly visual, scans not reads, often on mobile. Should grasp ~70% from the diagram alone. Every word past the diagram earns its keep.**
+
+Design every doc backwards from that:
+
+- **The diagram is the artifact.** Lead with it. If the diagram needs supporting text to be intelligible, fix the diagram — not the prose.
+- **Sections after the diagram exist only to clarify what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Skip any section that doesn't add what the diagram missed.
+- **Visual consistency = scannability.** Use emoji on section headers as signposts. Same emoji for the same role across all docs in a project so the reader can jump.
+- **Filler costs more than space.** Cut "if you're tempted to," "you might want to," "we could consider." State what is, not what could be.
+- **Describe current state as if the reader has no past context.** No "vN vs vN+1" framings.
+
+Two hard rules where intent doesn't pin down the choice:
+
+- **Diagrams = mermaid, not ASCII or images.** Mobile-friendly, scales, accessible.
+- **Code blocks ONLY for data** (YAML preferred for record shapes; JSON only when the system uses JSON natively). Never for diagrams.
 
 ## Routine Checks
 
@@ -36,7 +69,7 @@ Voice transcription ~99% of input — phrases garbled: cut short, merged words, 
 - **Obvious artifacts: interpret silently.** Reconcile from context or phonetics → don't ask. Noise.
 - **Out-of-place phrase, or ambiguity with real consequences: ask.** 10-second clarify cheaper than misread intent.
 
-Bar = "weird *and* matters," not "minor error."
+Bar = "weird _and_ matters," not "minor error."
 
 <!-- GSD:profile-start -->
 ## Developer Profile
@@ -81,6 +114,7 @@ Multiple modes — Flo decides, can shift mid-conversation:
 ## Shell
 
 Login shell fish. Bash tool runs through fish, not bash.
+
 - No bash syntax: `for/do/done`, `[[ ]]`, `$(( ))`, arrays, etc.
 - Run commands individually, no compound chain
 - Complex scripting → `python3 -c` or temp script file
@@ -91,3 +125,4 @@ Login shell fish. Bash tool runs through fish, not bash.
 - Project scripts: Just for orchestration:
   - In place of Make
   - Complex bootstrap → scripts orchestrated by Just
+
