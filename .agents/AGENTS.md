@@ -1,8 +1,8 @@
-# CLAUDE.md
+# AGENTS.md
 
-> **Note:** The `CLAUDE.md` at the repo root is managed by chezmoi and deployed to `~/CLAUDE.md`. It is NOT instructions for working in this repo. Ignore it. **This file** (`.claude/CLAUDE.md`) contains the repo-specific instructions.
+> **Note:** The `CLAUDE.md` at the repo root is managed by chezmoi and deployed to `~/CLAUDE.md`. It is NOT instructions for working in this repo. Ignore it. **This file** (`.agents/AGENTS.md`, reached via `.claude/CLAUDE.md` or `.codex/AGENTS.md`) contains the repo-specific instructions.
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to agents when working with code in this repository.
 
 ## What this repo is
 
@@ -37,7 +37,7 @@ The GitHub remote is **public** (intentionally — secrets are kept out of sourc
 
 ## Migration in progress
 
-> **Temporary section.** Once migration completes, this is replaced with maintenance-mode operating instructions and a Claude Code assistant skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
+> **Temporary section.** Once migration completes, this is replaced with maintenance-mode operating instructions and an assistant skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
 
 This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Current state:
 
