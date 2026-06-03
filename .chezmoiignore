@@ -37,6 +37,20 @@
 .claude/skills/gsd*
 .claude/hooks/gsd*
 
+# ──── ".codex"
+# Codex Skills & Hooks
+#  SYSTEM SKILLS
+.codex/skills/.system
+.codex/skills/codex-primary-runtime
+#  EXTERNAL SKILLS & HOOKS
+.codex/skills/copywriting
+.codex/skills/find-skills
+.codex/skills/review-panel-workspace
+.codex/skills/visual-explainer
+.codex/skills/graphify
+.codex/skills/gsd*
+.codex/hooks/gsd*
+
 
 # ──── ".config/fish"
 .config/fish/conf.d/fish_frozen_theme.fish.bak
