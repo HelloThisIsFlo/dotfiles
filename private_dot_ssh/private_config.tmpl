@@ -24,6 +24,23 @@ Host remarkable-paper-pro
   User root
 
 
+Host move.local
+    # Added by schwung
+    HostName move.local
+    User ableton
+    IdentityFile ~/.ssh/move_key
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+Host movedevice
+    # Added by schwung
+    HostName 192.168.0.140
+    User ableton
+    IdentityFile ~/.ssh/move_key
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+
+
 # --- Home servers ----------------------------------------------------
 
 Host dadhome-haos
