@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test1-rate-limiting.md",
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test1-rate-limiting.md",
       "expected_output": "A restyled version with callouts, emoji identity for the 3 strategies, comparison table, bullet points instead of prose, no filler phrases, restructured to lead with recommendations",
       "files": [],
       "expectations": [
@@ -19,7 +19,7 @@
     },
     {
       "id": 2,
-      "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test2-caching-gotchas.md",
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test2-caching-gotchas.md",
       "expected_output": "A restyled version where existing callout prose is converted to bullets, the critical write-through+sliding TTL finding becomes a Pattern C warning, hierarchical bullets are used, and edge cases get expressive emoji",
       "files": [],
       "expectations": [
@@ -35,7 +35,7 @@
     },
     {
       "id": 3,
-      "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test3-deploy-modes.md",
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test3-deploy-modes.md",
       "expected_output": "A restyled version with emoji identity for the 3 deploy modes, restructured to lead with the recommendation, comparison table, callouts for key rules and the March 12th warning, no trailing conclusion",
       "files": [],
       "expectations": [
@@ -51,7 +51,7 @@
     },
     {
       "id": 4,
-      "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test4-repetition-behavior.md",
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test4-repetition-behavior.md",
       "expected_output": "A restyled version of a real empirical reference doc — already partially structured, but needs emoji identity for schedule types, callouts for key rules and warnings, tighter prose, and better use of the style's structural patterns",
       "files": [],
       "expectations": [

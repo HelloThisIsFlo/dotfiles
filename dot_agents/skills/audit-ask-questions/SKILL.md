@@ -19,7 +19,7 @@ This skill detects the Claude Code bug where `AskUserQuestion` silently auto-com
 ## Running the Audit
 
 ```bash
-python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py [OPTIONS]
+python3 ~/.agents/skills/audit-ask-questions/scripts/audit.py [OPTIONS]
 ```
 
 ### CLI Reference
@@ -37,16 +37,16 @@ python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py [OPTIONS]
 
 ```bash
 # Today's sessions (default)
-python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py
+python3 ~/.agents/skills/audit-ask-questions/scripts/audit.py
 
 # Last 3 days
-python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py --since 2026-02-28
+python3 ~/.agents/skills/audit-ask-questions/scripts/audit.py --since 2026-02-28
 
 # Only omnifocus-operator project
-python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py --project omnifocus-operator
+python3 ~/.agents/skills/audit-ask-questions/scripts/audit.py --project omnifocus-operator
 
 # Everything, all time
-python3 ~/.claude/skills/audit-ask-questions/scripts/audit.py --all
+python3 ~/.agents/skills/audit-ask-questions/scripts/audit.py --all
 ```
 
 ## Output Schema

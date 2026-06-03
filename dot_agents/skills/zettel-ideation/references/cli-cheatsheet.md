@@ -44,7 +44,7 @@ Useful APIs:
 BFS the live graph from seed zettels. One call returns the full multi-layer neighborhood.
 
 ```bash
-~/.claude/skills/zettel-ideation/scripts/neighborhood.py [--depth N] [--vault NAME] SEED [SEED ...]
+~/.agents/skills/zettel-ideation/scripts/neighborhood.py [--depth N] [--vault NAME] SEED [SEED ...]
 ```
 
 - `SEED` — vault path (`_ZK_/Zettel/Foo.md`) or basename (`Foo`, `Having a system we can trust`). Resolved by basename match.

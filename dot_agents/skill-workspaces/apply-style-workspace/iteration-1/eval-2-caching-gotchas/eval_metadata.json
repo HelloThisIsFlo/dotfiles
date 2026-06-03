@@ -1,7 +1,7 @@
 {
   "eval_id": 2,
   "eval_name": "caching-partial-style",
-  "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test2-caching-gotchas.md",
+  "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test2-caching-gotchas.md",
   "assertions": [
     "The [!important] callout about TTL modes contains bullet points, not prose",
     "The [!warning] about write-through + sliding TTL uses Pattern C structure",

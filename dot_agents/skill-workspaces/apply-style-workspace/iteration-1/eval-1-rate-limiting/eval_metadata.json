@@ -1,7 +1,7 @@
 {
   "eval_id": 1,
   "eval_name": "rate-limiting-full-prose",
-  "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test1-rate-limiting.md",
+  "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test1-rate-limiting.md",
   "assertions": [
     "No filler phrases like 'it is important to note', 'in this document we will', 'in conclusion', 'it is worth mentioning'",
     "Contains at least 2 Obsidian-style callouts using '> [!type]' syntax",

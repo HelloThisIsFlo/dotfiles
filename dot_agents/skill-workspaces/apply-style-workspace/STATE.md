@@ -4,13 +4,13 @@
 
 ## What exists
 
-- **Skill**: `~/.claude/skills/apply-style/` (SKILL.md + references/style-reference.md)
+- **Skill**: `~/.agents/skills/apply-style/` (SKILL.md + references/style-reference.md)
 - **Style reference source**: `~/Work/Private/Dev/MCP/omnifocus-operator/STYLE-REFERENCE.md`
-- **Test docs**: `apply-style-workspace/test-docs/` (4 files)
-- **Iteration 1 results**: `apply-style-workspace/iteration-1/` (8 runs graded)
-- **Grading script**: `apply-style-workspace/grade_outputs.py`
-- **Evals**: `apply-style-workspace/evals/evals.json` (4 test cases, 34 assertions total)
-- **Benchmark**: `apply-style-workspace/iteration-1/benchmark.json`
+- **Test docs**: `~/.agents/skill-workspaces/apply-style-workspace/test-docs/` (4 files)
+- **Iteration 1 results**: `~/.agents/skill-workspaces/apply-style-workspace/iteration-1/` (8 runs graded)
+- **Grading script**: `~/.agents/skill-workspaces/apply-style-workspace/grade_outputs.py`
+- **Evals**: `~/.agents/skill-workspaces/apply-style-workspace/evals/evals.json` (4 test cases, 34 assertions total)
+- **Benchmark**: `~/.agents/skill-workspaces/apply-style-workspace/iteration-1/benchmark.json`
 
 ## Iteration 1 results
 

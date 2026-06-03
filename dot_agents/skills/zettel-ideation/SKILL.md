@@ -54,7 +54,7 @@ Use Obsidian's live graph, not keyword reconstruction. The bundled wrapper runs 
 
 2. **Run the BFS:**
    ```bash
-   ~/.claude/skills/zettel-ideation/scripts/neighborhood.py --depth 3 \
+   ~/.agents/skills/zettel-ideation/scripts/neighborhood.py --depth 3 \
      "Seed One" "Seed Two" "Seed Three"
    ```
    Seeds resolve by basename or full path. Output is JSON, filtered to zettels (`_ZK_/Zettel/`, `_ZK_/Evergreen/`, `_ZK_/Distill/Fragment/`). See `references/cli-cheatsheet.md` for the full output schema and other CLI primitives.

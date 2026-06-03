@@ -33,7 +33,7 @@
       "id": 3,
       "prompt": "Is this ready to implement? Poke holes in it.",
       "expected_output": "Multi-perspective review catching the deliberate gaps in this short spec, with each persona contributing distinct types of feedback.",
-      "files": ["/Users/flo/.claude/skills/review-panel/evals/synthetic-spec.md"],
+      "files": ["/Users/flo/.agents/skills/review-panel/evals/synthetic-spec.md"],
       "expectations": [
         "Persona fidelity: Each reviewer demonstrates their specific lens appropriate to the document type",
         "Unique contributions: At least 2 reviewers surface substantive issues that no other reviewer raised",

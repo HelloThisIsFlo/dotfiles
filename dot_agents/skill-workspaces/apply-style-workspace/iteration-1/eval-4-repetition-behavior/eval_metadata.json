@@ -1,7 +1,7 @@
 {
   "eval_id": 4,
   "eval_name": "repetition-real-doc",
-  "prompt": "Apply my style to this document: ~/.claude/skills/apply-style-workspace/test-docs/test4-repetition-behavior.md",
+  "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test4-repetition-behavior.md",
   "assertions": [
     "Schedule types use consistent emoji identity throughout",
     "The fundamental asymmetry rule (Part 3) appears in an [!important] callout",

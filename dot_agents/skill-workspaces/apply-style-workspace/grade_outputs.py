@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-WORKSPACE = Path("/Users/flo/.claude/skills/apply-style-workspace")
+WORKSPACE = Path.home() / ".agents" / "skill-workspaces" / "apply-style-workspace"
 ITERATION = WORKSPACE / "iteration-1"
 
 FILLER_PHRASES = [

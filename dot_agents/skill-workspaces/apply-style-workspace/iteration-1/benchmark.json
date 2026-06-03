@@ -1,7 +1,7 @@
 {
   "metadata": {
     "skill_name": "apply-style",
-    "skill_path": "/Users/flo/.claude/skills/apply-style",
+    "skill_path": "/Users/flo/.agents/skills/apply-style",
     "executor_model": "claude-opus-4-6",
     "analyzer_model": "claude-opus-4-6",
     "timestamp": "2026-04-04T12:00:00Z",
