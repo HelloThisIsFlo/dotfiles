@@ -126,3 +126,14 @@ Login shell fish. Bash tool runs through fish, not bash.
   - In place of Make
   - Complex bootstrap → scripts orchestrated by Just
 
+## Prompts for Sub-Agents
+
+Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
+
+- **Default = intent-driven.** Tell the agent what you're trying to achieve; trust it to find the steps. Capable agents react better when they understand than when they're instructed.
+- **Lean over bloated.** Shorter intent beats longer rules. Rule-laden prompts treat clever agents like children → worse output.
+- **The prompt itself follows the principle.** When writing a sub-agent prompt, write intent-driven prose, not numbered checklists.
+- **Exception:** step-by-step is fine when the output is genuinely mechanical (formatters, scripts) or when calibration has shown the agent drifts without guardrails.
+
+Tested: intent-driven version of a Flo-style doc-prompt produced clean output on first try; rule-heavy version produced ASCII art + wrong emojis + JSON-not-YAML.
+
