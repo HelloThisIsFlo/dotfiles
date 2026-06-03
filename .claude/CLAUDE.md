@@ -95,6 +95,56 @@ Output is `XY path/to/file`. The columns are **NOT** source vs target. They are:
 - **Workflow: edit → apply, not re-add** — `chezmoi re-add` destroys template logic in `.tmpl` files. Only use re-add on plain (non-template) files.
 - **No age encryption for v1** — deferred until unattended apply or air-gapped servers are needed.
 
+## Secrets workflow (rbw) — conventions
+
+> How secrets actually get created, named, stored, and consumed in this repo. The Architecture decision above is the *what*; this is the *how*.
+
+### 🗂️ Vault layout
+- **All chezmoi-managed secrets live in the rbw folder `chezmoi`.** Keeps them grouped + greppable (`rbw list --fields name,folder | grep chezmoi`).
+- **Item naming:** kebab-case, service-first, purpose-suffixed. Examples: `github-pat`, `fastmail-api`, `fastmail-apppassword`, `ntfy-topic`.
+- **One secret per item** (value in the `password` field) is the default. Use one item with custom fields only when several secrets are genuinely one credential set.
+
+### ➕ Creating secrets (non-interactively)
+- **Exact value → pipe to stdin** (the reliable headless method):
+  ```bash
+  echo "the-secret-value" | rbw add <name> --folder chezmoi
+  ```
+  For values with shell-hostile chars (`$`, backticks, quotes), drive it from Python so nothing hits the shell:
+  ```python
+  subprocess.run(['rbw','add',name,'--folder','chezmoi'], input=val+'\n', text=True)
+  ```
+- **`rbw add` bare needs a TTY** — in a non-interactive shell it silently skips its editor and creates an *empty* entry. Always pipe.
+- **`rbw generate <len> <name> --folder chezmoi`** makes a *random* value — only for brand-new generated creds, never for reproducing an existing secret.
+- **Custom fields can't be created via the CLI** — add those in the web/desktop vault. rbw can *read* them (`rbwFields`), not write them.
+- After any create/change: **`rbw sync`** (pushes to server).
+
+### 📝 Using secrets in templates
+- It's the chezmoi **template function** `rbw`, distinct from the CLI `rbw get`:
+  ```
+  {{ (rbw "github-pat").data.password }}     # password field
+  {{ (rbw "fastmail-apppassword").data.username }}   # also: .username, .notes, .uris, .totp
+  {{ (rbwFields "some-item").field_name.value }}     # custom fields
+  ```
+- **Verify a render without applying** (prints the value — only do in a private shell):
+  ```bash
+  chezmoi execute-template '{{ (rbw "github-pat").data.password }}'
+  ```
+
+### 🔒 Onboarding a secret-bearing file (the only correct flow)
+`secrets = "error"` runs a gitleaks scan → **`chezmoi add` on any file containing a secret is BLOCKED.** So:
+1. Extract each secret value, create rbw items (folder `chezmoi`) via the stdin method above.
+2. **Hand-author the `.tmpl` source** — copy the file verbatim, swap each secret value for its `{{ (rbw …) }}` call. Never `chezmoi add` it. The source therefore never holds plaintext → the guard stays `error` the whole time.
+3. `chezmoi apply`, then diff rendered-vs-original to confirm byte-identical.
+- ⚠️ **Before onboarding, check the file isn't mostly app *runtime state*** (recent-session lists, trusted-folder lists, device names). Those drift constantly and often carry private-life content — see the info-leak guardrail. A file mixing authored config + app state is usually a poor chezmoi candidate.
+
+### 🩺 rbw state model + gotchas
+- Three independent layers — don't conflate:
+  - **`rbw unlock`** — decrypts the *local* DB. Reads (`get`/`list`) work offline after this.
+  - **`rbw sync`** — talks to the *server*. Needed for writes + refresh.
+  - **`rbw login`** — refreshes the *server session token*.
+- **`rbw sync` failing with `missing field access_token`** = stale local auth state. Fix: **`rbw purge`** (wipes the *local* DB only — server vault untouched), then `rbw login` + `rbw sync`. Unlock alone won't fix it.
+- **rbw config on macOS** lives at `~/Library/Application Support/rbw/config.json` (Apple dirs, **not** XDG `~/.config/`). It's managed here (`private_Library/Application Support/private_rbw/config.json`, plain file — email intentionally hardcoded, not templated). `device_id`, agent logs, and the `~/Library/Caches/rbw/` vault cache are **not** managed (per-machine / regenerable).
+
 ## Repo structure
 
 ```
