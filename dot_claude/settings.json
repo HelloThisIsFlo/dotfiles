@@ -135,14 +135,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/flo/.claude/hooks/bugfix--strip-askuserquestion-from-allowed-tools.sh"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
             "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
           }
         ]
