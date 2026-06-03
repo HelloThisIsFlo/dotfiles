@@ -66,6 +66,7 @@ cheat = 'latest'
 claude-code = "2.1.144"
 "pipx:graphifyy" = "latest"
 "github:radiosilence/fastmail-cli" = "latest"
+codex = "latest"
 
 
 [settings]
