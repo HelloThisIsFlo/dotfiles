@@ -1,5 +1,5 @@
 # Declarative MCP server registry for Codex (v1).
-# Consumed by .chezmoiscripts/Z--AFTER/run_onchange_after_1000-CODEX-sync-mcp-servers.sh.tmpl
+# Consumed by .chezmoiscripts/Z--AFTER/run_onchange_after_0040-CODEX-sync-mcp-servers.sh.tmpl
 #
 # ADD-ONLY: removing an entry here does NOT remove it from codex.
 #           To remove a server, run manually:  codex mcp remove <name>

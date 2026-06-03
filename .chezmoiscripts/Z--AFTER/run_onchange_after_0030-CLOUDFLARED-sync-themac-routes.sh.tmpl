@@ -9,7 +9,7 @@
 #
 # - Gated to TheMac (see {{`{{ if ... }}`}} above)
 # - Re-runs when config-themac.yml changes (source hash below)
-# - Numbered 0030: must run after 0010-MACOS-brew-bundle (needs yq + cloudflared)
+# - Numbered 0030: must run after 0001-CORE-MACOS-brew-bundle (needs yq + cloudflared)
 # - Needs ~/.cloudflared/cert.pem (Phase 4). Until then: no-ops cleanly.
 #
 # Source hash: {{ include "private_dot_cloudflared/config-themac.yml.tmpl" | sha256sum }}

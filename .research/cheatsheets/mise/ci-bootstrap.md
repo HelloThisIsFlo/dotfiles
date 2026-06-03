@@ -307,13 +307,13 @@ For more sophisticated pre-commit tooling, see [hk](https://hk.jdx.dev/) (mise's
 chezmoi apply
   -> run_once_before_0001: curl-install mise (no dependencies)
   -> chezmoi applies all config files (mise.toml lands on disk)
-  -> run_onchange_after_0010: brew bundle (macOS packages)
-  -> run_onchange_after_0999: mise install (last — all config in place)
+  -> run_onchange_after_0001-CORE: brew bundle (macOS packages)
+  -> run_onchange_after_0002-CORE: mise install (right after brew)
 ```
 
 Key design decisions:
 - **Mise self-bootstraps** via curl installer in a `run_once_before` script (no Homebrew dependency)
-- **`mise install` runs last** (`0999`) because it needs `mise.toml` and potentially Homebrew-installed dependencies in place first
+- **`mise install` runs right after brew** (`0002`, after `0001` brew) because it needs `mise.toml` and potentially Homebrew-installed dependencies in place first. (Not "last" — the requirement was always *after brew*, not dead-last.)
 - **`run_onchange_after`** keyed on config sha256 — re-runs when config changes, not on every apply
 - **`mise_install_path` in chezmoidata** — single source of truth shared by bootstrap scripts and fish config
 
