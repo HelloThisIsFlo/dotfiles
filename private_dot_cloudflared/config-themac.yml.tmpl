@@ -11,6 +11,8 @@ tunnel: a57f23b6-310d-40bd-b061-e62ecfee83f3
 credentials-file: {{ .chezmoi.homeDir }}/.cloudflared/a57f23b6-310d-40bd-b061-e62ecfee83f3.json
 
 ingress:
+  - hostname: sandbox.kempenich.dev
+    service: http://localhost:1234
   - hostname: sketchpad.kempenich.dev
     service: http://localhost:8000
   - hostname: outpost.kempenich.dev
