@@ -45,6 +45,7 @@ Last verified: 2026-03-03
 | `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
+| `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 (rbw templates). |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
 | `~/.cloudflared/`                             | Partial           | Cloudflare Tunnel. Configs managed (`config-themac.yml.tmpl` homeDir-templatised, `symlink_config.yml.tmpl`, `README.md` under `private_dot_cloudflared/`). Secrets still unmanaged: `cert.pem`, `d5f42136-...json` — Phase 4 (rbw template). |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
@@ -134,6 +135,11 @@ At-a-glance view of every task. Check items off as they're completed.
   - [x] `config-themac.yml` — managed as `private_dot_cloudflared/config-themac.yml.tmpl`, `credentials-file` path uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `config.yml` — managed as `private_dot_cloudflared/symlink_config.yml.tmpl`, symlink target uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `README.md` — managed as `private_dot_cloudflared/README.md`, plain file. (2026-05-17)
+- [ ] `~/.ssh/` private keys — migrate via rbw templates (`private_*.tmpl`, `{{ (rbw "...") }}`). Currently unmanaged; `.ssh/config` is templatised but the keys it references are not.
+  - [ ] `id_rsa` — main key. rbw template.
+  - [ ] `id_rsa_remarkable` — reMarkable key. rbw template (or drop if reMarkable access retired).
+  - [ ] `move_key` — Ableton Move key (referenced by the `move.local`/`movedevice` hosts in `private_config.tmpl`). rbw template.
+  - [ ] Decide per-key: rbw-store vs keep-local-only (machine-bound keys may not belong in the vault).
 - [ ] Organise Bitwarden vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
 - [ ] Verify `secrets = "error"` catches missed plaintext
