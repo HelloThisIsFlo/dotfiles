@@ -37,6 +37,11 @@
 .claude/skills/gsd*
 .claude/hooks/gsd*
 
+# ──── ".agents"
+# Shared Agent Skills - EXTERNAL ONES
+.agents/skills/copywriting
+.agents/skills/find-skills
+
 # ──── ".codex"
 # Codex Skills & Hooks
 #  SYSTEM SKILLS
