@@ -1,19 +1,37 @@
-{{- if eq .os "macos" -}}
 #!/bin/sh
 # Register MCP servers into Codex from .chezmoidata/mcp-servers.yaml — declarative + idempotent.
 # `codex mcp add` is name-keyed: re-running overwrites in place, never duplicates.
 # ADD-ONLY — this NEVER removes a server. To remove one:  codex mcp remove <name>
 # run_onchange reruns automatically when the rendered `codex mcp add` lines below change.
+#
+# `chezmoi_filter:` is a generic {chezmoi-var: required-value} map — each key is looked up
+# dynamically against this machine's template data, so new dimensions (host_universe, arch,
+# ...) work with no script change. A server registers only if EVERY listed var matches.
+# No whole-script OS gate — `command -v codex` below is the real, OS-agnostic guard.
+#
+# FUTURE: this is the *codex* emitter for a deliberately agent-agnostic registry
+# (.chezmoidata/mcp-servers.yaml). The plan is to add sibling emitters that replay the
+# same servers into other agents — Claude Code first (`claude mcp add ...`, different flags:
+# --transport http <name> <url>, -e KEY=VAL, --header), and potentially others later.
+# Keep the data file free of codex-specific assumptions so those emitters can share it.
 set -eu
 
 command -v codex >/dev/null 2>&1 || { echo "skip codex mcp sync: codex not installed"; exit 0; }
 
 {{ range .mcp_servers -}}
+{{- $name := .name -}}
 {{- $env := index . "env" -}}
 {{- $secret := index . "secret_env" -}}
 {{- $url := index . "url" -}}
-{{- if and $secret (ne $.trust_level "personal") -}}
-echo "skip {{ .name }}: needs a secret but trust_level != personal"
+{{- $skip := "" -}}
+{{- range $var, $want := (index . "chezmoi_filter") -}}
+{{- if not (hasKey $ $var) -}}{{- fail (printf "mcp-servers.yaml: server '%s' has chezmoi_filter.%s, but '%s' is not a chezmoi template variable (typo?)" $name $var $var) -}}{{- end -}}
+{{- $have := index $ $var -}}
+{{- if ne $want $have -}}{{- $skip = printf "chezmoi_filter.%s=%v (this machine: %v)" $var $want $have -}}{{- end -}}
+{{- end -}}
+{{- if and (not $skip) $secret (ne $.trust_level "personal") -}}{{- $skip = "needs a secret but trust_level != personal" -}}{{- end -}}
+{{- if $skip -}}
+echo "skip {{ .name }}: {{ $skip }}"
 {{ else -}}
 {{- $args := list -}}
 {{- range $k, $v := $env -}}{{- $args = append $args "--env" (printf "%s=%s" $k $v) -}}{{- end -}}
@@ -23,7 +41,6 @@ echo "→ codex mcp add {{ .name }}"
 codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} --url {{ $url }} || echo "⚠ failed: {{ .name }}"
 {{ else -}}
 codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} -- {{ .command }}{{ range .args }} {{ . }}{{ end }} || echo "⚠ failed: {{ .name }}"
-{{ end -}}
 {{ end -}}
 {{ end -}}
 {{ end -}}

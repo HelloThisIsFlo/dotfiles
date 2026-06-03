@@ -4,6 +4,16 @@
 # ADD-ONLY: removing an entry here does NOT remove it from codex.
 #           To remove a server, run manually:  codex mcp remove <name>
 #
+# chezmoi_filter: (optional, keep as the LAST key of an entry) — a {chezmoi-var: value} map.
+#         The server registers only if EVERY listed var equals that value on THIS machine.
+#         Keys are looked up dynamically, so ANY chezmoi template variable works (NOT an MCP
+#         concept). Common ones:
+#           os:            macos|linux
+#           trust_level:   personal|work|untrusted
+#           host_universe: TheMac|TheHome|DadHome
+#         (typo'd / unknown var -> chezmoi apply ERRORS — fail-fast, so mistakes surface)
+#         (a server with secret_env is implicitly personal-only — no need to also filter)
+#
 # Secrets: put the rbw ITEM NAME (folder `chezmoi`) under secret_env — never the value.
 #          The consuming script resolves it via rbw at apply time.
 mcp_servers:
@@ -11,6 +21,8 @@ mcp_servers:
     command: uvx
     args:
       - omnifocus-operator@latest
+    chezmoi_filter:
+      os: macos              # OmniFocus is macOS-only
 
   - name: fastmail
     url: https://api.fastmail.com/mcp
@@ -21,3 +33,9 @@ mcp_servers:
   #   args: [run, -i, --rm, -e, GITHUB_PERSONAL_ACCESS_TOKEN, ghcr.io/github/github-mcp-server]
   #   secret_env:
   #     GITHUB_PERSONAL_ACCESS_TOKEN: github-pat
+
+  # Example — a server only on your personal machine:
+  # - name: some_personal_thing
+  #   url: https://example.internal/mcp
+  #   chezmoi_filter:
+  #     trust_level: personal
