@@ -49,6 +49,7 @@
 .codex/skills/visual-explainer
 .codex/skills/graphify
 .codex/skills/gsd*
+.codex/agents/gsd*
 .codex/hooks/gsd*
 
 

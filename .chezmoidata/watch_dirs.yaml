@@ -17,8 +17,9 @@ watch_dirs:
     - ".claude/projects/-Users-flo-Work-Private-Dev-HomeLab-TheHome/memory"
     - ".claude/projects/-Users-flo-Work-Private-Standalone-Agent-Workspaces-Daily-Review/memory"
 
-    # Codex Skills & Hooks
+    # Codex Skills, Agents & Hooks
     - ".codex/skills"
+    - ".codex/agents"
     - ".codex/hooks"
 
 
