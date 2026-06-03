@@ -1,0 +1,4 @@
+interface:
+  display_name: "Onboard Agent Asset"
+  short_description: "Triage new agent skills and hooks"
+  default_prompt: "Use $onboard-agent-asset to inspect and safely onboard this unmanaged agent asset."
