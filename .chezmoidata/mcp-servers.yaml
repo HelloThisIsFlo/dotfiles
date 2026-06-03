@@ -1,0 +1,23 @@
+# Declarative MCP server registry for Codex (v1).
+# Consumed by .chezmoiscripts/Z--AFTER/run_onchange_after_1000-CODEX-sync-mcp-servers.sh.tmpl
+#
+# ADD-ONLY: removing an entry here does NOT remove it from codex.
+#           To remove a server, run manually:  codex mcp remove <name>
+#
+# Secrets: put the rbw ITEM NAME (folder `chezmoi`) under secret_env — never the value.
+#          The consuming script resolves it via rbw at apply time.
+mcp_servers:
+  - name: omnifocus_operator
+    command: uvx
+    args:
+      - omnifocus-operator@latest
+
+  - name: fastmail
+    url: https://api.fastmail.com/mcp
+
+  # Example — a server needing a secret (commented, for reference):
+  # - name: github
+  #   command: docker
+  #   args: [run, -i, --rm, -e, GITHUB_PERSONAL_ACCESS_TOKEN, ghcr.io/github/github-mcp-server]
+  #   secret_env:
+  #     GITHUB_PERSONAL_ACCESS_TOKEN: github-pat

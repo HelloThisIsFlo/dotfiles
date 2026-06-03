@@ -1,0 +1,29 @@
+{{- if eq .os "macos" -}}
+#!/bin/sh
+# Register MCP servers into Codex from .chezmoidata/mcp-servers.yaml — declarative + idempotent.
+# `codex mcp add` is name-keyed: re-running overwrites in place, never duplicates.
+# ADD-ONLY — this NEVER removes a server. To remove one:  codex mcp remove <name>
+# run_onchange reruns automatically when the rendered `codex mcp add` lines below change.
+set -eu
+
+command -v codex >/dev/null 2>&1 || { echo "skip codex mcp sync: codex not installed"; exit 0; }
+
+{{ range .mcp_servers -}}
+{{- $env := index . "env" -}}
+{{- $secret := index . "secret_env" -}}
+{{- $url := index . "url" -}}
+{{- if and $secret (ne $.trust_level "personal") -}}
+echo "skip {{ .name }}: needs a secret but trust_level != personal"
+{{ else -}}
+{{- $args := list -}}
+{{- range $k, $v := $env -}}{{- $args = append $args "--env" (printf "%s=%s" $k $v) -}}{{- end -}}
+{{- range $k, $item := $secret -}}{{- $args = append $args "--env" (printf "%s=%s" $k (rbw $item).data.password) -}}{{- end -}}
+echo "→ codex mcp add {{ .name }}"
+{{ if $url -}}
+codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} --url {{ $url }} || echo "⚠ failed: {{ .name }}"
+{{ else -}}
+codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} -- {{ .command }}{{ range .args }} {{ . }}{{ end }} || echo "⚠ failed: {{ .name }}"
+{{ end -}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
