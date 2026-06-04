@@ -1,0 +1,250 @@
+{
+  "metadata": {
+    "skill_name": "apply-style",
+    "skill_path": "/Users/flo/.agents/skills/apply-style",
+    "executor_model": "claude-opus-4-6",
+    "analyzer_model": "claude-opus-4-6",
+    "timestamp": "2026-04-04T12:00:00Z",
+    "evals_run": [1, 2, 3, 4],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "Rate Limiting (full prose)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 45.7,
+        "tokens": 25702,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "No filler phrases", "passed": true, "evidence": "No filler phrases found"},
+        {"text": "Contains at least 2 Obsidian-style callouts", "passed": true, "evidence": "Found 4 callouts"},
+        {"text": "Three strategies have consistent emoji", "passed": true, "evidence": "All 3 strategies have emoji identity"},
+        {"text": "Contains comparison table", "passed": true, "evidence": "Found 2 tables"},
+        {"text": "Callout content uses bullets", "passed": true, "evidence": "All callouts use bullets"},
+        {"text": "Uses bullet points extensively", "passed": true, "evidence": "High bullet ratio"},
+        {"text": "Inline code formatting for technical terms", "passed": true, "evidence": "25+ inline code spans"},
+        {"text": "Recommendation in [!important] callout", "passed": true, "evidence": "[!important] with recommendation content"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "Rate Limiting (full prose)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 42.2,
+        "tokens": 20057,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "No filler phrases", "passed": true, "evidence": "Filler removed"},
+        {"text": "Contains at least 2 Obsidian-style callouts", "passed": false, "evidence": "Used generic blockquotes, not [!type] callouts"},
+        {"text": "Three strategies have consistent emoji", "passed": false, "evidence": "No emoji identity assigned"},
+        {"text": "Contains comparison table", "passed": true, "evidence": "Tables present"},
+        {"text": "Callout content uses bullets", "passed": true, "evidence": "Blockquote content has bullets"},
+        {"text": "Uses bullet points extensively", "passed": true, "evidence": "Good bullet usage"},
+        {"text": "Inline code formatting for technical terms", "passed": false, "evidence": "Minimal code formatting"},
+        {"text": "Recommendation in [!important] callout", "passed": false, "evidence": "No [!important] callout"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Caching Gotchas (partial style)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.88,
+        "passed": 7,
+        "failed": 1,
+        "total": 8,
+        "time_seconds": 54.6,
+        "tokens": 26121,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "[!important] has bullets not prose", "passed": true, "evidence": "Bullets inside callout"},
+        {"text": "[!warning] uses Pattern C structure", "passed": true, "evidence": "Opening + bullets + bold action item"},
+        {"text": "Edge cases have expressive emoji", "passed": true, "evidence": "4/4 edge cases have emoji"},
+        {"text": "Hierarchical nested bullets (>=3)", "passed": false, "evidence": "Found 2, needed 3"},
+        {"text": "No filler phrases", "passed": true, "evidence": "Clean"},
+        {"text": "At least 3 callouts", "passed": true, "evidence": "3 callouts found"},
+        {"text": "Three approaches in structured format", "passed": true, "evidence": "Table format used"},
+        {"text": "Tier 2 reference for benchmarks", "passed": true, "evidence": "Italic footnote below ---"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Caching Gotchas (partial style)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 4,
+        "failed": 4,
+        "total": 8,
+        "time_seconds": 47.6,
+        "tokens": 20554,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "[!important] has bullets not prose", "passed": false, "evidence": "Prose in callout"},
+        {"text": "[!warning] uses Pattern C structure", "passed": false, "evidence": "No Pattern C"},
+        {"text": "Edge cases have expressive emoji", "passed": false, "evidence": "No emoji assigned"},
+        {"text": "Hierarchical nested bullets (>=3)", "passed": true, "evidence": "Some nesting present"},
+        {"text": "No filler phrases", "passed": true, "evidence": "Clean"},
+        {"text": "At least 3 callouts", "passed": true, "evidence": "Callouts present"},
+        {"text": "Three approaches in structured format", "passed": true, "evidence": "Table used"},
+        {"text": "Tier 2 reference for benchmarks", "passed": false, "evidence": "Inline link, not tier 2"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deploy Modes (restructure)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 54.3,
+        "tokens": 25975,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Three modes have consistent emoji", "passed": true, "evidence": "All 3 modes have emoji"},
+        {"text": "Comparison table present", "passed": true, "evidence": "Tables found"},
+        {"text": "Shared state warning in [!warning]", "passed": true, "evidence": "Warning callout with March 12th content"},
+        {"text": "No trailing conclusion", "passed": true, "evidence": "Clean ending"},
+        {"text": "No filler phrases", "passed": true, "evidence": "Clean"},
+        {"text": "Recommendation in [!important] with bullets", "passed": true, "evidence": "[!important] with bullet mappings"},
+        {"text": "Bullet points extensively", "passed": true, "evidence": "High bullet ratio"},
+        {"text": "Reference uses two-tier style", "passed": true, "evidence": "Tip callout for runbook"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Deploy Modes (restructure)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.38,
+        "passed": 3,
+        "failed": 5,
+        "total": 8,
+        "time_seconds": 43.9,
+        "tokens": 19782,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Three modes have consistent emoji", "passed": false, "evidence": "No emoji identity"},
+        {"text": "Comparison table present", "passed": true, "evidence": "Tables added"},
+        {"text": "Shared state warning in [!warning]", "passed": false, "evidence": "Generic blockquote, not [!warning]"},
+        {"text": "No trailing conclusion", "passed": false, "evidence": "Trailing conclusion present"},
+        {"text": "No filler phrases", "passed": false, "evidence": "Filler phrases remain"},
+        {"text": "Recommendation in [!important] with bullets", "passed": false, "evidence": "No [!important] callout"},
+        {"text": "Bullet points extensively", "passed": true, "evidence": "Good bullet usage"},
+        {"text": "Reference uses two-tier style", "passed": true, "evidence": "Some reference styling"}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Repetition Behavior (real doc)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 141.4,
+        "tokens": 33958,
+        "tool_calls": 5,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Schedule types have consistent emoji identity", "passed": true, "evidence": "✅ catch-up, 🔄 regularly, ⚠️ from-completion throughout"},
+        {"text": "Asymmetry rule in [!important]", "passed": true, "evidence": "Day-level vs time-level in [!important] callout"},
+        {"text": "14-day divergence in [!warning]", "passed": true, "evidence": "[!warning] with 14-day content"},
+        {"text": "MCP warning in [!warning]", "passed": true, "evidence": "Warning callout present"},
+        {"text": "Decision guide uses bullets with emoji", "passed": true, "evidence": "Bullets with ✅🔄⚠️ in decision section"},
+        {"text": "No excessive prose paragraphs", "passed": true, "evidence": "20% prose ratio"},
+        {"text": "Inline code formatting", "passed": true, "evidence": "35+ inline code spans"},
+        {"text": "Methodology de-emphasized", "passed": true, "evidence": "At 92% of document, below separator"},
+        {"text": "Tables preserved", "passed": true, "evidence": "7 tables found"},
+        {"text": "Technical facts preserved", "passed": true, "evidence": "All 7 key facts present"}
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "Repetition Behavior (real doc)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.4,
+        "passed": 4,
+        "failed": 6,
+        "total": 10,
+        "time_seconds": 134.8,
+        "tokens": 28010,
+        "tool_calls": 4,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Schedule types have consistent emoji identity", "passed": false, "evidence": "Emoji REMOVED from document"},
+        {"text": "Asymmetry rule in [!important]", "passed": false, "evidence": "No [!important] callouts"},
+        {"text": "14-day divergence in [!warning]", "passed": false, "evidence": "No [!warning] callouts"},
+        {"text": "MCP warning in [!warning]", "passed": false, "evidence": "No callouts at all"},
+        {"text": "Decision guide uses bullets with emoji", "passed": false, "evidence": "Bullets present but no emoji"},
+        {"text": "No excessive prose paragraphs", "passed": true, "evidence": "Prose was tightened"},
+        {"text": "Inline code formatting", "passed": true, "evidence": "Code formatting present"},
+        {"text": "Methodology de-emphasized", "passed": true, "evidence": "At end of document"},
+        {"text": "Tables preserved", "passed": true, "evidence": "Tables kept"},
+        {"text": "Technical facts preserved", "passed": false, "evidence": "Some facts may have been reformulated"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.97, "stddev": 0.05, "min": 0.88, "max": 1.0},
+      "time_seconds": {"mean": 74.0, "stddev": 42.3, "min": 45.7, "max": 141.4},
+      "tokens": {"mean": 27939, "stddev": 3660, "min": 25702, "max": 33958}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.44, "stddev": 0.06, "min": 0.38, "max": 0.50},
+      "time_seconds": {"mean": 67.1, "stddev": 43.2, "min": 42.2, "max": 134.8},
+      "tokens": {"mean": 22101, "stddev": 3825, "min": 19782, "max": 28010}
+    },
+    "delta": {
+      "pass_rate": "+0.53",
+      "time_seconds": "+6.9",
+      "tokens": "+5838"
+    }
+  },
+  "notes": [
+    "Skill shows +53% pass rate improvement over baseline (97% vs 44%)",
+    "Without-skill runs consistently fail on style-specific assertions (callouts, emoji identity, tier-2 references)",
+    "Eval 4 without-skill actually REMOVED emoji from a document that had them — skill prevents this regression",
+    "The one with-skill failure (eval 2, nested bullets) is borderline: found 2, needed 3 — short doc has limited nesting opportunities",
+    "Time overhead from skill is modest: +10% average (reading style reference adds ~6.9s)",
+    "Token overhead ~26% — cost of reading the 335-line style reference"
+  ]
+}

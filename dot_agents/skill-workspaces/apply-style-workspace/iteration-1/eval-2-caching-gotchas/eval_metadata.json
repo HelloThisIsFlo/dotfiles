@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "caching-partial-style",
+  "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test2-caching-gotchas.md",
+  "assertions": [
+    "The [!important] callout about TTL modes contains bullet points, not prose",
+    "The [!warning] about write-through + sliding TTL uses Pattern C structure",
+    "Edge cases have expressive emoji",
+    "Uses hierarchical (nested) bullet points — at least 3 instances",
+    "No filler phrases",
+    "Contains at least 3 Obsidian-style callouts",
+    "The three nested-object approaches are presented in structured format",
+    "Reference to docs/cache-benchmarks.md uses Tier 2 style"
+  ]
+}

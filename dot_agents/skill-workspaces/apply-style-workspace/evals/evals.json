@@ -1,0 +1,71 @@
+{
+  "skill_name": "apply-style",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test1-rate-limiting.md",
+      "expected_output": "A restyled version with callouts, emoji identity for the 3 strategies, comparison table, bullet points instead of prose, no filler phrases, restructured to lead with recommendations",
+      "files": [],
+      "expectations": [
+        "No filler phrases like 'it is important to note', 'in this document we will', 'in conclusion', 'it is worth mentioning'",
+        "Contains at least 2 Obsidian-style callouts using '> [!type]' syntax (e.g., [!important], [!warning], [!tip], [!note])",
+        "The three strategies (fixed window, sliding window, token bucket) each have a consistent emoji assigned",
+        "Contains at least one markdown comparison table",
+        "Callout content uses bullet points, not prose paragraphs (no multi-sentence blocks inside > lines without bullet markers)",
+        "Uses bullet points extensively — the majority of explanatory content is bulleted, not in paragraph form",
+        "Uses inline code formatting for technical terms like field names, config values, and strategy names",
+        "The recommendation (token bucket for public, fixed window for internal) appears in a prominent [!important] callout, not buried in a paragraph"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test2-caching-gotchas.md",
+      "expected_output": "A restyled version where existing callout prose is converted to bullets, the critical write-through+sliding TTL finding becomes a Pattern C warning, hierarchical bullets are used, and edge cases get expressive emoji",
+      "files": [],
+      "expectations": [
+        "The [!important] callout about TTL modes contains bullet points, not the original prose paragraph",
+        "The [!warning] about write-through + sliding TTL uses Pattern C structure: opening statement, detail bullets, bolded action item",
+        "Edge cases have expressive emoji (e.g., thundering herd, race condition, partial invalidation each get a distinct emoji)",
+        "Uses hierarchical (nested) bullet points — at least 3 instances of indented sub-bullets",
+        "No filler phrases like 'it is important to note', 'in conclusion', 'it is worth mentioning'",
+        "Contains at least 3 Obsidian-style callouts using '> [!type]' syntax",
+        "The three nested-object approaches (eager invalidation, version tags, short TTL) are presented in a structured format, not numbered prose paragraphs",
+        "Reference to docs/cache-benchmarks.md uses Tier 2 style (italic footnote below horizontal rule), not an inline link"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test3-deploy-modes.md",
+      "expected_output": "A restyled version with emoji identity for the 3 deploy modes, restructured to lead with the recommendation, comparison table, callouts for key rules and the March 12th warning, no trailing conclusion",
+      "files": [],
+      "expectations": [
+        "The three deploy modes (blue-green, rolling, canary) each have a consistent emoji assigned that appears in tables and bullet lists",
+        "Contains a comparison/summary table for the deploy modes",
+        "The 'never use rolling deploy for shared state' warning appears in a [!warning] callout, not a paragraph",
+        "No trailing conclusion paragraph — the document does not end with 'in conclusion' or a summary restating what was already said",
+        "No filler phrases like 'it is important to note', 'in this section we will', 'in conclusion', 'it is worth mentioning'",
+        "The recommendation section uses an [!important] callout with bullet points mapping scenarios to modes",
+        "Uses bullet points extensively — deploy mode descriptions are bulleted, not multi-paragraph prose",
+        "Reference to docs/deploy-migration-runbook.md uses one of the two-tier reference styles (either [!tip] callout or italic footnote)"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Apply my style to this document: ~/.agents/skill-workspaces/apply-style-workspace/test-docs/test4-repetition-behavior.md",
+      "expected_output": "A restyled version of a real empirical reference doc — already partially structured, but needs emoji identity for schedule types, callouts for key rules and warnings, tighter prose, and better use of the style's structural patterns",
+      "files": [],
+      "expectations": [
+        "The three schedule types use consistent emoji identity throughout: catch-up gets a positive/recommended emoji, regularly gets a neutral emoji, from-completion gets a caution emoji",
+        "The fundamental asymmetry rule (Part 3) appears in an [!important] callout, not just as a plain table under a heading",
+        "The 14-day divergence finding (Part 5) appears in a [!warning] callout — this is a dramatic gotcha that deserves Pattern C treatment",
+        "The MCP Server Warning section (Part 7) uses a [!warning] callout for the incorrect warning text",
+        "The decision guide (Part 8) uses bullet points with emoji identity matching the schedule types",
+        "No multi-sentence prose paragraphs used where bullets would work — intro paragraphs are 1-2 sentences max before switching to structured content",
+        "Technical terms like schedule type names, field names, and config values use inline code formatting",
+        "The methodology section is de-emphasized relative to the findings — either moved to a secondary reference position or clearly separated as supplementary material",
+        "All existing tables are preserved or improved — no tables removed or converted to less scannable formats",
+        "All technical facts and empirical findings are preserved — no content lost, no claims changed or softened"
+      ]
+    }
+  ]
+}

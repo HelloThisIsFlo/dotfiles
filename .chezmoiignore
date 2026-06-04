@@ -2,8 +2,6 @@
 .research
 
 {{ if ne .trust_level "personal" }}
-.claude/skills/explore-and-present
-.claude/skills/flo-cheatsheet
 .config/gh/hosts.yml
 {{ end }}
 
@@ -36,6 +34,11 @@
 .claude/skills/graphify
 .claude/skills/gsd*
 .claude/hooks/gsd*
+
+# ──── ".agents"
+# Shared Agent Skills - EXTERNAL ONES
+.agents/skills/copywriting
+.agents/skills/find-skills
 
 # ──── ".codex"
 # Codex Skills & Hooks
