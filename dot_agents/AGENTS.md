@@ -126,6 +126,15 @@ Login shell fish. Bash tool runs through fish, not bash.
   - In place of Make
   - Complex bootstrap → scripts orchestrated by Just
 
+## Agent Asset Ownership
+
+- Shared personal skills live in `~/.agents/skills`.
+- Repo-specific skills live in `<repo>/.agents/skills`.
+- `~/.claude/skills` is an adapter surface, usually symlinks to `~/.agents/skills`.
+- `~/.codex/skills` is Codex-local, plugin/system, or legacy compatibility space.
+- Do not create new shared personal skills under `~/.codex/skills`.
+- Skip Codex per-skill adapters unless verification proves Codex cannot load `~/.agents/skills`.
+
 ## Prompts for Sub-Agents
 
 Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
@@ -136,4 +145,3 @@ Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
 - **Exception:** step-by-step is fine when the output is genuinely mechanical (formatters, scripts) or when calibration has shown the agent drifts without guardrails.
 
 Tested: intent-driven version of a Flo-style doc-prompt produced clean output on first try; rule-heavy version produced ASCII art + wrong emojis + JSON-not-YAML.
-
