@@ -2,7 +2,6 @@
 .research
 
 {{ if ne .trust_level "personal" }}
-.claude/skills/flo-cheatsheet
 .config/gh/hosts.yml
 {{ end }}
 
