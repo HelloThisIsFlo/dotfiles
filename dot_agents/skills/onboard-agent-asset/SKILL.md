@@ -12,6 +12,10 @@ Use this skill to turn a new or unmanaged agent asset into an intentional chezmo
 - Inspect first. Do not add, move, delete, or ignore until the asset is classified.
 - Never decide ownership silently. Recommend, then ask before mutation unless the user already gave an explicit exact action.
 - Preserve history with `git mv` when the asset is already tracked in this repo.
+- Treat `chezmoi status`, `chezmoi diff`, and `chezmoi cat` as inspection commands.
+- Treat `chezmoi apply` as mutation.
+- Never run global `chezmoi apply` during onboarding.
+- Ask Flo to apply after review, or use path-scoped `chezmoi apply` only with explicit approval.
 - Keep commits semantic:
   - pure moves
   - content cleanup
@@ -55,6 +59,9 @@ Before reporting done:
 
 - `git status --short`
 - `git diff --cached --summary --find-renames` for staged moves
+- show `chezmoi status`
 - `chezmoi cat` or `chezmoi diff` for symlink adapters when relevant
 - `codex debug prompt-input "probe"` when Codex skill discovery or home instructions changed
+- report whether `chezmoi apply` was run
+- if anything was applied, name the exact target paths
 - remind Flo about any skipped candidates that are good tests for this skill
