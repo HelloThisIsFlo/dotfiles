@@ -22,10 +22,19 @@ If `git status --short` prints anything, do not inspect or migrate further. Tell
 
 After a clean preflight, inspect the repo shape:
 
-- Instruction files: `CLAUDE.md`, `AGENTS.md`, nested guidance files
+- Instruction files: `CLAUDE.md`, `claude.md`, any mixed-case `claude.md`, `AGENTS.md`, nested guidance files
 - Claude assets: `.claude/settings.json`, `.claude/settings.local.json`, `.claude/hooks`, `.claude/skills`, `.claude/agents`
 - Existing shared/Codex assets: `.agents`, `.codex`
 - Tracking state: `git ls-files`, `git status --short`, `git diff --name-status`
+
+Discover instruction files case-insensitively. Do not rely only on shell globs like `*CLAUDE.md`; they miss tracked lowercase files on case-insensitive filesystems:
+
+```bash
+find . -iname 'claude.md' -o -iname 'agents.md'
+git ls-files | rg -i '(^|/)claude\.md$|(^|/)agents\.md$'
+```
+
+Track original casing for every Claude instruction file. The canonical target is always `AGENTS.md`, but the compatibility adapter preserves the original filename casing (`CLAUDE.md`, `claude.md`, or mixed-case).
 
 Compare duplicates before choosing moves or symlinks. Treat divergent existing `.agents` or `.codex` content as ambiguity.
 
@@ -37,6 +46,7 @@ Present a clear migration plan before editing files. Include:
 - Target structure, using Mermaid if helpful
 - Commit sequence
 - Files to edit, move, symlink, delete, or leave untouched
+- Any project folders with no instruction file, listed separately from unmigrated instruction files
 - Verification commands
 
 Ask for explicit approval. Do not continue from vague encouragement; wait for a clear approval such as "implement this plan", "approved", or "go ahead".
@@ -60,6 +70,8 @@ Use this default sequence unless the approved plan says otherwise:
    - Make hook failures explicit with nonzero exits where possible.
 
 2. Preserve history with `git mv`.
+   - Move any case variant of `claude.md` to `AGENTS.md`.
+   - Preserve the original adapter casing when recreating the symlink (`CLAUDE.md -> AGENTS.md` or `claude.md -> AGENTS.md`).
    - Move canonical hooks and skills into `.agents/hooks` and `.agents/skills`.
    - Keep pure moves in their own commit.
 
@@ -90,8 +102,12 @@ Run the checks that match the repo:
 ```bash
 git show --summary --oneline HEAD
 git ls-files -s .agents .claude .codex
+git ls-files | rg -i '(^|/)claude\.md$|(^|/)agents\.md$'
+find . -iname 'claude.md' -type f
 codex debug prompt-input "probe"
 ```
+
+After instruction migration, there should be no tracked regular file matching `claude.md` case-insensitively. Every tracked Claude instruction adapter should be a symlink to `AGENTS.md`, preserving its original casing. Every canonical instruction file should be a regular tracked `AGENTS.md`.
 
 Smoke-test hooks with synthetic payloads when hooks exist:
 
