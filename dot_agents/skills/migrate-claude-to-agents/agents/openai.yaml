@@ -1,6 +1,6 @@
 interface:
   display_name: "Migrate Claude to Agents"
   short_description: "Move Claude assets into shared agent form"
-  default_prompt: "Use $migrate-claude-to-agents to migrate this repo's Claude Code hooks and skills into shared .agents assets with Codex compatibility."
+  default_prompt: "Use $migrate-claude-to-agents to migrate this repo's Claude Code instructions, hooks, skills, subagents, and related assets into shared agent assets with Codex compatibility."
 policy:
   allow_implicit_invocation: false
