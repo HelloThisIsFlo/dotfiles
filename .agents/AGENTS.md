@@ -56,6 +56,14 @@ Separate from the migration: evaluating and adopting modern CLI tools for an upg
 
 Porting the interactive shell from zsh (oh-my-zsh + antigen) to fish. Tracker: `.research/FISH-MIGRATION.md`. The bulk of aliases/functions/abbreviations are already migrated. Remaining work is mostly filling placeholders and completions. Don't confuse with the chezmoi migration (which is about *how* files are managed) or CLI exploration (which is about *which* tools to use) — this track is about translating the zsh shell config to fish equivalents.
 
+## Active WIP tracker
+
+Some dirty files are intentional WIP. Tracker: `.research/WIP.md`.
+
+- If paths listed there are dirty, assume that is expected.
+- Do not ask Flo to re-explain those WIP changes every session.
+- At the end of repo work, briefly ask whether to keep, update, or clear the tracker if it looks stale.
+
 ## Key commands
 
 ```bash
