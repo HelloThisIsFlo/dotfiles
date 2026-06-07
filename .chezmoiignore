@@ -51,6 +51,8 @@
 .codex/skills/review-panel-workspace
 .codex/skills/visual-explainer
 .codex/skills/graphify
+.codex/skills/playwright
+.codex/skills/playwright-interactive
 .codex/skills/gsd*
 .codex/agents/gsd*
 .codex/hooks/gsd*
