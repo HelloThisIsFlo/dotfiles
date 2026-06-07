@@ -32,6 +32,11 @@
 .claude/skills/review-panel-workspace
 .claude/skills/visual-explainer
 .claude/skills/graphify
+.claude/skills/defuddle
+.claude/skills/json-canvas
+.claude/skills/obsidian-bases
+.claude/skills/obsidian-cli
+.claude/skills/obsidian-markdown
 .claude/skills/gsd*
 .claude/hooks/gsd*
 
@@ -39,6 +44,11 @@
 # Shared Agent Skills - EXTERNAL ONES
 .agents/skills/copywriting
 .agents/skills/find-skills
+.agents/skills/defuddle
+.agents/skills/json-canvas
+.agents/skills/obsidian-bases
+.agents/skills/obsidian-cli
+.agents/skills/obsidian-markdown
 
 # ──── ".codex"
 # Codex Skills & Hooks
