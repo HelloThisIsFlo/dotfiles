@@ -5,12 +5,12 @@
 # == Languages ==========
 node = 'lts'
 golang = '1'
-ruby = '3'
+ruby = "4"
 rust = 'stable'
 
 # -- Python -------------
 # See: https://mise.jdx.dev/lang/python.html
-python = '3.13'
+python = "3.14"
 uv = 'latest'
 
 # -- Java ---------------
@@ -29,8 +29,8 @@ clojure = '1'
 babashka = '1'
 
 # -- Elixir -------------
-erlang = '28'
-elixir = '1.19.5-otp-28' # must match erlang OTP version
+erlang = "29"
+elixir = "1.20.0-otp-29"
 
 
 # == Infrastructure =====
