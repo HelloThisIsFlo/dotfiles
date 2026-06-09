@@ -135,7 +135,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
           }
         ]
       },
@@ -164,7 +164,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -174,7 +174,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
             "timeout": 5
           }
         ]
@@ -196,7 +196,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
             "timeout": 5
           }
         ]
@@ -206,7 +206,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
             "timeout": 5
           }
         ]
@@ -216,7 +216,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
             "timeout": 5
           }
         ]
@@ -238,7 +238,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "\"/Users/flo/.local/share/mise/installs/node/24.14.1/bin/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+    "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
