@@ -1,0 +1,684 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "rich>=13.9",
+# ]
+# ///
+"""
+Archive and restore Codex rollout session files by last activity date.
+
+Default mode is dry-run. Add --apply to move files.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import shlex
+import shutil
+import sys
+from collections import defaultdict
+from dataclasses import dataclass
+from datetime import date, datetime
+from pathlib import Path
+from typing import Any, Iterable
+
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
+
+
+DEFAULT_SESSIONS_DIR = Path.home() / ".codex" / "sessions"
+DEFAULT_ARCHIVE_DIR = Path.home() / ".codex" / "session-archive"
+
+
+@dataclass(frozen=True)
+class SessionRecord:
+    current_path: Path
+    active_path: Path
+    archive_path: Path
+    relative_path: Path
+    started_at: datetime
+    last_activity: datetime
+    size: int
+    cwd: str
+
+    @property
+    def last_activity_date(self) -> date:
+        return self.last_activity.date()
+
+
+@dataclass(frozen=True)
+class MoveResult:
+    record: SessionRecord
+    status: str
+    reason: str = ""
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="codex-sessions",
+        description="Dry-run or apply Codex session archiving/restoring by last activity date.",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    for command, help_text in (
+        ("archive", "Move active sessions last touched before DATE into the archive."),
+        ("restore", "Move archived sessions last touched on or after DATE back to active sessions."),
+    ):
+        subparser = subparsers.add_parser(command, help=help_text)
+        subparser.add_argument("cutoff", help="Boundary date in YYYY-MM-DD format.")
+        subparser.add_argument(
+            "--apply",
+            action="store_true",
+            help="Actually move files. Without this flag, only show a dry run.",
+        )
+        subparser.add_argument(
+            "--top",
+            type=int,
+            default=12,
+            help="Number of project rows to show in each breakdown. Default: 12.",
+        )
+        subparser.add_argument(
+            "--show-files",
+            action="store_true",
+            help="Show exact files that would move or did move.",
+        )
+        subparser.add_argument(
+            "--sessions-dir",
+            type=Path,
+            default=DEFAULT_SESSIONS_DIR,
+            help=f"Active sessions directory. Default: {DEFAULT_SESSIONS_DIR}",
+        )
+        subparser.add_argument(
+            "--archive-dir",
+            type=Path,
+            default=DEFAULT_ARCHIVE_DIR,
+            help=f"Archive directory. Default: {DEFAULT_ARCHIVE_DIR}",
+        )
+        subparser.add_argument(
+            "--color",
+            choices=("auto", "always", "never"),
+            default="auto",
+            help="Terminal color mode. Default: auto.",
+        )
+
+    return parser.parse_args()
+
+
+def build_console(color: str) -> Console:
+    if color == "always":
+        return Console(force_terminal=True, color_system="truecolor")
+    if color == "never":
+        return Console(no_color=True)
+    return Console()
+
+
+def parse_cutoff(value: str) -> date:
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError as exc:
+        raise SystemExit("Cutoff must use YYYY-MM-DD, e.g. 2026-06-15.") from exc
+
+
+def parse_session_start_from_name(path: Path) -> datetime | None:
+    match = re.match(
+        r"rollout-(\d{4})-(\d{2})-(\d{2})T(\d{2})-(\d{2})-(\d{2})",
+        path.name,
+    )
+    if not match:
+        return None
+
+    year, month, day, hour, minute, second = map(int, match.groups())
+    return datetime(year, month, day, hour, minute, second).astimezone()
+
+
+def parse_json_timestamp(value: str) -> datetime | None:
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+    if parsed.tzinfo is None:
+        return parsed.astimezone()
+    return parsed.astimezone()
+
+
+def walk_values(value: Any) -> Iterable[dict[str, Any]]:
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from walk_values(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from walk_values(child)
+
+
+def extract_cwd(payload: dict[str, Any]) -> str:
+    for obj in walk_values(payload):
+        for key in ("cwd", "working_directory", "workdir"):
+            value = obj.get(key)
+            if isinstance(value, str) and value:
+                return value
+    return "UNKNOWN"
+
+
+def read_first_payload_and_timestamp(path: Path) -> tuple[dict[str, Any], datetime | None]:
+    first_payload: dict[str, Any] | None = None
+    first_timestamp: datetime | None = None
+
+    try:
+        with path.open("r", encoding="utf-8", errors="replace") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                try:
+                    payload = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if not isinstance(payload, dict):
+                    continue
+
+                if first_payload is None:
+                    first_payload = payload
+
+                timestamp = payload.get("timestamp")
+                if isinstance(timestamp, str):
+                    first_timestamp = parse_json_timestamp(timestamp)
+
+                if first_payload is not None and first_timestamp is not None:
+                    break
+    except OSError:
+        return {}, None
+
+    return first_payload or {}, first_timestamp
+
+
+def read_last_timestamp(path: Path) -> datetime | None:
+    try:
+        with path.open("rb") as handle:
+            handle.seek(0, 2)
+            position = handle.tell()
+            buffer = b""
+
+            while position > 0:
+                chunk_size = min(8192, position)
+                position -= chunk_size
+                handle.seek(position)
+                buffer = handle.read(chunk_size) + buffer
+                lines = buffer.splitlines()
+
+                for raw_line in reversed(lines):
+                    if not raw_line.strip():
+                        continue
+                    try:
+                        payload = json.loads(raw_line.decode("utf-8", errors="replace"))
+                    except json.JSONDecodeError:
+                        continue
+                    if not isinstance(payload, dict):
+                        continue
+
+                    timestamp = payload.get("timestamp")
+                    if isinstance(timestamp, str):
+                        parsed = parse_json_timestamp(timestamp)
+                        if parsed is not None:
+                            return parsed
+
+                if len(lines) > 1:
+                    buffer = lines[0]
+    except OSError:
+        return None
+
+    return None
+
+
+def inspect_session(path: Path) -> tuple[datetime, datetime, str] | None:
+    first_payload, first_timestamp = read_first_payload_and_timestamp(path)
+    started_at = first_timestamp or parse_session_start_from_name(path)
+    last_activity = read_last_timestamp(path)
+
+    if started_at is None or last_activity is None:
+        return None
+
+    return started_at, last_activity, extract_cwd(first_payload)
+
+
+def ensure_archive_not_inside_sessions(sessions_dir: Path, archive_dir: Path) -> None:
+    sessions = sessions_dir.expanduser().resolve()
+    archive_sessions = (archive_dir.expanduser() / "sessions").resolve()
+
+    try:
+        archive_sessions.relative_to(sessions)
+    except ValueError:
+        return
+
+    raise SystemExit("--archive-dir must not put archive sessions inside --sessions-dir.")
+
+
+def scan_active_sessions(sessions_dir: Path, archive_dir: Path) -> list[SessionRecord]:
+    sessions_dir = sessions_dir.expanduser()
+    archive_sessions_dir = archive_dir.expanduser() / "sessions"
+    records: list[SessionRecord] = []
+
+    if not sessions_dir.exists():
+        return records
+
+    for active_path in sessions_dir.rglob("rollout-*.jsonl"):
+        if not active_path.is_file():
+            continue
+
+        try:
+            relative_path = active_path.relative_to(sessions_dir)
+        except ValueError:
+            continue
+
+        inspected = inspect_session(active_path)
+        if inspected is None:
+            continue
+
+        started_at, last_activity, cwd = inspected
+        try:
+            size = active_path.stat().st_size
+        except OSError:
+            continue
+
+        records.append(
+            SessionRecord(
+                current_path=active_path,
+                active_path=active_path,
+                archive_path=archive_sessions_dir / relative_path,
+                relative_path=relative_path,
+                started_at=started_at,
+                last_activity=last_activity,
+                size=size,
+                cwd=cwd,
+            )
+        )
+
+    return records
+
+
+def scan_archived_sessions(sessions_dir: Path, archive_dir: Path) -> list[SessionRecord]:
+    archive_sessions_dir = archive_dir.expanduser() / "sessions"
+    sessions_dir = sessions_dir.expanduser()
+    records: list[SessionRecord] = []
+
+    if not archive_sessions_dir.exists():
+        return records
+
+    for archive_path in archive_sessions_dir.rglob("rollout-*.jsonl"):
+        if not archive_path.is_file():
+            continue
+
+        try:
+            relative_path = archive_path.relative_to(archive_sessions_dir)
+        except ValueError:
+            continue
+
+        inspected = inspect_session(archive_path)
+        if inspected is None:
+            continue
+
+        started_at, last_activity, cwd = inspected
+        try:
+            size = archive_path.stat().st_size
+        except OSError:
+            continue
+
+        records.append(
+            SessionRecord(
+                current_path=archive_path,
+                active_path=sessions_dir / relative_path,
+                archive_path=archive_path,
+                relative_path=relative_path,
+                started_at=started_at,
+                last_activity=last_activity,
+                size=size,
+                cwd=cwd,
+            )
+        )
+
+    return records
+
+
+def human_size(num_bytes: int) -> str:
+    mib = num_bytes / 1024 / 1024
+    if mib >= 1024:
+        return f"{mib / 1024:.2f} GB"
+    return f"{mib:.1f} MB"
+
+
+def short_path(value: str | Path) -> str:
+    text = str(value)
+    home = str(Path.home())
+    if text == home:
+        return "~"
+    if text.startswith(home + "/"):
+        return "~/" + text[len(home) + 1 :]
+    return text
+
+
+def select_records(command: str, records: list[SessionRecord], cutoff: date) -> list[SessionRecord]:
+    if command == "archive":
+        return [record for record in records if record.last_activity_date < cutoff]
+    return [record for record in records if record.last_activity_date >= cutoff]
+
+
+def destination_for(command: str, record: SessionRecord) -> Path:
+    if command == "archive":
+        return record.archive_path
+    return record.active_path
+
+
+def source_for(command: str, record: SessionRecord) -> Path:
+    if command == "archive":
+        return record.active_path
+    return record.archive_path
+
+
+def split_conflicts(command: str, records: list[SessionRecord]) -> tuple[list[SessionRecord], list[MoveResult]]:
+    movable: list[SessionRecord] = []
+    conflicts: list[MoveResult] = []
+
+    for record in records:
+        source = source_for(command, record)
+        destination = destination_for(command, record)
+        if not source.exists():
+            conflicts.append(MoveResult(record, "skipped", "source missing"))
+        elif destination.exists():
+            conflicts.append(MoveResult(record, "skipped", "destination exists"))
+        else:
+            movable.append(record)
+
+    return movable, conflicts
+
+
+def group_by_project(records: list[SessionRecord]) -> list[tuple[str, int, int, datetime, datetime]]:
+    totals: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {"size": 0, "count": 0, "oldest": None, "newest": None}
+    )
+
+    for record in records:
+        row = totals[record.cwd]
+        row["size"] += record.size
+        row["count"] += 1
+        row["oldest"] = record.last_activity if row["oldest"] is None else min(row["oldest"], record.last_activity)
+        row["newest"] = record.last_activity if row["newest"] is None else max(row["newest"], record.last_activity)
+
+    return sorted(
+        (
+            (project, row["size"], row["count"], row["oldest"], row["newest"])
+            for project, row in totals.items()
+        ),
+        key=lambda row: row[1],
+        reverse=True,
+    )
+
+
+def format_date_range(oldest: datetime, newest: datetime) -> str:
+    oldest_day = oldest.date().isoformat()
+    newest_day = newest.date().isoformat()
+    if oldest_day == newest_day:
+        return oldest_day
+    return f"{oldest_day} to {newest_day}"
+
+
+def build_project_table(title: str, records: list[SessionRecord], top: int) -> Table:
+    table = Table(title=title, show_lines=False)
+    table.add_column("Project", overflow="fold")
+    table.add_column("Sessions", justify="right")
+    table.add_column("Size", justify="right")
+    table.add_column("Last activity", overflow="fold")
+
+    grouped = group_by_project(records)
+    if not grouped:
+        table.add_row("No sessions", "0", "0.0 MB", "")
+        return table
+
+    for project, size, count, oldest, newest in grouped[:top]:
+        table.add_row(short_path(project), str(count), human_size(size), format_date_range(oldest, newest))
+
+    if len(grouped) > top:
+        hidden = len(grouped) - top
+        hidden_size = sum(size for _, size, _, _, _ in grouped[top:])
+        table.add_row(f"... {hidden} more projects", "", human_size(hidden_size), "")
+
+    return table
+
+
+def build_file_table(title: str, command: str, results: list[MoveResult]) -> Table:
+    table = Table(title=title, show_lines=False)
+    table.add_column("Status")
+    table.add_column("Last activity")
+    table.add_column("Size", justify="right")
+    table.add_column("Project", overflow="fold")
+    table.add_column("Source", overflow="fold")
+    table.add_column("Destination", overflow="fold")
+
+    if not results:
+        table.add_row("none", "", "0.0 MB", "", "", "")
+        return table
+
+    for result in sorted(results, key=lambda item: item.record.size, reverse=True):
+        record = result.record
+        status = result.status if not result.reason else f"{result.status}: {result.reason}"
+        table.add_row(
+            status,
+            record.last_activity.strftime("%Y-%m-%d %H:%M"),
+            human_size(record.size),
+            short_path(record.cwd),
+            short_path(source_for(command, record)),
+            short_path(destination_for(command, record)),
+        )
+
+    return table
+
+
+def apply_command_for(args: argparse.Namespace) -> str:
+    script = Path(sys.argv[0]).expanduser()
+    if script.exists():
+        executable = str(script.resolve())
+    else:
+        executable = "codex-sessions"
+
+    command = [executable, args.command, args.cutoff, "--apply"]
+    if args.top != 12:
+        command.extend(["--top", str(args.top)])
+    if args.show_files:
+        command.append("--show-files")
+    if args.sessions_dir != DEFAULT_SESSIONS_DIR:
+        command.extend(["--sessions-dir", str(args.sessions_dir)])
+    if args.archive_dir != DEFAULT_ARCHIVE_DIR:
+        command.extend(["--archive-dir", str(args.archive_dir)])
+    if args.color != "auto":
+        command.extend(["--color", args.color])
+    return " ".join(shlex.quote(part) for part in command)
+
+
+def append_manifest(archive_dir: Path, operation: str, cutoff: date, record: SessionRecord) -> None:
+    manifest_path = archive_dir.expanduser() / "manifest.jsonl"
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    moved_timestamp = datetime.now().astimezone().isoformat(timespec="seconds")
+
+    event = {
+        "operation": operation,
+        "original_path": str(record.active_path),
+        "archive_path": str(record.archive_path),
+        "source_path": str(source_for(operation, record)),
+        "destination_path": str(destination_for(operation, record)),
+        "size": record.size,
+        "cwd": record.cwd,
+        "started_timestamp": record.started_at.isoformat(timespec="seconds"),
+        "last_activity_timestamp": record.last_activity.isoformat(timespec="seconds"),
+        "command_cutoff_date": cutoff.isoformat(),
+        "moved_timestamp": moved_timestamp,
+    }
+
+    with manifest_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(event, sort_keys=True) + "\n")
+
+
+def clean_empty_parents(start: Path, stop: Path) -> None:
+    current = start.expanduser().resolve()
+    stop = stop.expanduser().resolve()
+
+    while current != stop:
+        try:
+            current.relative_to(stop)
+        except ValueError:
+            return
+
+        try:
+            current.rmdir()
+        except OSError:
+            return
+        current = current.parent
+
+
+def move_records(
+    command: str,
+    cutoff: date,
+    records: list[SessionRecord],
+    archive_dir: Path,
+    cleanup_stop: Path,
+) -> list[MoveResult]:
+    results: list[MoveResult] = []
+
+    for record in records:
+        source = source_for(command, record)
+        destination = destination_for(command, record)
+
+        if not source.exists():
+            results.append(MoveResult(record, "skipped", "source missing"))
+            continue
+        if destination.exists():
+            results.append(MoveResult(record, "skipped", "destination exists"))
+            continue
+
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(source), str(destination))
+        append_manifest(archive_dir, command, cutoff, record)
+        clean_empty_parents(source.parent, cleanup_stop)
+        results.append(MoveResult(record, "moved"))
+
+    return results
+
+
+def print_summary(
+    console: Console,
+    args: argparse.Namespace,
+    cutoff: date,
+    scanned: list[SessionRecord],
+    matched: list[SessionRecord],
+    movable: list[SessionRecord],
+    conflicts: list[MoveResult],
+    move_results: list[MoveResult],
+) -> None:
+    operation = "archive" if args.command == "archive" else "restore"
+    dry_run = not args.apply
+    moved_count = sum(1 for result in move_results if result.status == "moved")
+    moved_size = sum(result.record.size for result in move_results if result.status == "moved")
+    skipped_results = [result for result in move_results if result.status != "moved"]
+    skipped_all = conflicts + skipped_results
+
+    if args.command == "archive":
+        title = f"🧹 Archive sessions last active before {cutoff.isoformat()}"
+        affected_label = "Would archive" if dry_run else "Archived"
+        remaining_label = "Would remain active" if dry_run else "Remain active"
+        source_label = "Active sessions scanned"
+    else:
+        title = f"♻️ Restore archived sessions last active on/after {cutoff.isoformat()}"
+        affected_label = "Would restore" if dry_run else "Restored"
+        remaining_label = "Would stay archived" if dry_run else "Stay archived"
+        source_label = "Archived sessions scanned"
+
+    mode = "DRY RUN" if dry_run else "APPLIED"
+    style = "yellow" if dry_run else "green"
+    console.print(Panel(Text(f"{mode} • {title}", justify="center"), style=style))
+
+    affected_records = movable if dry_run else [result.record for result in move_results if result.status == "moved"]
+    affected_size = sum(record.size for record in affected_records) if dry_run else moved_size
+    remaining = [record for record in scanned if record not in matched]
+
+    summary = Table(show_header=True, header_style="bold")
+    summary.add_column("Bucket")
+    summary.add_column("Sessions", justify="right")
+    summary.add_column("Size", justify="right")
+    summary.add_row(affected_label, str(len(affected_records) if dry_run else moved_count), human_size(affected_size))
+    summary.add_row(remaining_label, str(len(remaining)), human_size(sum(record.size for record in remaining)))
+    if skipped_all:
+        summary.add_row("Skipped", str(len(skipped_all)), human_size(sum(result.record.size for result in skipped_all)))
+    summary.add_row(source_label, str(len(scanned)), human_size(sum(record.size for record in scanned)))
+    console.print(summary)
+
+    if affected_size:
+        total_size = sum(record.size for record in scanned)
+        percent = affected_size / total_size * 100 if total_size else 0
+        verb = "Would move" if dry_run else "Moved"
+        console.print(f"\n[bold]{verb}:[/bold] {human_size(affected_size)} ({percent:.1f}% of scanned session data)")
+    else:
+        console.print("\n[bold]Nothing to move.[/bold]")
+
+    if dry_run:
+        apply_command = apply_command_for(args)
+        console.print(
+            Panel(
+                f"Dry run only. To apply this move, run:\n\n[bold]{apply_command}[/bold]",
+                title="Next step",
+                style="blue",
+            )
+        )
+
+    console.print(build_project_table("Biggest Projects That Move", affected_records, args.top))
+    console.print(build_project_table("Biggest Projects Left Behind", remaining, args.top))
+
+    if conflicts:
+        console.print(build_file_table("Skipped Conflicts", args.command, conflicts))
+    if args.show_files:
+        file_results = (
+            [MoveResult(record, "would move") for record in movable] + conflicts
+            if dry_run
+            else move_results + conflicts
+        )
+        console.print(build_file_table("Files", args.command, file_results))
+
+
+def main() -> None:
+    args = parse_args()
+    console = build_console(args.color)
+    cutoff = parse_cutoff(args.cutoff)
+    sessions_dir = args.sessions_dir.expanduser()
+    archive_dir = args.archive_dir.expanduser()
+
+    ensure_archive_not_inside_sessions(sessions_dir, archive_dir)
+
+    if args.command == "archive":
+        scanned = scan_active_sessions(sessions_dir, archive_dir)
+        cleanup_stop = sessions_dir
+    else:
+        scanned = scan_archived_sessions(sessions_dir, archive_dir)
+        cleanup_stop = archive_dir / "sessions"
+
+    matched = select_records(args.command, scanned, cutoff)
+    movable, conflicts = split_conflicts(args.command, matched)
+
+    if args.apply:
+        move_results = move_records(args.command, cutoff, movable, archive_dir, cleanup_stop)
+    else:
+        move_results = []
+
+    print_summary(console, args, cutoff, scanned, matched, movable, conflicts, move_results)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except BrokenPipeError:
+        try:
+            sys.stdout.close()
+        finally:
+            os._exit(1)
