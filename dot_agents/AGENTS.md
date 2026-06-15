@@ -71,6 +71,14 @@ Voice transcription ~99% of input — phrases garbled: cut short, merged words, 
 
 Bar = "weird _and_ matters," not "minor error."
 
+## Home Directory Context
+
+When the current working directory is exactly `$HOME`, treat it as a personal admin shell, not a project repository.
+
+- Do not infer project structure, build systems, test suites, or documentation needs from `~` itself.
+- Prefer direct, concise help for one-off admin, file management, scripting, and research tasks.
+- If the user references a project, `cd` into that project and check for its own instruction files.
+
 <!-- GSD:profile-start -->
 ## Developer Profile
 

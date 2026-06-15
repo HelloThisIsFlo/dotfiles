@@ -1,0 +1,11 @@
+{{- /* chezmoi:modify-template */ -}}
+{{/*
+Why modify_:
+~/.codex/config.toml contains machine-private project paths and trusted hashes.
+We inject only the public-safe AGENTS fallback and preserve the rest of the file byte-for-byte.
+Avoid structured TOML rewriting here because it may reorder tables, drop comments, or churn Codex-managed state.
+*/ -}}
+# chezmoi-managed:start codex-agents-fallback
+project_doc_fallback_filenames = [".agents/AGENTS.md"]
+# chezmoi-managed:end
+{{- "\n" -}}{{ .chezmoi.stdin | replaceAllRegex "(?s)^# chezmoi-managed:start codex-agents-fallback.*?# chezmoi-managed:end\n*" "" | trimSuffix "\n" }}

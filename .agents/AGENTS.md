@@ -1,6 +1,6 @@
 # AGENTS.md
 
-> **Note:** The `CLAUDE.md` at the repo root is managed by chezmoi and deployed to `~/CLAUDE.md`. It is NOT instructions for working in this repo. Ignore it. **This file** (`.agents/AGENTS.md`, reached via `.claude/CLAUDE.md` or `.codex/AGENTS.md`) contains the repo-specific instructions.
+> **Note:** This file is the repo-specific instruction source. Claude Code loads it through `.claude/CLAUDE.md`; Codex loads it through global fallback discovery for `.agents/AGENTS.md`.
 
 This file provides guidance to agents when working with code in this repository.
 
