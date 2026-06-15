@@ -242,9 +242,13 @@ Each layer summarizes just enough to be useful on its own, then points to the ne
 ### 5.2 Tables
 
 - Use tables for comparisons, mode overviews, and summaries
+- Use tables when many sections repeat the same fields
+  - Example: lane → role → skills → proof
+  - Example: option → tradeoff → verdict
 - Emoji at the start of rows when modes have emoji identities
 - Keep tables compact — one line per row, no multi-line cells
 - Tables summarize; bullets/callouts explain
+- Per-item tables can be the final detail format when they scan better than repeated bullet trees
 
 ### 5.3 Horizontal Rules
 
@@ -253,6 +257,21 @@ Used sparingly, for:
 - Separating major scenarios in a guide
 
 NOT used between every section — that's what headings are for.
+
+### 5.4 Quote Blocks
+
+- Use quote blocks for example questions, facilitation prompts, spoken scripts, or interview lines
+- Put **one question per quote block**
+  - Good:
+    ```markdown
+    > How would you debug a RAG system returning irrelevant documents?
+
+    > How would you evaluate whether a prompt change improved the system?
+    ```
+  - Avoid:
+    - questions as bullet lists
+    - questions inside code fences
+- Use code fences only when the content is literal code, config, data, or command output
 
 ---
 

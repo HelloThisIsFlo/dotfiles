@@ -20,6 +20,8 @@ Everything about *how* the content is presented:
 - **Structure** — Reorganize sections if they'd flow better. Lead with decisions and results, not narrative buildup.
 - **Prose to bullets** — Convert paragraphs into bullet points. Prose is only acceptable for 1-2 sentence intros before switching to structured content.
 - **Callouts** — Identify key rules (`[!important]`), gotchas (`[!warning]`), cross-references (`[!tip]`), and side notes (`[!note]`). Content inside callouts is ALWAYS bullets — never prose paragraphs.
+- **Tables for repeated records** — When many sections repeat the same fields (lane → responsibilities → skills → proof, option → tradeoff → verdict), prefer a summary table and compact per-item tables over long repeated bullet trees.
+- **Quote blocks for prompts/questions** — Example interview questions, facilitation prompts, or spoken scripts should usually be separate markdown quote blocks, one per question, not list items and not code fences.
 - **Emoji** — Assign semantic emoji to modes/variants and use them consistently throughout. Use expressive emoji for edge cases/gotchas (severity should be instantly clear). Never decorative.
 - **Tone** — Direct, conversational, confident. No hedging, no filler, no trailing summaries.
 - **Inline formatting** — `code` for API values/field names/enum names, **bold** for key terms/concepts, `→` for mappings, `—` for inline explanations, `=>` for implications/conclusions.
@@ -46,9 +48,24 @@ The user stages their file before applying this skill, so they get a clean diff.
 | "In this section we will discuss..." | Delete — just start |
 | "In conclusion, we have seen that..." | Delete — the structure IS the summary |
 | Flat bullet list with mixed concerns | Hierarchical bullets grouped by concern |
+| Repeated sections with identical fields | Overview table + compact per-section table |
+| Dense responsibility bullet trees | Scan table, or headings after testing readability |
+| Example questions in bullets/code fences | Separate `>` quote block per question |
 | Prose inside a callout | Bullets inside a callout (always) |
 | Wall of text explaining an edge case | Pattern C callout: statement → detail bullets → bold action item |
 | Scattered "see also" links | Two-tier references: tip callout OR italic footnote |
+
+## When format is uncertain
+
+Try 1-2 representative variants before restyling the whole document.
+
+- Pick the densest repeated section.
+- Make small alternatives, such as:
+  - table-first
+  - heading-first
+  - bullets with bold scan anchors
+- Ask Flo which one scans better.
+- Apply the winning pattern globally.
 
 ## Section rhythm
 
