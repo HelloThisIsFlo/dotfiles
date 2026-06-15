@@ -42,10 +42,11 @@ Compare duplicates before choosing moves or symlinks. Treat divergent existing `
 
 For skills, inspect frontmatter metadata as well as files. Note trigger-heavy or unusually long `description` fields as a possible cross-agent indexing risk, but do not assume a fixed length limit. Plan to verify actual discovery after migration.
 
-Run the bundled validator in inventory mode when available:
+Run the bundled validator in inventory mode when available. Resolve bundled helper paths relative to this `SKILL.md`, not relative to the repository being migrated:
 
 ```bash
-python3 dot_agents/skills/migrate-claude-to-agents/scripts/validate_agent_migration.py inventory
+SKILL_DIR=/path/to/migrate-claude-to-agents
+python3 "$SKILL_DIR/scripts/validate_agent_migration.py" inventory
 ```
 
 Use its report as a starting point, not as a substitute for reading ambiguous files.
@@ -145,7 +146,8 @@ Split commits for readable history:
 Run the checks that match the repo:
 
 ```bash
-python3 dot_agents/skills/migrate-claude-to-agents/scripts/validate_agent_migration.py verify
+SKILL_DIR=/path/to/migrate-claude-to-agents
+python3 "$SKILL_DIR/scripts/validate_agent_migration.py" verify
 git show --summary --oneline HEAD
 git ls-files -s .agents .claude .codex
 git ls-files | rg -i '(^|/)claude\.md$|(^|/)agents\.md$'
