@@ -16,6 +16,8 @@ Use this skill to turn a new or unmanaged agent asset into an intentional chezmo
 - Treat `chezmoi apply` as mutation.
 - Never run global `chezmoi apply` during onboarding.
 - Ask Flo to apply after review, or use path-scoped `chezmoi apply` only with explicit approval.
+- Onboarding is not complete until the original live asset path still works for the tool or user that created it.
+- When a source file, adapter, ignore rule, or executable-mode fix changes the live target state, finish with an explicitly approved path-scoped `chezmoi apply` for only the affected target path(s).
 - Keep commits semantic:
   - pure moves
   - content cleanup
@@ -61,6 +63,7 @@ Before reporting done:
 - `git diff --cached --summary --find-renames` for staged moves
 - show `chezmoi status`
 - `chezmoi cat` or `chezmoi diff` for symlink adapters when relevant
+- verify every original live asset path still exists and resolves as intended after any path-scoped apply
 - `codex debug prompt-input "probe"` when Codex skill discovery or home instructions changed
 - report whether `chezmoi apply` was run
 - if anything was applied, name the exact target paths
