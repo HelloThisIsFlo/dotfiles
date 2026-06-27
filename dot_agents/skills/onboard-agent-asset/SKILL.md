@@ -15,9 +15,13 @@ Use this skill to turn a new or unmanaged agent asset into an intentional chezmo
 - Treat `chezmoi status`, `chezmoi diff`, and `chezmoi cat` as inspection commands.
 - Treat `chezmoi apply` as mutation.
 - Never run global `chezmoi apply` during onboarding.
-- Ask Flo to apply after review, or use path-scoped `chezmoi apply` only with explicit approval.
+- After classification, proceed automatically when there is no ownership or scope ambiguity and the change only touches the asset being onboarded.
+- Ask before mutation only when classification, ownership, target path, generated/plugin status, or live-data side effects are unclear.
 - Onboarding is not complete until the original live asset path still works for the tool or user that created it.
-- When a source file, adapter, ignore rule, or executable-mode fix changes the live target state, finish with an explicitly approved path-scoped `chezmoi apply` for only the affected target path(s).
+- When a source file, adapter, ignore rule, or executable-mode fix changes live state, finish automatically with path-scoped `chezmoi apply` for only the affected target path(s).
+- Apply only the exact live asset path(s) just onboarded or updated. Never apply a parent directory, watched directory, or global target.
+- Commit exactly one onboarded skill or asset per commit. Stage only its source files, required adapters, and required ignore/watch updates.
+- Never stage or commit unrelated dirty files, even when they are in the same repo or surfaced by `git status`.
 - Keep commits semantic:
   - pure moves
   - content cleanup
