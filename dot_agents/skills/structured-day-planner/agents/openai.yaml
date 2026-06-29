@@ -1,0 +1,4 @@
+interface:
+  display_name: "Structured Day Planner"
+  short_description: "Update Structured day plans cleanly"
+  default_prompt: "Use $structured-day-planner to update my Structured plan for today from messy natural language."
