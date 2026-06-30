@@ -25,45 +25,57 @@
 .config/nvim/README.md
 
 
-# ──── ".claude"
-# Claude Skills & Hooks - EXTERNAL ONES
-.claude/skills/copywriting
-.claude/skills/find-skills
-.claude/skills/review-panel-workspace
-.claude/skills/visual-explainer
-.claude/skills/graphify
-.claude/skills/defuddle
-.claude/skills/json-canvas
-.claude/skills/obsidian-bases
-.claude/skills/obsidian-cli
-.claude/skills/obsidian-markdown
-.claude/skills/gsd*
-.claude/hooks/gsd*
-
-# ──── ".agents"
-# Shared Agent Skills - EXTERNAL ONES
-.agents/skills/copywriting
-.agents/skills/find-skills
-.agents/skills/defuddle
-.agents/skills/json-canvas
-.agents/skills/obsidian-bases
-.agents/skills/obsidian-cli
-.agents/skills/obsidian-markdown
-
-# ──── ".codex"
-# Codex Skills & Hooks
-#  SYSTEM SKILLS
+# ──── Agent assets
+# ────── Built-in skills
+# ──────── Codex
 .codex/skills/.system
 .codex/skills/codex-primary-runtime
-#  EXTERNAL SKILLS & HOOKS
-.codex/skills/copywriting
-.codex/skills/find-skills
-.codex/skills/review-panel-workspace
-.codex/skills/visual-explainer
-.codex/skills/graphify
 .codex/skills/hatch-pet
+
+# ────── External shared skills
+# ──────── Copywriting
+.claude/skills/copywriting
+.agents/skills/copywriting
+.codex/skills/copywriting
+# ──────── Find skills
+.claude/skills/find-skills
+.agents/skills/find-skills
+.codex/skills/find-skills
+# ──────── Review panel workspace
+.claude/skills/review-panel-workspace
+.codex/skills/review-panel-workspace
+# ──────── Visual explainer
+.claude/skills/visual-explainer
+.codex/skills/visual-explainer
+# ──────── Graphify
+.claude/skills/graphify
+.codex/skills/graphify
+# ──────── Defuddle
+.claude/skills/defuddle
+.agents/skills/defuddle
+# ──────── JSON Canvas
+.claude/skills/json-canvas
+.agents/skills/json-canvas
+# ──────── Obsidian
+.claude/skills/obsidian-bases
+.agents/skills/obsidian-bases
+.claude/skills/obsidian-cli
+.agents/skills/obsidian-cli
+.claude/skills/obsidian-markdown
+.agents/skills/obsidian-markdown
+# ──────── Playwright
 .codex/skills/playwright
 .codex/skills/playwright-interactive
+# ──────── GSD Core
+.claude/skills/gsd*
+.claude/hooks/gsd*
+.claude/hooks/lib
+.claude/hooks/managed-hooks-registry.cjs
+.agents/skills/gsd*
+.agents/agents/gsd*
+.agents/agents/subagents
+.agents/agents/subagents/gsd*
+.agents/hooks/gsd*
 .codex/skills/gsd*
 .codex/agents/gsd*
 .codex/hooks/gsd*
