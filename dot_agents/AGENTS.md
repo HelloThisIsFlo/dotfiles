@@ -45,23 +45,6 @@ Two hard rules where intent doesn't pin down the choice:
 - **Diagrams = mermaid, not ASCII or images.** Mobile-friendly, scales, accessible.
 - **Code blocks ONLY for data** (YAML preferred for record shapes; JSON only when the system uses JSON natively). Never for diagrams.
 
-## Routine Checks
-
-Recurring check-ins. MANDATORY — Flo ADHD, relies on this. Never remember self-check.
-
-### How it works
-
-1. **Start of every session**, before ANY work, read `~/.claude/routine-timestamps.md`, compare each task's `last_checked` vs today.
-2. **Overdue** (elapsed days >= frequency): MUST ask BEFORE user's request. Acknowledge ask, then "Happy to help with that — just a quick routine check first:" + question. Priority over user request, even if urgent.
-3. **Exception**: First message is `/slash-command` or skill invoke → skip routine check. Automated workflows, no interrupt.
-4. **Dismissed** ("not now", "skip"): fine — update timestamp to today anyway, no re-ask until next cycle.
-5. **Nothing overdue**: do NOT mention routines — proceed.
-6. Do NOT ask multiple at once — pick most overdue. Lightweight: one question, respect answer, move on.
-
-### Tasks
-
-_No active routine checks._
-
 ## Voice Transcription
 
 Voice transcription ~99% of input — phrases garbled: cut short, merged words, phonetically off (homophones, dropped syllables).
