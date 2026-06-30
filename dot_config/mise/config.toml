@@ -30,7 +30,7 @@ babashka = '1'
 
 # -- Elixir -------------
 erlang = "29"
-elixir = "1.20.0-otp-29"
+elixir = "1.20.1-otp-29"
 
 
 # == Infrastructure =====
