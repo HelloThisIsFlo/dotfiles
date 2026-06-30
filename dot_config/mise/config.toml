@@ -95,3 +95,6 @@ ruby.compile = false
 
 # Automatically source .env files
 env_file = '.env'
+
+[settings.python]
+compile = false
