@@ -4,9 +4,9 @@
 # ADD-ONLY — this NEVER removes a server. To remove one:  codex mcp remove <name>
 # run_onchange reruns automatically when the rendered `codex mcp add` lines below change.
 #
-# `chezmoi_filter:` is a generic {chezmoi-var: required-value} map — each key is looked up
-# dynamically against this machine's template data, so new dimensions (host_universe, arch,
-# ...) work with no script change. A server registers only if EVERY listed var matches.
+# `chezmoi_filter:` is a {supported-context-key: required-value} map. A server
+# registers only if EVERY listed var matches. Keep the context allowlist below
+# compact so rendered scripts do not embed broad chezmoi internals.
 # No whole-script OS gate — `command -v codex` below is the real, OS-agnostic guard.
 #
 # FUTURE: this is the *codex* emitter for a deliberately agent-agnostic registry
@@ -18,29 +18,104 @@ set -eu
 
 command -v codex >/dev/null 2>&1 || { echo "skip codex mcp sync: codex not installed"; exit 0; }
 
-{{ range .mcp_servers -}}
-{{- $name := .name -}}
-{{- $env := index . "env" -}}
-{{- $secret := index . "secret_env" -}}
-{{- $url := index . "url" -}}
-{{- $skip := "" -}}
-{{- range $var, $want := (index . "chezmoi_filter") -}}
-{{- if not (hasKey $ $var) -}}{{- fail (printf "mcp-servers.yaml: server '%s' has chezmoi_filter.%s, but '%s' is not a chezmoi template variable (typo?)" $name $var $var) -}}{{- end -}}
-{{- $have := index $ $var -}}
-{{- if ne $want $have -}}{{- $skip = printf "chezmoi_filter.%s=%v (this machine: %v)" $var $want $have -}}{{- end -}}
-{{- end -}}
-{{- if and (not $skip) $secret (ne $.trust_level "personal") -}}{{- $skip = "needs a secret but trust_level != personal" -}}{{- end -}}
-{{- if $skip -}}
-echo "skip {{ .name }}: {{ $skip }}"
-{{ else -}}
-{{- $args := list -}}
-{{- range $k, $v := $env -}}{{- $args = append $args "--env" (printf "%s=%s" $k $v) -}}{{- end -}}
-{{- range $k, $item := $secret -}}{{- $args = append $args "--env" (printf "%s=%s" $k (rbw $item).data.password) -}}{{- end -}}
-echo "→ codex mcp add {{ .name }}"
-{{ if $url -}}
-codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} --url {{ $url }} || echo "⚠ failed: {{ .name }}"
-{{ else -}}
-codex mcp add {{ .name }}{{ range $args }} {{ . }}{{ end }} -- {{ .command }}{{ range .args }} {{ . }}{{ end }} || echo "⚠ failed: {{ .name }}"
-{{ end -}}
-{{ end -}}
-{{ end -}}
+{{ $chezmoiContext := dict "email" .email "host_universe" .host_universe "is_headless" .is_headless "mise_bin" .mise_bin "os" .os "trust_level" .trust_level -}}
+
+python3 <<'PY'
+import json
+import os
+import pathlib
+import re
+import subprocess
+import sys
+
+servers = json.loads({{ .mcp_servers | toJson | quote }})
+chezmoi_context = json.loads({{ $chezmoiContext | toJson | quote }})
+
+
+def skip_reason(server):
+    for key, want in (server.get("chezmoi_filter") or {}).items():
+        if key not in chezmoi_context:
+            raise SystemExit(
+                f"mcp-servers.yaml: server '{server['name']}' has "
+                f"chezmoi_filter.{key}, but '{key}' is not a chezmoi template variable"
+            )
+        have = chezmoi_context[key]
+        if have != want:
+            return f"chezmoi_filter.{key}={want} (this machine: {have})"
+
+    if server.get("secret_env") and chezmoi_context.get("trust_level") != "personal":
+        return "needs a secret but trust_level != personal"
+
+    return None
+
+
+def resolve_secret_env(server):
+    resolved = {}
+    for key, item in (server.get("secret_env") or {}).items():
+        result = subprocess.run(
+            ["rbw", "get", "--folder", "chezmoi", item],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        resolved[key] = result.stdout.rstrip("\n")
+    return resolved
+
+
+def patch_startup_timeout(name, timeout):
+    codex_home = os.environ.get("CODEX_HOME") or os.path.join(os.environ["HOME"], ".codex")
+    config_path = pathlib.Path(codex_home) / "config.toml"
+    if not config_path.exists():
+        return
+
+    text = config_path.read_text()
+    header = f"[mcp_servers.{name}]"
+    start = text.find(header)
+    if start == -1:
+        print(f"⚠ cannot patch startup_timeout_sec: missing {header}", file=sys.stderr)
+        return
+
+    next_header = re.search(r"(?m)^\[", text[start + len(header):])
+    end = len(text) if next_header is None else start + len(header) + next_header.start()
+    block = text[start:end]
+    line = f"startup_timeout_sec = {int(timeout)}"
+
+    if re.search(r"(?m)^startup_timeout_sec\s*=", block):
+        block = re.sub(r"(?m)^startup_timeout_sec\s*=.*$", line, block)
+    else:
+        first_newline = block.find("\n")
+        if first_newline == -1:
+            block = block + "\n" + line + "\n"
+        else:
+            block = block[:first_newline + 1] + line + "\n" + block[first_newline + 1:]
+
+    new_text = text[:start] + block + text[end:]
+    if new_text != text:
+        config_path.write_text(new_text)
+
+
+for server in servers:
+    skip = skip_reason(server)
+    if skip:
+        print(f"skip {server['name']}: {skip}")
+        continue
+
+    print(f"→ codex mcp add {server['name']}", flush=True)
+    cmd = ["codex", "mcp", "add", server["name"]]
+    for env_map in (server.get("env") or {}, resolve_secret_env(server)):
+        for key, value in env_map.items():
+            cmd.extend(["--env", f"{key}={value}"])
+
+    if server.get("url"):
+        cmd.extend(["--url", server["url"]])
+    else:
+        cmd.append("--")
+        cmd.append(server["command"])
+        cmd.extend(server.get("args") or [])
+
+    result = subprocess.run(cmd)
+    if result.returncode != 0:
+        print(f"⚠ failed: {server['name']}")
+    elif server.get("startup_timeout_sec") is not None:
+        patch_startup_timeout(server["name"], server["startup_timeout_sec"])
+PY

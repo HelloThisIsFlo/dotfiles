@@ -4,14 +4,16 @@
 # ADD-ONLY: removing an entry here does NOT remove it from codex.
 #           To remove a server, run manually:  codex mcp remove <name>
 #
-# chezmoi_filter: (optional, keep as the LAST key of an entry) — a {chezmoi-var: value} map.
+# chezmoi_filter: (optional, keep as the LAST key of an entry) — a {context-key: value} map.
 #         The server registers only if EVERY listed var equals that value on THIS machine.
-#         Keys are looked up dynamically, so ANY chezmoi template variable works (NOT an MCP
-#         concept). Common ones:
+#         Supported context keys:
+#           email
 #           os:            macos|linux
 #           trust_level:   personal|work|untrusted
 #           host_universe: TheMac|TheHome|DadHome
-#         (typo'd / unknown var -> chezmoi apply ERRORS — fail-fast, so mistakes surface)
+#           is_headless
+#           mise_bin
+#         (typo'd / unknown var -> script errors — fail-fast, so mistakes surface)
 #         (a server with secret_env is implicitly personal-only — no need to also filter)
 #
 # Secrets: put the rbw ITEM NAME (folder `chezmoi`) under secret_env — never the value.
@@ -25,7 +27,22 @@ mcp_servers:
       os: macos              # OmniFocus is macOS-only
 
   - name: fastmail
-    url: https://api.fastmail.com/mcp
+    # Fastmail MCP keeps losing auth when added as a regular "HTTP" MCP in Codex
+    # This solution/trick comes from the following guide: https://ai.sulat.com/how-to-connect-codex-to-fastmail-mcp-3488e8cb2bb7
+    startup_timeout_sec: 300
+    command: npx
+    args:
+      - -y
+      - mcp-remote@latest
+      - https://api.fastmail.com/mcp
+      - --transport
+      - http-only
+      - --resource
+      - https://api.fastmail.com/mcp
+      - --static-oauth-client-metadata
+      - '{ "scope": "https://www.fastmail.com/dev/mcp offline_access" }'
+      - --auth-timeout
+      - "300"
 
   # Example — a server needing a secret (commented, for reference):
   # - name: github
