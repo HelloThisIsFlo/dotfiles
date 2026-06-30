@@ -136,3 +136,16 @@ Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
 - **Exception:** step-by-step is fine when the output is genuinely mechanical (formatters, scripts) or when calibration has shown the agent drifts without guardrails.
 
 Tested: intent-driven version of a Flo-style doc-prompt produced clean output on first try; rule-heavy version produced ASCII art + wrong emojis + JSON-not-YAML.
+
+<!-- GSD Configuration — managed by gsd-core installer -->
+# GSD Core — Git. Ship. Done.
+
+- GSD workflows live in `gsd-core/workflows/`. Load the relevant workflow when
+  the user runs a `/gsd-*` command.
+- GSD agents live in `agents/`. Use the matching agent when spawning subagents.
+- GSD tools are at `gsd-core/bin/gsd-tools.cjs`. Run with `node`.
+- Planning artifacts live in `.planning/`. Never edit them outside a GSD workflow.
+- Do not apply GSD workflows unless the user explicitly asks for them.
+- When a GSD command triggers a deliverable (feature, fix, docs), offer the next
+  step to the user using Cline's ask_user tool after completing it.
+<!-- End GSD Configuration -->

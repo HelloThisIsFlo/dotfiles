@@ -42,7 +42,7 @@ function gsd-update --description "Update GSD across all AI CLIs"
         return 1
     end
 
-    npx -y get-shit-done-cc@latest $args
+    npx -y @opengsd/gsd-core@latest $args
 end
 complete -c gsd-update -f -l statusline -d "Include --force-statusline"
 

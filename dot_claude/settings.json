@@ -115,7 +115,12 @@
       "Bash(gh issue:*)",
       "Skill(gsd:new-milestone)",
       "Bash(find ~/.claude -maxdepth 2 -type f -name *.json -newer ~/.claude/settings.json)",
-      "Skill(gsd:add-todo)"
+      "Skill(gsd:add-todo)",
+      "Bash(npx gsd-core *)",
+      "Read(.planning/*)",
+      "Write(.planning/*)",
+      "Read(STATE.md)",
+      "Write(STATE.md)"
     ],
     "deny": [
       "Read(.env)",
@@ -125,29 +130,13 @@
       "Read(**/secrets/*)",
       "Read(**/*credential*)",
       "Read(**/*.pem)",
-      "Read(**/*.key)"
+      "Read(**/*.key)",
+      "Read(.env.*)",
+      "Read(.secrets)"
     ],
     "defaultMode": "bypassPermissions"
   },
   "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash \"/Users/flo/.claude/hooks/gsd-session-state.sh\""
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -160,11 +149,21 @@
         ]
       },
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-graphify-update.sh\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
         "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -174,7 +173,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
             "timeout": 5
           }
         ]
@@ -192,11 +191,11 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-worktree-path-guard.js\"",
             "timeout": 5
           }
         ]
@@ -206,7 +205,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
             "timeout": 5
           }
         ]
@@ -216,7 +215,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
             "timeout": 5
           }
         ]
@@ -231,14 +240,73 @@
           }
         ]
       }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "FileChanged": [
+      {
+        "matcher": "config.json",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-config-reload.js\"",
+            "timeout": 8
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/flo/.claude/hooks/gsd-session-state.sh\""
+          }
+        ]
+      }
     ]
   },
   "worktree": {
     "baseRef": "head"
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "\"/Users/flo/.local/share/mise/installs/node/lts/bin/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
@@ -281,5 +349,9 @@
   "autoCompactEnabled": false,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "statusLine": {
+    "type": "command",
+    "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  }
 }
