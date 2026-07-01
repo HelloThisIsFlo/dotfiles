@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sandbox Explain"
+  short_description: "Create Flo-style notes in the agent sandbox"
+  default_prompt: "Use $sandbox-explain to create a clear sandbox explanation note for this work."
