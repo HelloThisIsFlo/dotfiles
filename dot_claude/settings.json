@@ -136,6 +136,7 @@
     ],
     "defaultMode": "bypassPermissions"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -308,6 +309,10 @@
   "worktree": {
     "baseRef": "head"
   },
+  "statusLine": {
+    "type": "command",
+    "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+  },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
@@ -349,9 +354,5 @@
   "autoCompactEnabled": false,
   "remoteControlAtStartup": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "statusLine": {
-    "type": "command",
-    "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
-  }
+  "skipAutoPermissionPrompt": true
 }
