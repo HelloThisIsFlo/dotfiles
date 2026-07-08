@@ -17,9 +17,25 @@ Create clear explanatory notes in Flo's Obsidian agent sandbox.
 ## Required Companion Skills
 
 - Use `obsidian-cli` for vault lookup, reads, and writes when Obsidian interaction is needed.
-- Use `obsidian-markdown` for Obsidian-valid Markdown, frontmatter, wikilinks, callouts, embeds, and Mermaid.
+- Use `obsidian-markdown` for Obsidian-valid Markdown, wikilinks, callouts, embeds, and Mermaid.
+- Ignore `obsidian-markdown`'s generic frontmatter guidance for this workflow.
 - Use `apply-style` for Flo's documentation style.
 - Do not duplicate Flo's full style rules in this skill; defer to `apply-style` and the base agent instructions.
+
+## Hard Formatting Rules
+
+- Do not write YAML frontmatter in sandbox notes or sandbox `INDEX.md` files.
+  - No opening `---` property block.
+  - No `title`, `tags`, `created`, `status`, or similar metadata properties.
+  - Put useful context in normal Markdown only when it helps future reading.
+- Do not repeat the filename as the first `# H1`.
+  - The note title lives in the filename.
+  - Start with useful content instead:
+    - a callout
+    - a `##` section
+    - a Mermaid diagram
+    - a short result / mental-model statement
+  - Use an H1 only when the user explicitly asks for one or when it is not just the filename repeated.
 
 ## Workflow
 
@@ -63,7 +79,8 @@ Do not turn `INDEX.md` into the full explanation unless the user explicitly want
 
 Default to a note that helps another agent or future Flo understand the work quickly:
 
-- Start with the result or mental model.
+- Start with the result or mental model, not a repeated title.
+- Use `##` headings for sections by default.
 - Include a Mermaid diagram when it materially improves understanding.
 - Use concrete examples from the current project or artifact.
 - Clearly separate:
