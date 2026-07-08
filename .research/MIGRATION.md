@@ -21,7 +21,9 @@ Each phase checklist includes Mackup cleanup items — a phase is not done until
 
 ## Current State
 
-Last verified: 2026-03-03
+Last broad audit: 2026-03-03
+
+Live chezmoi state changes frequently. Check it with `chezmoi status`; do not treat this tracker as a live status snapshot.
 
 ### Summary
 
@@ -30,7 +32,7 @@ Last verified: 2026-03-03
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
 | chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless, rbw hook, delta diff, autoCommit off |
 | Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
-| `rbw` on machine                              | Configured        | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi           |
+| `rbw` / Bitwarden                             | Temporary current | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi. Next secret-backend step is 1Password, not deferred cleanup. |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
@@ -45,16 +47,16 @@ Last verified: 2026-03-03
 | `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
-| `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 (rbw templates). |
+| `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 secret-backend migration. |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
-| `~/.cloudflared/`                             | Partial           | Cloudflare Tunnel. Configs managed (`config-themac.yml.tmpl` homeDir-templatised, `symlink_config.yml.tmpl`, `README.md` under `private_dot_cloudflared/`). Secrets still unmanaged: `cert.pem`, `d5f42136-...json` — Phase 4 (rbw template). |
+| `~/.cloudflared/`                             | Partial           | Cloudflare Tunnel. Configs managed (`config-themac.yml.tmpl` homeDir-templatised, `symlink_config.yml.tmpl`, `README.md` under `private_dot_cloudflared/`). Secrets still unmanaged: `cert.pem`, `d5f42136-...json` — Phase 4 secret-backend migration. |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
 
 ### What works
 
 - `chezmoi apply` runs successfully
-- `chezmoi status` is clean — no plist noise
+- Raw plist noise reduced by forgetting volatile plist files
 - `delta` diff pager — readable diffs
 - `plutil` textconv — binary plists shown as XML in diffs
 - Brewfile workflow (`cmbrew` alias)
@@ -105,7 +107,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] Add `.amethyst.yml` macOS guard in `.chezmoiignore`
 - [x] Delete Mackup sources for 8 migrated files
 - [x] `.npmrc`: inspected — no auth tokens, just stale Python paths and commented defaults. **Dropped** (symlink + Mackup source deleted, not added to chezmoi)
-- [ ] `.logseq/`: **deferred to Phase 4** — plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Needs rbw template.
+- [ ] `.logseq/`: **deferred to Phase 4** — plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Needs secret-backend template.
 - [x] `.spacemacs.d/`: migrated `init.el` + `layers/the-standalones/packages.el` (archived config, not actively used)
 - [x] `.ipython/`: migrated `profile_default/ipython_config.py` only (skipped runtime dirs)
 - [x] Cleanup: `.tmux.conf` deprecated section removed + 4 QoL settings added; `.ansible.cfg` stale inventory removed; `.amethyst.yml` floating list updated
@@ -121,27 +123,29 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
+- [ ] **Interview/design 1Password migration** — this is the next secret-backend step. Confirm `op` CLI setup, vault/item naming, chezmoi integration pattern, and migration path from existing rbw template calls.
 - [ ] Triage each secret file — inspect contents, decide keep/drop/template
-- [ ] `.secrets.env` — env vars with secrets, needs rbw template
+- [x] `FASTLANE_SESSION` — temporary rbw item `fastlane-session`, exposed via `~/.config/fish/conf.d/03__secrets.fish` template until the 1Password migration lands.
+- [ ] `.secrets.env` — env vars with secrets, needs secret-backend template
 - [ ] `.tadl-pass` — TADL password
 - [ ] `.tadl-minion` — TADL agent config
 - [ ] `.cli_chat.json` — API tokens/credentials
-- [ ] `.aws/config` + `.aws/credentials` — AWS profiles and access keys, needs rbw template
-- [ ] `.config/exercism/user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`). Decide: still in use? If yes, rbw template + fix path. If no, delete symlink + Mackup source.
+- [ ] `.aws/config` + `.aws/credentials` — AWS profiles and access keys, needs secret-backend template
+- [ ] `.config/exercism/user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`). Decide: still in use? If yes, secret-backend template + fix path. If no, delete symlink + Mackup source.
 - [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
 - [ ] `~/.cloudflared/`: Cloudflare Tunnel (TheMac tunnel for kempenich.dev)
-  - [ ] `cert.pem` — Argo Tunnel token (account ID + API token). Needs rbw template.
-  - [ ] `d5f42136-9272-4ae2-afa0-1f96eacf7dd1.json` — tunnel credentials (AccountTag, TunnelSecret, TunnelID). Needs rbw template.
+  - [ ] `cert.pem` — Argo Tunnel token (account ID + API token). Needs secret-backend template.
+  - [ ] `d5f42136-9272-4ae2-afa0-1f96eacf7dd1.json` — tunnel credentials (AccountTag, TunnelSecret, TunnelID). Needs secret-backend template.
   - [x] `config-themac.yml` — managed as `private_dot_cloudflared/config-themac.yml.tmpl`, `credentials-file` path uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `config.yml` — managed as `private_dot_cloudflared/symlink_config.yml.tmpl`, symlink target uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `README.md` — managed as `private_dot_cloudflared/README.md`, plain file. (2026-05-17)
-- [ ] `~/.ssh/` private keys — migrate via rbw templates (`private_*.tmpl`, `{{ (rbw "...") }}`). Currently unmanaged; `.ssh/config` is templatised but the keys it references are not.
-  - [ ] `id_rsa` — main key. rbw template.
-  - [ ] `id_rsa_remarkable` — reMarkable key. rbw template (or drop if reMarkable access retired).
-  - [ ] `move_key` — Ableton Move key (referenced by the `move.local`/`movedevice` hosts in `private_config.tmpl`). rbw template.
+- [ ] `~/.ssh/` private keys — migrate via the chosen 1Password-backed template pattern. Currently unmanaged; `.ssh/config` is templatised but the keys it references are not.
+  - [ ] `id_rsa` — main key. Secret-backend template.
+  - [ ] `id_rsa_remarkable` — reMarkable key. Secret-backend template (or drop if reMarkable access retired).
+  - [ ] `move_key` — Ableton Move key (referenced by the `move.local`/`movedevice` hosts in `private_config.tmpl`). Secret-backend template.
   - [ ] Decide per-key: rbw-store vs keep-local-only (machine-bound keys may not belong in the vault).
-- [ ] Organise Bitwarden vault items for chezmoi naming
-- [ ] Convert secret files to `.tmpl` with `{{ (rbw "...") }}` syntax
+- [ ] Organise secret vault items for chezmoi naming
+- [ ] Convert secret files to `.tmpl` files using the chosen 1Password-backed pattern
 - [ ] Verify `secrets = "error"` catches missed plaintext
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
@@ -326,7 +330,7 @@ These files live in `~/.config/` but were never managed by Mackup — they were 
 
 ### Phase 4: Wire Secrets into Templates
 
-> Goal: secret files managed via `rbw` template functions, no plaintext in source.
+> Goal: secret files managed via the next 1Password-backed template pattern, no plaintext in source. `rbw` remains only the temporary current mechanism for already-wired items like `FASTLANE_SESSION`.
 
 Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secrets)
 
@@ -334,20 +338,21 @@ Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secret
 
 | Symlink | Contents | Notes |
 |---|---|---|
-| `~/.secrets.env` | Environment variables with secrets | Needs rbw template |
-| `~/.tadl-pass` | TADL password | Needs rbw template |
-| `~/.tadl-minion` | TADL agent config | Needs rbw template |
-| `~/.cli_chat.json` | API tokens/credentials | Needs rbw template |
-| `~/.aws/` | `config` (profiles) + `credentials` (access keys) | Directory symlink. `config` may be plain, `credentials` needs rbw template |
-| `~/.config/exercism/` | `user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`) | Discovered 2026-03-03 audit. Decide: still in use? If yes, rbw + fix path. If no, delete symlink + Mackup source. |
+| `~/.secrets.env` | Environment variables with secrets | Needs secret-backend template |
+| `~/.tadl-pass` | TADL password | Needs secret-backend template |
+| `~/.tadl-minion` | TADL agent config | Needs secret-backend template |
+| `~/.cli_chat.json` | API tokens/credentials | Needs secret-backend template |
+| `~/.aws/` | `config` (profiles) + `credentials` (access keys) | Directory symlink. `config` may be plain, `credentials` needs secret-backend template |
+| `~/.config/exercism/` | `user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`) | Discovered 2026-03-03 audit. Decide: still in use? If yes, secret-backend template + fix path. If no, delete symlink + Mackup source. |
 
 **Also deferred from Phase 3:**
 - `.logseq/`: plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Migrate config subset (preferences.json, config/, settings/).
 
 **Steps:**
+- Interview/design the 1Password migration — confirm `op` CLI setup, vault/item naming, and template invocation pattern
 - Triage each file — inspect contents, decide keep/drop/template
-- Organise Bitwarden vault items with consistent naming for chezmoi
-- Convert secret files to `.tmpl` files using `{{ (rbw "...") }}` syntax
+- Organise secret vault items with consistent naming for chezmoi
+- Convert secret files to `.tmpl` files using the chosen 1Password-backed pattern
 - Verify `secrets = "error"` catches any missed plaintext
 
 ### Phase 5: Migrate Volatile Plists to `run_onchange_` Scripts
@@ -559,5 +564,3 @@ Reverse-chronological log.
 | config-in-the-cloud/ audit   | MIGRATION.md §Source Audit                                              | Subfolder inventory                               |
 | Ansible SSH config template  | `ansible-magic/.../base_ssh_config`                                     | Source for `~/.ssh/config`                        |
 | Dev Environment Steps (from Notion) | [Dev Environment Steps](2026-02-26/Dev%20Environment%20Steps%20(from%20Notion).md) | Manual setup steps — feeds Phase 6.5 automation |
-
-
