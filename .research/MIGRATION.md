@@ -123,7 +123,7 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
-- [ ] **Interview/design 1Password migration** — this is the next secret-backend step. Confirm `op` CLI setup, vault/item naming, chezmoi integration pattern, and migration path from existing rbw template calls.
+- [ ] **Interview/design 1Password migration** — this is the next secret-backend step. Known status: 1Password is installed and authenticated. Still open: vault/item naming conventions, chezmoi integration pattern, and migration path from existing rbw template calls. Research best practices before deciding.
 - [ ] Triage each secret file — inspect contents, decide keep/drop/template
 - [x] `FASTLANE_SESSION` — temporary rbw item `fastlane-session`, exposed via `~/.config/fish/conf.d/03__secrets.fish` template until the 1Password migration lands.
 - [ ] `.secrets.env` — env vars with secrets, needs secret-backend template
@@ -349,7 +349,7 @@ Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secret
 - `.logseq/`: plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Migrate config subset (preferences.json, config/, settings/).
 
 **Steps:**
-- Interview/design the 1Password migration — confirm `op` CLI setup, vault/item naming, and template invocation pattern
+- Interview/design the 1Password migration — `op` setup is already installed/authenticated; research best-practice vault/item naming, choose the template invocation pattern, then plan migration from existing rbw calls
 - Triage each file — inspect contents, decide keep/drop/template
 - Organise secret vault items with consistent naming for chezmoi
 - Convert secret files to `.tmpl` files using the chosen 1Password-backed pattern
