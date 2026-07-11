@@ -1,6 +1,12 @@
 ---
 name: commit-by-theme
-description: "Help the user commit changes grouped by theme — reviewing staged/unstaged diffs, splitting unrelated changes into separate commits, and flagging work-in-progress. Use when the user asks to commit staged changes, asks what the git state looks like, wants help organizing commits, says things like 'commit what I staged', 'commit this', 'what clusters do you see', 'help me sort out these changes', 'commit by theme', or presents a messy working tree and wants guidance on how to commit it cleanly. Also trigger when the user lists specific files and asks to commit them, or wants to split a commit into multiple."
+description: >
+  Inspect and organize ambiguous, heterogeneous, or multi-agent working trees
+  into coherent thematic commits. Use when the commit scope is unclear, changes
+  may contain multiple themes, staging needs review, work has accumulated over
+  time, or the user explicitly asks to triage or split changes. Do not use for
+  a straightforward commit when the conversation already establishes one clear,
+  cohesive scope; commit those changes directly.
 ---
 
 # Commit by Theme
