@@ -1,4 +1,6 @@
 interface:
-  display_name: "Prepare WalkAndLearn Input"
-  short_description: "Prepare clipboard sessions for LangGraph"
-  default_prompt: "Use $prepare-walkandlearn-input to turn my clipboard conversation into a WalkAndLearn input file."
+  display_name: "Prepare WalkAndLearn Input (Legacy)"
+  short_description: "Prepare clipboard input for legacy LangGraph"
+  default_prompt: "Use $prepare-walkandlearn-input to prepare my clipboard conversation for the legacy WalkAndLearn LangGraph UI."
+policy:
+  allow_implicit_invocation: false

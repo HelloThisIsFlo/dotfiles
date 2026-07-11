@@ -1,15 +1,17 @@
 ---
 name: prepare-walkandlearn-input
-description: Prepare a WalkAndLearn LangGraph input file from a conversation copied to the macOS clipboard. Use when the user says they have a clipboard conversation/session/export to turn into a WalkAndLearn or W&L Summary input, asks for a LangGraph state block for a copied conversation, or wants the WalkAndLearn UI workflow prepared from clipboard text.
+description: Legacy adapter that prepares a WalkAndLearn LangGraph input file and UI state JSON from a conversation copied to the macOS clipboard. Use only when the user explicitly asks for the legacy LangGraph workflow, LangGraph Studio/UI, or a WalkAndLearn graph state block. Do not use for Codex-native WalkAndLearn summarization; use generate-walkandlearn-summary instead.
 ---
 
-# Prepare WalkAndLearn Input
+# Prepare WalkAndLearn Input (Legacy LangGraph)
 
 ## Purpose
 
-Turn a clipboard conversation export into a local ignored input file for the
-`W&L Summary` LangGraph graph, then copy the ready state JSON back to the
-clipboard.
+Retain the old LangGraph input workflow for explicit rollback use. Turn a
+clipboard conversation export into a local ignored input file for the `W&L
+Summary` graph, then copy the ready state JSON back to the clipboard.
+
+For native Codex generation, stop and use `generate-walkandlearn-summary`.
 
 Default target repo:
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate WalkAndLearn Summary"
+  short_description: "Research, repair, and audit WalkAndLearn summaries"
+  default_prompt: "Use $generate-walkandlearn-summary to generate transcript-grounded candidates, verify technical correctness, repair audit failures, and publish the accepted WalkAndLearn set to Obsidian."

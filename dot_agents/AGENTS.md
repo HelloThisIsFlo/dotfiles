@@ -126,6 +126,13 @@ Login shell fish. Bash tool runs through fish, not bash.
 - Do not create new shared personal skills under `~/.codex/skills`.
 - Skip Codex per-skill adapters unless verification proves Codex cannot load `~/.agents/skills`.
 
+### Intentional Codex-only skills
+
+- `generate-walkandlearn-summary`
+  - Requires Codex-native sub-agent orchestration and `fork_turns="none"`.
+  - Do not flag it as an unmigrated shared skill or add a Claude adapter.
+  - Reconsider only when deliberately porting its orchestration contract.
+
 ## Prompts for Sub-Agents
 
 Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
