@@ -1,0 +1,4 @@
+interface:
+  display_name: "Onboard Job Application"
+  short_description: "Evaluate, rank, inspect, and add a job application"
+  default_prompt: "Use $onboard-job-application to evaluate this role against my current vault context, inspect its application requirements, and add or update it in my Obsidian application dashboard."
