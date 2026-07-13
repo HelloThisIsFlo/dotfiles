@@ -1,6 +1,6 @@
 # Active Work In Progress
 
-Last updated: 2026-07-08
+Last updated: 2026-07-13
 
 These dirty paths are intentional WIP. Do not treat them as ready to commit unless Flo explicitly says so.
 
@@ -8,6 +8,17 @@ These dirty paths are intentional WIP. Do not treat them as ready to commit unle
   - `private_dot_tmux.conf` is currently clean.
   - `private_dot_tmux.conf.bak` exists as a small TPM/resurrect reference.
   - Tmux remains WIP until the BAK file is reconciled, deleted, or intentionally onboarded.
+
+- `.chezmoi.toml.tmpl`
+  - Part of the declarative Time Machine policy package.
+- `.chezmoidata/time-machine.yaml`
+  - Time Machine inclusion and exclusion policy.
+- `.chezmoiscripts/Z--AFTER/run_onchange_after_0012-MACOS-time-machine-policy.sh.tmpl`
+  - Time Machine policy reconciliation script.
+- `.research/MIGRATION.md`
+  - Time Machine policy documentation and migration tracking.
+  - The package looks structurally complete but has not been tested on the real machine.
+  - Keep all four paths as WIP until the `plan`, `apply`, and `verify` flows have been exercised and Flo explicitly approves the result.
 
 - `dot_config/nvim/lua/config/keymaps.lua`
   - Arrow-key remap experiment.
