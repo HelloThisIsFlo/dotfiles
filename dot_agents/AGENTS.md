@@ -62,6 +62,15 @@ When the current working directory is exactly `$HOME`, treat it as a personal ad
 - Prefer direct, concise help for one-off admin, file management, scripting, and research tasks.
 - If the user references a project, `cd` into that project and check for its own instruction files.
 
+## Chezmoi-Managed Home Files
+
+Before editing an existing path under `$HOME` that is outside a Git working tree, run `chezmoi source-path -- <absolute-target-path>`.
+
+- **Exit `0`:** edit the returned source path, then run `chezmoi --no-tty apply -- <absolute-target-path>` followed by `chezmoi --no-tty verify -- <absolute-target-path>`. Continue only if both succeed.
+- **Explicitly unmanaged or outside chezmoi’s destination:** edit the original target normally. Stop the chezmoi workflow.
+- **Any other nonzero exit:** stop and report the error.
+- Never run an unscoped `chezmoi apply` through this workflow. A broad apply requires an explicit user request.
+
 <!-- GSD:profile-start -->
 ## Developer Profile
 
