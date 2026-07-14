@@ -24,6 +24,8 @@ If an expected entry point moved, search the vault by concept and content. Do no
 
 Build a temporary decision model for this run. Do not persist a separate profile and do not copy personal facts into the skill.
 
+The parent agent owns this model. Browser workers may inspect role and application evidence, but must not map Flo's experience, assign fit scores, set priority, or write candidate records.
+
 ### Current CV and evidence
 
 1. Resolve the current CV location from the live Job Search material.
@@ -72,7 +74,7 @@ Stop when another pass adds no material evidence, goal, constraint, preference, 
 - expressed preference
 - agent inference
 
-## 3. Establish role truth
+## 3. Establish official role facts
 
 Use the supplied advert or URL as the starting point. Prefer the official company job page and official application form over aggregators.
 
@@ -90,46 +92,25 @@ Capture:
 
 If a listing is stale or unavailable, find the official current page where possible and record the uncertainty.
 
-## 4. Evaluate fit
+Before persisting any role or application URL:
 
-### Candidate Fit
+- strip URL credentials, fragments and tracking parameters
+- redact query values that carry tokens, sessions, invitations, signatures, authentication, keys or authorization codes
+- when redaction breaks access, store the public URL or page descriptor and record that a live session is required
+- never copy the sensitive value into a candidate note or batch artifact
 
-Answer: **How strong is the current evidence that Flo can perform and interview for this role?**
-
-Use the live score meaning documented in the current ranking material. Preserve the existing 1–5 scale and half-point increments. Explain:
-
-- strongest direct evidence
-- transferable adjacent evidence
-- meaningful gaps
-- claims that must not be overstated
-
-### Goal Fit
-
-Answer: **Would obtaining this role move Flo toward the professional identity and working conditions he currently wants?**
-
-Use current vault evidence for trajectory, seniority, substantive work, logistics, compensation, and trade-offs. Do not equate comfortable skill overlap with strategic value.
-
-### Relative ranking
-
-Read every current candidate's scores, priority, status, and role family. Place the new role relative to the live queue using:
-
-- Candidate Fit and Goal Fit
-- strategic career value
-- credible interview probability
-- seniority preservation
-- compensation and logistics
-- application effort
-- urgency or deadline
-- warm path versus cold application
-- how the role compounds Flo's strongest evidence
-
-Do not mechanically add the fit scores. Assign an integer `triage_priority` from 0–100. Ties are allowed. Do not renumber existing candidates merely to create space.
-
-Use only role families currently defined by the live triage guide unless the existing system clearly cannot represent the role; ask before introducing a new family.
-
-## 5. Inspect the application
+## 4. Inspect the role and application
 
 Use the Browser plugin for the official role and application pages. When authentication hides information, try the user's logged-in Chrome surface when it is available and appropriate.
+
+For a single input, the parent may perform this inspection directly.
+
+For a batch:
+
+- use the isolated persistent browser worker defined in `batch-workflow.md`
+- give it no CV, personal decision context, scores, candidate records, manifest or live queue
+- require the current attempt-specific audit packet before the worker returns
+- evaluate fit and write the candidate from the accepted packet plus the shared decision context
 
 Allowed browser actions:
 
@@ -167,7 +148,44 @@ If blocked:
 - finish the record with the evidence available
 - give Flo the direct link and a precise request for what to report back
 
-If browser control is unavailable, use read-only web retrieval for role truth, mark the form audit unverified, and report the limitation.
+If browser control is unavailable, use read-only web retrieval for official role facts, mark the form audit unverified, and report the limitation.
+
+## 5. Evaluate fit
+
+### Candidate Fit
+
+Answer: **How strong is the current evidence that Flo can perform and interview for this role?**
+
+Use the live score meaning documented in the current ranking material. Preserve the existing 1–5 scale and half-point increments. Explain:
+
+- strongest direct evidence
+- transferable adjacent evidence
+- meaningful gaps
+- claims that must not be overstated
+
+### Goal Fit
+
+Answer: **Would obtaining this role move Flo toward the professional identity and working conditions he currently wants?**
+
+Use current vault evidence for trajectory, seniority, substantive work, logistics, compensation, and trade-offs. Do not equate comfortable skill overlap with strategic value.
+
+### Relative ranking
+
+Read every current candidate's scores, priority, status, and role family. Place the new role relative to the live queue using:
+
+- Candidate Fit and Goal Fit
+- strategic career value
+- credible interview probability
+- seniority preservation
+- compensation and logistics
+- application effort
+- urgency or deadline
+- warm path versus cold application
+- how the role compounds Flo's strongest evidence
+
+Do not mechanically add the fit scores. Assign an integer `triage_priority` from 0–100. Ties are allowed. Do not renumber existing candidates merely to create space.
+
+Use only role families currently defined by the live triage guide unless the existing system clearly cannot represent the role; ask before introducing a new family.
 
 ## 6. Create or update the record
 
@@ -219,6 +237,11 @@ The block contains only useful sections:
 - blockers and unknowns
 - official job and application links
 
+Keep the block concise without imposing a word limit:
+
+- state each role fact, trade-off and application requirement once
+- preserve exact questions, evidence boundaries and material blockers even when they make the block longer
+
 `<!-- onboard-job-application:end -->`
 
 Do not repeat the filename as an H1. Use a result-first callout and `##` sections.
@@ -235,14 +258,15 @@ For a legacy record without markers:
 ## 7. Verify and report
 
 1. Confirm the candidate note is valid Obsidian Markdown and its frontmatter parses.
-2. Open the Base in Obsidian and force a live reload when external edits are cached.
-3. Confirm:
+2. For a single input, open the Base in Obsidian and force a live reload when external edits are cached.
+3. For a batch, use the CLI-first verification path in `batch-workflow.md` instead of opening the Base for each candidate.
+4. Confirm:
    - the record appears
    - the derived lane matches the audited requirements
    - a CV-only role enters Apply Next
    - a Ready to Apply role enters Apply Next and leaves Needs Preparation
    - Skip and Applied records do not remain in active queues
-4. Report:
+5. Report:
    - verdict and both fit scores
    - priority and nearest comparison roles
    - application lane and remaining work
