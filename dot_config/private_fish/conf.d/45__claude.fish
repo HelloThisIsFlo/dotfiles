@@ -9,7 +9,7 @@ function gsd-update --description "Update GSD across all AI CLIs"
         claude \
         codex \
         cursor \
-        gemini
+        antigravity
     # ────────────────────────────────────────────────
 
     argparse 'statusline' -- $argv
