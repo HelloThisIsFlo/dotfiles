@@ -740,9 +740,16 @@ def is_uncertainty_worded(value: str) -> bool:
         "unresolved",
         "unverified",
         "not established",
+        "cannot establish",
+        "cannot be asserted",
         "cannot confirm",
+        "could not establish",
+        "could not be established",
         "could not confirm",
+        "unable to verify",
+        "unable to confirm",
         "insufficient evidence",
+        "evidence is inconclusive",
     )
     return any(marker in lower for marker in markers)
 

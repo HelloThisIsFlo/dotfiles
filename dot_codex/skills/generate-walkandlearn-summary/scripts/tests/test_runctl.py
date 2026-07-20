@@ -79,6 +79,25 @@ class RunControllerTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.tempdir.cleanup()
 
+    def test_uncertainty_wording_accepts_cautious_claims_not_generic_text(self):
+        accepted = (
+            "This cannot be asserted from the available primary evidence.",
+            "The claim could not be established by the reviewed sources.",
+            "The evidence is inconclusive.",
+            "We were unable to verify this claim.",
+        )
+        rejected = (
+            "",
+            "The claim is correct.",
+            "The concept definitely exists.",
+        )
+        for value in accepted:
+            with self.subTest(value=value):
+                self.assertTrue(runctl.is_uncertainty_worded(value))
+        for value in rejected:
+            with self.subTest(value=value):
+                self.assertFalse(runctl.is_uncertainty_worded(value))
+
     def args(self, **values):
         defaults = {
             "repo": self.repo,
@@ -730,6 +749,9 @@ class RunControllerTests(unittest.TestCase):
         prepared = runctl.prepare_technical_review(self.args(run_id=run_id))
         payload = self.research_payload(prepared, unresolved=True)
         finding = payload["findings"][0]
+        finding["correction"] = (
+            "This cannot be asserted from the available primary evidence."
+        )
         self.assertEqual(finding["assessment"], "unresolved")
         self.assertNotIn("does not exist", finding["correction"].lower())
         Path(prepared["output_path"]).write_text(json.dumps(payload), encoding="utf-8")
