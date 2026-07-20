@@ -1,4 +1,5 @@
 **/.DS_Store
+**/__pycache__
 .research
 
 {{ if ne .trust_level "personal" }}
@@ -30,6 +31,7 @@
 # ──────── Codex
 .codex/skills/.system
 .codex/skills/codex-primary-runtime
+.codex/skills/chronicle
 .codex/skills/hatch-pet
 
 # ────── External shared skills
