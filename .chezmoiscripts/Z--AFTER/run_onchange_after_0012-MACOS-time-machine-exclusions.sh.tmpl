@@ -1,0 +1,18 @@
+{{- if .time_machine_enabled -}}
+#!/bin/sh
+set -eu
+
+echo "Time Machine exclusions need admin access. You may be asked for your password."
+sudo -v
+
+while IFS= read -r path
+do
+    sudo tmutil addexclusion -p "$path"
+    tmutil isexcluded "$path" | grep '^\[Excluded\]' || {
+        echo "Could not verify Time Machine exclusion: $path" >&2
+        exit 1
+    }
+done <<EOF
+{{ range .time_machine_exclusions }}{{ . }}
+{{ end }}EOF
+{{ end -}}

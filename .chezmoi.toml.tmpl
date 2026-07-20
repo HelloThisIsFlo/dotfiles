@@ -30,6 +30,7 @@
     TheHome has Kubernetes; DadHome has Plex.
 */}}
 {{ $host_universe := promptChoiceOnce . "host_universe" "Which universe does this host belong to?" (list "TheMac" "TheHome" "DadHome" "Other") "Other" -}}
+{{ $time_machine_enabled := and (eq .chezmoi.os "darwin") (eq $trust_level "personal") (not $is_headless) -}}
 
 
 [data]
@@ -40,6 +41,8 @@
     trust_level = {{ $trust_level | quote }}
     is_headless = {{ $is_headless }}
     host_universe = {{ $host_universe | quote }}
+    # Time Machine enabled
+    time_machine_enabled = {{ $time_machine_enabled }}
 {{- if eq .chezmoi.os "darwin" }}
     os = "macos"
 {{- else if eq .chezmoi.os "linux" }}

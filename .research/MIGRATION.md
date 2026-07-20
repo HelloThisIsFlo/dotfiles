@@ -30,12 +30,13 @@ Live chezmoi state changes frequently. Check it with `chezmoi status`; do not tr
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless, rbw hook, delta diff, autoCommit off |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless; derives `time_machine_enabled`; rbw hook, delta diff, autoCommit off |
 | Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
 | `rbw` / Bitwarden                             | Temporary current | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi. Next secret-backend step is 1Password, not deferred cleanup. |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
+| Time Machine exclusions                       | Managed           | `time_machine_enabled` is derived for personal GUI Macs; a small exclusions-only script applies and verifies eight fixed-path exclusions |
 | Mackup public dotfiles                        | Nearly done       | 1 symlink remains (`.logseq/` — deferred to Phase 4, has API key). `.npmrc` dropped. `.spacemacs.d/`, `.ipython/` migrated. |
 | Mackup secret dotfiles                        | Still symlinked   | 6 symlinks → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
 | macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
@@ -182,6 +183,7 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
     go = ["github.com/cheat/cheat/cmd/cheat@latest"]
 ```
 
+- [x] Time Machine exclusions — derive the `time_machine_enabled` machine capability, apply eight fixed-path exclusions, and verify existing paths
 - [ ] Add `[data.tools]` tables to `.chezmoi.toml.tmpl`
 - [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
 - [ ] ~~Verify asdf deps are in `dot_Brewfile`~~ — asdf removed, mise handles tool installation
@@ -510,6 +512,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-07-13 | Time Machine exclusions (Phase 6.5) | Added the derived `time_machine_enabled` capability and a small idempotent add-and-verify script for eight fixed-path exclusions. Removing an exclusion is deliberately manual. Existing snapshots are unchanged. |
 | 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl` (homeDir-templatised credentials path), `symlink_config.yml.tmpl` (homeDir-templatised target), `README.md`. Secrets (`cert.pem`, `d5f42136-...json`) still pending rbw templates. |
 | 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |

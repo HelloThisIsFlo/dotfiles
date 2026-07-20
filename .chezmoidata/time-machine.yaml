@@ -1,0 +1,19 @@
+# Fixed-path Time Machine exclusions for eligible personal GUI Macs.
+# Everything not listed here follows Time Machine's normal inclusion behavior.
+# To stop managing an exclusion, remove it explicitly with `tmutil
+# removeexclusion -p` before deleting it from this list.
+# `$HOME` is expanded by the rendered shell script; absolute paths can start
+# with `/`.
+
+time_machine_exclusions:
+  # Re-downloadable Ableton factory content.
+  - $HOME/Music/Ableton/Factory Packs
+
+  # Reproducible caches and Apple development state.
+  - $HOME/.cache
+  - $HOME/Library/Developer/XCTestDevices
+  - $HOME/Library/Developer/CoreSimulator
+  - $HOME/Library/Developer/Xcode/DerivedData
+  - $HOME/Library/Developer/Xcode/iOS DeviceSupport
+  - $HOME/Library/Developer/Xcode/watchOS DeviceSupport
+  - $HOME/Library/Developer/Xcode/visionOS DeviceSupport
