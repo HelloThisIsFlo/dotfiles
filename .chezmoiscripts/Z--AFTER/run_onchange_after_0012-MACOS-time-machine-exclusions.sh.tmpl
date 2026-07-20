@@ -5,14 +5,69 @@ set -eu
 echo "Time Machine exclusions need admin access. You may be asked for your password."
 sudo -v
 
+time_machine_plist=/Library/Preferences/com.apple.TimeMachine.plist
+
+desired_paths=$(
+    jq -Rsc 'split("\n") | map(select(length > 0 and (startswith("#") | not))) | unique' <<EOF
+
+# =============================================================================
+# ONLY THESE PATHS ARE MANAGED AS TIME MACHINE FIXED-PATH EXCLUSIONS
+# Any other user-managed fixed-path exclusion will be removed.
+# =============================================================================
+
+{{ range .time_machine_exclusions }}{{ . }}
+{{ end }}
+# =============================================================================
+# END OF MANAGED TIME MACHINE EXCLUSION PATHS
+# =============================================================================
+
+EOF
+)
+
+read_skip_paths() {
+    if [ ! -e "$time_machine_plist" ]; then
+        printf '[]\n'
+        return
+    fi
+
+    plutil -lint "$time_machine_plist" >/dev/null
+    if plutil -type SkipPaths "$time_machine_plist" >/dev/null 2>&1; then
+        plutil -extract SkipPaths json -expect array -o - "$time_machine_plist" |
+            jq -ce 'if all(.[]; type == "string") then unique else error("SkipPaths contains a non-string value") end'
+    else
+        printf '[]\n'
+    fi
+}
+
+current_paths=$(read_skip_paths)
+
+printf '%s\n' "$desired_paths" | jq -r '.[]' |
 while IFS= read -r path
 do
+    echo "Ensuring Time Machine exclusion: $path"
     sudo tmutil addexclusion -p "$path"
-    tmutil isexcluded "$path" | grep '^\[Excluded\]' || {
-        echo "Could not verify Time Machine exclusion: $path" >&2
-        exit 1
-    }
-done <<EOF
-{{ range .time_machine_exclusions }}{{ . }}
-{{ end }}EOF
+done
+
+jq -nr --argjson current "$current_paths" --argjson desired "$desired_paths" \
+    '($current | unique) - ($desired | unique) | .[]' |
+while IFS= read -r path
+do
+    echo "Removing unmanaged Time Machine exclusion: $path"
+    sudo tmutil removeexclusion -p "$path"
+done
+
+for attempt in 1 2 3 4 5
+do
+    current_paths=$(read_skip_paths)
+    if jq -en --argjson current "$current_paths" --argjson desired "$desired_paths" \
+        '($current | unique | sort) == ($desired | unique | sort)' >/dev/null
+    then
+        echo "Time Machine exclusions match the configured list."
+        exit 0
+    fi
+    sleep 1
+done
+
+echo "Time Machine exclusions do not match the configured list." >&2
+exit 1
 {{ end -}}
