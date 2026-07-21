@@ -1,6 +1,6 @@
 interface:
   display_name: "Chezmoi Status"
-  short_description: "Visual, verified dotfiles health dashboard"
+  short_description: "Manual-only verified dotfiles health dashboard"
   default_prompt: "Use $chezmoi-status to show the verified state of my chezmoi-managed dotfiles."
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

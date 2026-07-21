@@ -1,17 +1,26 @@
 ---
 name: chezmoi-status
 description: >
-  Produce a short, visual, evidence-backed health report for Flo's
-  chezmoi-managed dotfiles from any working directory. Use only when explicitly
-  invoked as $chezmoi-status or when the user unmistakably asks for the state,
-  status, or health of chezmoi or the dotfiles repository. Do not trigger for a
-  generic project-status or Git-status request.
+  Manual invocation only. Produce a short, visual, evidence-backed health
+  report for Flo's chezmoi-managed dotfiles. Use exclusively when the user
+  explicitly invokes $chezmoi-status. Never trigger automatically from context,
+  from being inside the chezmoi repository, or from generic questions about
+  status, health, Git, open loops, readiness, or closing a session.
 ---
 
 # Chezmoi Status
 
 Report the relationship between the live home directory, chezmoi source, Git,
 shared agent assets, and the migration tracker. Remain strictly read-only.
+
+## Trigger policy
+
+This is a **manual-only** skill.
+
+- Run it only when the user's message explicitly invokes `$chezmoi-status`.
+- Never infer invocation from the current repository or conversation topic.
+- Never treat generic status, health, readiness, open-loop, Git, or
+  session-closing questions as invocation.
 
 ## Collect verified evidence
 
