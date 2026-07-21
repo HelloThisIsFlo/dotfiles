@@ -10,7 +10,7 @@ A [chezmoi](https://chezmoi.io) dotfiles repository for macOS (primary) with pla
 
 ## ⚠️ THIS IS A PUBLIC REPO — info-leak guardrail
 
-The GitHub remote is **public** (intentionally — secrets are kept out of source via `rbw` templates and `secrets = "error"`). But info disclosure beyond credentials can still happen by accident. Before any of the following actions, **pause and check** whether the content might leak something the user wouldn't want public:
+The GitHub remote is **public** (intentionally — secrets are kept out of source via password-manager templates and `secrets = "error"`). But info disclosure beyond credentials can still happen by accident. Before any of the following actions, **pause and check** whether the content might leak something the user wouldn't want public:
 
 - **Onboarding a new file** to chezmoi management (`chezmoi add` or hand-creating a source file)
 - **Writing a new cheatsheet or research doc** in `.research/`
@@ -44,7 +44,7 @@ This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Cur
 - **Tracker:** `.research/MIGRATION.md` — the living migration document. Read it for full status, phase checklists, and what's broken.
 - **~20 files still Mackup-symlinked** — `.gitconfig`, VS Code settings, secret env files, and others. Not yet in chezmoi.
 - **Plist drift** — 5 plists show MM (modified-modified) status. Apps write runtime data into tracked files. These will be replaced by `defaults write` scripts.
-- **Secrets not yet templated** — `rbw` is the decided tool but no templates use it yet.
+- **Secrets migration underway** — new migrations use 1Password; rbw remains temporarily for rollback and unmigrated consumers.
 
 **For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes. **After completing any migration work, update the Progress Checklist in `.research/MIGRATION.md` — check off finished items, update the Current State table, and add an entry to the Completed Items log.**
 
@@ -97,15 +97,25 @@ Output is `XY path/to/file`. The columns are **NOT** source vs target. They are:
 
 **Key trap:** ` M` does NOT mean "target has edits source doesn't know about." It means the opposite — source has updates ready to apply. Full details: `.research/cheatsheets/chezmoi/chezmoi-status.md`.
 
-## Architecture decisions (from .research/2026-02-25/decisions.md)
+## Architecture decisions
 
-- **Secrets via rbw only** — Rust Bitwarden CLI with background agent. Template syntax: `{{ (rbw "item-name").data.password }}` or `{{ (rbwFields "item-name").field_name.value }}`. No age encryption, no GPG, no official `bw` CLI.
+- **Secrets via 1Password** — new templates use `onepasswordRead` references into the `Chezmoi` vault. The current Mac uses account mode with desktop-app authorization (`prompt = false`). rbw remains only as a migration fallback until its final consumer is converted.
 - **Workflow: edit → apply, not re-add** — `chezmoi re-add` destroys template logic in `.tmpl` files. Only use re-add on plain (non-template) files.
 - **No age encryption for v1** — deferred until unattended apply or air-gapped servers are needed.
 
-## Secrets workflow (rbw) — conventions
+## Secrets workflow (1Password) — current convention
 
-> How secrets actually get created, named, stored, and consumed in this repo. The Architecture decision above is the *what*; this is the *how*.
+- **Vault:** `Chezmoi`.
+- **References:** use public-safe vault, item, and field names in `op://` references. Secret values never enter source.
+- **Scalar values:** use `{{ onepasswordRead "op://Chezmoi/item/field" }}`.
+- **Whole opaque files:** use `onepasswordDocument` only when the entire file is stored as a 1Password Document.
+- **Personal Mac authentication:** `[onepassword]` uses `mode = "account"` and `prompt = false`, delegating authorization to the 1Password desktop app.
+- **Eligibility:** gate personal secret-bearing targets by `trust_level` before template evaluation so non-personal machines never request the secret.
+- **Migration:** convert and verify one consumer at a time; retain its rbw item until the 1Password version is accepted.
+
+## Secrets workflow (rbw) — migration fallback
+
+> Keep this only while rbw consumers remain. Do not use it for new secret migrations.
 
 ### 🗂️ Vault layout
 - **All chezmoi-managed secrets live in the rbw folder `chezmoi`.** Keeps them grouped + greppable (`rbw list --fields name,folder | grep chezmoi`).

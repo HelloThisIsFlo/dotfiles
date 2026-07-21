@@ -30,9 +30,10 @@ Live chezmoi state changes frequently. Check it with `chezmoi status`; do not tr
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless; derives `time_machine_enabled`; rbw hook, delta diff, autoCommit off |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless; derives `time_machine_enabled`; 1Password account mode uses desktop authorization; delta diff; autoCommit off |
 | Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
-| `rbw` / Bitwarden                             | Temporary current | v1.15.0, email/lock-timeout/pinentry-mac set, wired into chezmoi. Next secret-backend step is 1Password, not deferred cleanup. |
+| 1Password                                     | Migration active  | `Chezmoi` vault; account mode with `prompt = false`; `FASTLANE_SESSION` is the first migrated consumer |
+| `rbw` / Bitwarden                             | Migration fallback | Retained for rollback and unmigrated consumers; remove only after the final rbw reference is converted |
 | `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
@@ -124,9 +125,9 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
-- [ ] **Interview/design 1Password migration** — this is the next secret-backend step. Known status: 1Password is installed and authenticated. Still open: vault/item naming conventions, chezmoi integration pattern, and migration path from existing rbw template calls. Research best practices before deciding.
+- [x] **Interview/design 1Password migration** — `Chezmoi` vault; `onepasswordRead` for scalar values; account mode with desktop authorization on personal Macs; service-account design for headless hosts deferred until needed.
 - [ ] Triage each secret file — inspect contents, decide keep/drop/template
-- [x] `FASTLANE_SESSION` — temporary rbw item `fastlane-session`, exposed via `~/.config/fish/conf.d/03__secrets.fish` template until the 1Password migration lands.
+- [x] `FASTLANE_SESSION` — migrated to 1Password item `Fastlane Session`, concealed field `credential`; rendered only on personal machines through a private Fish template. The rbw item remains temporarily for rollback.
 - [ ] `.secrets.env` — env vars with secrets, needs secret-backend template
 - [ ] `.tadl-pass` — TADL password
 - [ ] `.tadl-minion` — TADL agent config
@@ -144,7 +145,7 @@ At-a-glance view of every task. Check items off as they're completed.
   - [ ] `id_rsa` — main key. Secret-backend template.
   - [ ] `id_rsa_remarkable` — reMarkable key. Secret-backend template (or drop if reMarkable access retired).
   - [ ] `move_key` — Ableton Move key (referenced by the `move.local`/`movedevice` hosts in `private_config.tmpl`). Secret-backend template.
-  - [ ] Decide per-key: rbw-store vs keep-local-only (machine-bound keys may not belong in the vault).
+  - [ ] Decide per-key: 1Password SSH agent/document vs keep-local-only (machine-bound keys may not belong in the vault).
 - [ ] Organise secret vault items for chezmoi naming
 - [ ] Convert secret files to `.tmpl` files using the chosen 1Password-backed pattern
 - [ ] Verify `secrets = "error"` catches missed plaintext
@@ -155,7 +156,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] ShiftIt: `defaults write` for all `*KeyCode`/`*Modifiers` keys
 - [ ] Rocket: `defaults write` for trigger char, launch-at-login, use-fuzzy-search
 - [ ] Bartender: `defaults write` for `ProfileSettings.activeProfile`, `TriggerSettings`
-- [ ] Keyboard Maestro: manage `Macros.plist` as binary file; serial via rbw template
+- [ ] Keyboard Maestro: manage `Macros.plist` as binary file; serial via 1Password template
 - [ ] SteerMouse: manage `Device.smsetting` as binary file (not a plist)
 - [ ] iTerm2: `defaults write` for `GlobalKeyMap`, `Profiles`, `TabStyle` (do last — most complex)
 - [ ] Moom, Clocker, iStat Menus: already in chezmoi as plists — convert to run scripts
@@ -202,7 +203,7 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 - [ ] Clean `~/config-in-the-cloud/dotfiles/restored_via_mackup/`
 - [ ] Clean `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`
 - [ ] Clean `~/config-in-the-cloud/dotfiles-binary/restored_via_mackup/`
-- [ ] Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to rbw, archive stale contexts
+- [ ] Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to 1Password, archive stale contexts
 - [ ] Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
 - [ ] Build Claude Code assistant skill for health checks
 - [ ] Rewrite CLAUDE.md — remove migration section
@@ -225,7 +226,7 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 When migration is complete:
 
 - All config files managed by chezmoi (no Mackup symlinks remain)
-- Secrets injected via `rbw` templates — no plaintext secrets in source
+- Secrets injected via 1Password templates — no plaintext secrets in source
 - Volatile plists replaced by `run_onchange_` scripts with `defaults write`
 - `.chezmoi.toml.tmpl` prompts for machine type, email, headless flag
 - `chezmoi init --apply <github-user>` works from scratch on Mac + Linux
@@ -280,7 +281,7 @@ Public (`~/config-in-the-cloud/dotfiles/restored_via_mackup/`):
 | `~/.gitignore_global`    | Migrate (Phase 2)          | Referenced by .gitconfig                                                  |
 | `~/.tmux.conf`           | Migrate                    | Plain file, no templating needed                                          |
 | `~/.tool-versions`       | Migrate                    | asdf version pins (18 tools)                                              |
-| `~/.npmrc`               | Migrate (check for tokens) | May need rbw template if auth tokens present                              |
+| `~/.npmrc`               | Migrate (check for tokens) | May need a password-manager template if auth tokens are present           |
 | `~/.ideavimrc`           | Migrate                    | JetBrains vim bindings, plain file                                        |
 | `~/.ansible.cfg`         | Migrate                    | Sets default inventory path; low priority but real config                 |
 | `~/.asdfrc`              | Migrate                    | Plain file (`java_macos_integration_enable`)                              |
@@ -301,7 +302,7 @@ Secret (`~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
 
 | Symlink                  | Decision          | Notes                                |
 | ------------------------ | ----------------- | ------------------------------------ |
-| `~/.secrets.env`         | ? — Phase 4       | Secrets — needs rbw template         |
+| `~/.secrets.env`         | ? — Phase 4       | Secrets — needs 1Password template   |
 | `~/.tadl-pass`           | ? — Phase 4       | Secrets                              |
 | `~/.tadl-minion`         | ? — Phase 4       | Secrets                              |
 | `~/.cli_chat.json`       | ? — Phase 4       | Secrets                              |
@@ -332,7 +333,7 @@ These files live in `~/.config/` but were never managed by Mackup — they were 
 
 ### Phase 4: Wire Secrets into Templates
 
-> Goal: secret files managed via the next 1Password-backed template pattern, no plaintext in source. `rbw` remains only the temporary current mechanism for already-wired items like `FASTLANE_SESSION`.
+> Goal: secret files managed via the 1Password-backed template pattern, no plaintext in source. rbw remains only as a migration fallback for unmigrated consumers.
 
 Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secrets)
 
@@ -350,8 +351,16 @@ Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secret
 **Also deferred from Phase 3:**
 - `.logseq/`: plugin settings contain Gemini API key (`logseq-plugin-assistseq-ai-assistant.json`). Migrate config subset (preferences.json, config/, settings/).
 
+**Current 1Password contract:**
+- Vault: `Chezmoi`
+- Personal secret targets are gated by `trust_level`
+- Current Mac authentication: account mode, `prompt = false`, desktop-app authorization
+- Scalar secrets: `onepasswordRead`; opaque whole files only: `onepasswordDocument`
+- Secret targets are eligibility-gated before their templates are evaluated
+- Headless service-account vault design is deliberately deferred
+
 **Steps:**
-- Interview/design the 1Password migration — `op` setup is already installed/authenticated; research best-practice vault/item naming, choose the template invocation pattern, then plan migration from existing rbw calls
+- Migrate and verify one existing rbw consumer at a time; keep its rbw item for rollback until accepted
 - Triage each file — inspect contents, decide keep/drop/template
 - Organise secret vault items with consistent naming for chezmoi
 - Convert secret files to `.tmpl` files using the chosen 1Password-backed pattern
@@ -397,7 +406,7 @@ Full audit completed 2026-02-26. Reference table for all subfolders:
 - **ShiftIt:** all `*KeyCode`/`*Modifiers` keys (keyboard shortcuts)
 - **Rocket:** trigger char, launch-at-login, use-fuzzy-search
 - **Bartender:** `ProfileSettings.activeProfile`, `TriggerSettings`
-- **Keyboard Maestro:** `Macros.plist` (binary file — entire macro library); serial number via rbw template
+- **Keyboard Maestro:** `Macros.plist` (binary file — entire macro library); serial number via 1Password template
 - **SteerMouse:** `Device.smsetting` (binary file, not a plist — custom button/scroll mappings)
 - **iTerm2:** `GlobalKeyMap`, `Profiles`, `TabStyle` (most complex — do last)
 
@@ -410,7 +419,7 @@ Full audit completed 2026-02-26. Reference table for all subfolders:
 - `trialStart*` — trial period timestamps
 
 **Special cases:**
-- **Keyboard Maestro:** `Macros.plist` is a binary plist containing the full macro library — manage as binary file, not `defaults write`. Serial number goes in separate rbw template.
+- **Keyboard Maestro:** `Macros.plist` is a binary plist containing the full macro library — manage as binary file, not `defaults write`. Serial number goes in a separate 1Password template.
 - **SteerMouse:** `Device.smsetting` is a custom binary format (not a plist at all) — manage as binary file.
 
 **Not migrating (documented reason):**
@@ -445,7 +454,7 @@ Design pattern: tool lists in `.chezmoi.toml.tmpl` `[data.tools]` tables, run sc
 > Goal: shift from migration mode to maintenance mode. See [dedicated section below](#post-migration-transition).
 
 - Clean all `~/config-in-the-cloud/*/restored_via_mackup/` directories
-- Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to rbw, archive stale contexts
+- Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to 1Password, archive stale contexts
 - Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
 - Build Claude Code assistant skill for chezmoi health checks
 - Rewrite CLAUDE.md — remove migration section, add maintenance guidance
@@ -512,8 +521,9 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-07-21 | First 1Password secret migrated (Phase 4) | Configured account mode with desktop-app authorization (`prompt = false`). Migrated `FASTLANE_SESSION` to `onepasswordRead`, gated it to personal machines, and enforced `0600`; retained the matching rbw item for rollback. |
 | 2026-07-20 | Time Machine exclusions (Phase 6.5) | Added the derived `time_machine_enabled` capability and an exclusions-only script. YAML owns the exact global user-managed fixed-path `SkipPaths` set; automatic, sticky, and volume exclusions are untouched. Existing snapshots are unchanged. |
-| 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl` (homeDir-templatised credentials path), `symlink_config.yml.tmpl` (homeDir-templatised target), `README.md`. Secrets (`cert.pem`, `d5f42136-...json`) still pending rbw templates. |
+| 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl` (homeDir-templatised credentials path), `symlink_config.yml.tmpl` (homeDir-templatised target), `README.md`. Secrets (`cert.pem`, `d5f42136-...json`) still pending 1Password templates. |
 | 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/chezmoi/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
@@ -557,7 +567,7 @@ Reverse-chronological log.
 
 | Document                      | Path                                                                    | Content                                           |
 | ----------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------- |
-| Architecture decisions        | [decisions.md](2026-02-25/decisions.md)                                 | rbw-only, edit→apply, no age                      |
+| Architecture decisions        | [decisions.md](2026-02-25/decisions.md)                                 | Historical rbw decision (superseded), edit→apply, no age |
 | Phased action plan            | [next-actions.md](2026-02-25/next-actions.md)                           | Detailed instructions per phase                   |
 | Migration assessment (Feb 17) | [migration-status.md](2026-02-17/migration-status.md)                   | What's managed, what's symlinked, plist deep dive |
 | Original CLAUDE.md            | [ORIGINAL_CLAUDE.md](2026-02-17/ORIGINAL_CLAUDE.md)                     | Pre-migration CLAUDE.md snapshot                  |

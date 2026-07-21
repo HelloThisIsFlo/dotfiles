@@ -4,7 +4,9 @@ This file documents key architectural decisions for this dotfiles setup. Future-
 
 ---
 
-## 1. Secrets management: rbw-only (decided 2026-02-24)
+## 1. Secrets management: rbw-only (decided 2026-02-24; superseded 2026-07-21)
+
+> **Superseded:** New secret migrations use 1Password. rbw remains temporarily for rollback and unmigrated consumers; this section preserves the original decision context.
 
 ### Decision
 
@@ -63,7 +65,9 @@ Use `chezmoi edit <target-path>` → `chezmoi apply` as the primary workflow. St
 
 ---
 
-## 3. Future: Touch ID for rbw via custom Swift pinentry (backlog)
+## 3. Previous backlog: Touch ID for rbw via custom Swift pinentry (superseded)
+
+> Superseded by 1Password desktop-app authorization.
 
 ### Plan
 
