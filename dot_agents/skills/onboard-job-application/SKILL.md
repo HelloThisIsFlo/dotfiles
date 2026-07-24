@@ -37,15 +37,16 @@ The vault is the source of truth. This skill defines how to discover and apply t
    - a job or application URL
    - a pasted job advert
    - an explicitly identified open browser page
-3. For one input, follow `references/workflow.md` directly and do not create batch state.
-4. For multiple inputs, read `references/batch-workflow.md` completely and use it as the outer orchestration contract.
-5. Reconstruct Flo's current decision context from the vault and current CV sources.
-6. Inspect each role and application flow.
-7. Score Candidate Fit and Goal Fit, then rank each role against the live queue.
-8. Read the live candidate template, triage guide, and Base before writing.
-9. Create a new candidate record or safely update the matching one.
-10. Verify the record, derived lane, and relevant views through the applicable single-role or batch path.
-11. Report the verdict, record path, ranking position, application requirements, and any blocked information.
+3. Preserve a supplied third-party job-board URL in `job_board_url` before following official role or application links.
+4. For one input, follow `references/workflow.md` directly and do not create batch state.
+5. For multiple inputs, read `references/batch-workflow.md` completely and use it as the outer orchestration contract.
+6. Reconstruct Flo's current decision context from the vault and current CV sources.
+7. Inspect each role and application flow.
+8. Score Candidate Fit and Goal Fit, then rank each role against the live queue.
+9. Read the live candidate template, triage guide, and Base before writing.
+10. Create a new candidate record or safely update the matching one.
+11. Verify the record, derived lane, and relevant views through the applicable single-role or batch path.
+12. Report the verdict, record path, ranking position, application requirements, and any blocked information.
 
 ## Batch Ownership Boundaries
 

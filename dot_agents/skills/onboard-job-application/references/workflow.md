@@ -76,7 +76,15 @@ Stop when another pass adds no material evidence, goal, constraint, preference, 
 
 ## 3. Establish official role facts
 
-Use the supplied advert or URL as the starting point. Prefer the official company job page and official application form over aggregators.
+Use the supplied advert or URL as the starting point. Before following its links, classify and retain the starting URL:
+
+- If it is a third-party job-board listing such as Welcome to the Jungle or LinkedIn, sanitize it and preserve it as `job_board_url`.
+- Keep `job_board_url` separate from the canonical official role URL and `application_url`.
+- Leave `job_board_url` blank for an official company URL, pasted advert or browser page without a distinct job-board URL.
+- On an existing record, preserve a non-empty `job_board_url` unless Flo explicitly asks to replace it.
+- Allow `job_board_url` and `application_url` to match when the job board also hosts the application.
+
+Prefer the official company job page and official application form over aggregators for role facts and application inspection.
 
 Capture:
 
@@ -88,11 +96,12 @@ Capture:
 - location, office cadence, travel, and work authorization
 - compensation when published
 - deadline, posting freshness, rolling review, and application limits
+- original job-board URL when supplied
 - canonical job URL and direct application URL
 
 If a listing is stale or unavailable, find the official current page where possible and record the uncertainty.
 
-Before persisting any role or application URL:
+Before persisting any job-board, role or application URL:
 
 - strip URL credentials, fragments and tracking parameters
 - redact query values that carry tokens, sessions, invitations, signatures, authentication, keys or authorization codes
@@ -193,8 +202,9 @@ Use only role families currently defined by the live triage guide unless the exi
 
 Search candidates in this order:
 
-1. exact or canonicalized job/application URL
-2. normalized company plus normalized role title
+1. exact or canonicalized `job_board_url`
+2. exact or canonicalized job/application URL
+3. normalized company plus normalized role title
 
 Update the existing record when one clear match exists. Ask when multiple plausible matches remain.
 
@@ -204,12 +214,13 @@ For a new record, use the next unused numeric prefix in the current filename con
 
 Copy the live template schema rather than a schema embedded in this reference. Populate the current equivalents of:
 
-- application route, URL, work, and question labels
+- application route, `job_board_url`, application URL, work, and question labels
 - Candidate Fit and Goal Fit
 - company, role, and role family
 - relative priority and triage status
 
 Never manually add or modify `created` or `modified`.
+Never clear an existing `job_board_url` merely because a later run starts from an official URL or pasted advert.
 
 Status rules:
 
@@ -235,7 +246,7 @@ The block contains only useful sections:
 - application shape and requirements
 - exact questions and instructions
 - blockers and unknowns
-- official job and application links
+- job-board, official job and application links
 
 Keep the block concise without imposing a word limit:
 

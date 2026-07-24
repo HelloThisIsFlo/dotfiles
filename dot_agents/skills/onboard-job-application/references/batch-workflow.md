@@ -274,9 +274,10 @@ The parent resumes sole ownership after the audit packet is accepted.
 1. Re-read the current role's `input.md` and recorded `accepted_artifact`.
 2. Map the role against the loaded CV and vault evidence.
 3. Assign Candidate Fit, Goal Fit, role family, application work, status and relative priority.
-4. Follow `workflow.md` to detect duplicates and create or safely update the candidate directly.
-5. Keep the managed decision block concise and non-repetitive while preserving exact questions and evidence boundaries.
-6. Store `candidate_path` and set the role to `written` only after its Markdown and frontmatter parse.
+4. Carry a sanitized third-party source URL from `input.md` into `job_board_url`; never derive it from the canonical or application URL and never clear an existing value.
+5. Follow `workflow.md` to detect duplicates and create or safely update the candidate directly.
+6. Keep the managed decision block concise and non-repetitive while preserving exact questions and evidence boundaries.
+7. Store `candidate_path` and set the role to `written` only after its Markdown and frontmatter parse.
 
 The candidate note is the durable decision record. Do not write a second judgment checkpoint.
 
