@@ -51,7 +51,7 @@ Live chezmoi state changes frequently. Check it with `chezmoi status`; do not tr
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 secret-backend migration. |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
-| `~/.cloudflared/`                             | Managed           | TheMac config, `0400` runtime credential, DNS sync, and user LaunchAgent are reproducible through chezmoi. Runtime JSON comes from 1Password. Regenerable admin-only `cert.pem` is intentionally unmanaged. |
+| `~/.cloudflared/`                             | Managed           | TheMac config, `0400` runtime credential, DNS sync, and chezmoi-owned user LaunchAgent are reproducible. Homebrew owns binary updates. Regenerable admin-only `cert.pem` is intentionally unmanaged. |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
 
@@ -141,7 +141,7 @@ At-a-glance view of every task. Check items off as they're completed.
   - [x] `config-themac.yml` — managed as `private_dot_cloudflared/config-themac.yml.tmpl`, `credentials-file` path uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `config.yml` — managed as `private_dot_cloudflared/symlink_config.yml.tmpl`, symlink target uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `README.md` — managed as `private_dot_cloudflared/README.md`, plain file. (2026-05-17)
-  - [x] macOS autostart — `0031-CLOUDFLARED-install-service` manages a non-sudo user LaunchAgent after the `0030` DNS route sync step. (2026-07-29)
+  - [x] macOS autostart — chezmoi owns the plist; `0031-CLOUDFLARED-install-service` reloads it and verifies startup after the `0030` DNS route sync step. (2026-07-29)
 - [ ] `~/.ssh/` private keys — migrate via the chosen 1Password-backed template pattern. Currently unmanaged; `.ssh/config` is templatised but the keys it references are not.
   - [ ] `id_rsa` — main key. Secret-backend template.
   - [ ] `id_rsa_remarkable` — reMarkable key. Secret-backend template (or drop if reMarkable access retired).
@@ -522,6 +522,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-07-29 | Cloudflare LaunchAgent repaired | Replaced `cloudflared service install` output, which omitted `tunnel run`, with a chezmoi-owned plist. Added deterministic Homebrew update ownership, reload handling, and startup liveness verification. |
 | 2026-07-29 | TheMac Cloudflare Tunnel made reproducible | Added the 1Password-backed `0400` runtime credential and user LaunchAgent installer. Kept `cert.pem` intentionally unmanaged because it is regenerable and not required at runtime. |
 | 2026-07-21 | First 1Password secret migrated (Phase 4) | Configured account mode with desktop-app authorization (`prompt = false`). Migrated `FASTLANE_SESSION` to `onepasswordRead`, gated it to personal machines, and enforced `0600`; retained the matching rbw item for rollback. |
 | 2026-07-20 | Time Machine exclusions (Phase 6.5) | Added the derived `time_machine_enabled` capability and an exclusions-only script. YAML owns the exact global user-managed fixed-path `SkipPaths` set; automatic, sticky, and volume exclusions are untouched. Existing snapshots are unchanged. |

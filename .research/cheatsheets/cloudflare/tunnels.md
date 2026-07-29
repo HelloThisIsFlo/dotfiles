@@ -200,26 +200,27 @@ You did this for TheMac. Step-by-step:
 
 ## Autostart on macOS
 
-`TheMac` uses the user-level service installed by chezmoi:
+`TheMac` uses a user LaunchAgent owned directly by chezmoi:
 
 ```bash
-cloudflared service install
 launchctl print "gui/$(id -u)/com.cloudflare.cloudflared"
 ```
 
-This creates `~/Library/LaunchAgents/com.cloudflare.cloudflared.plist`, reads
-`~/.cloudflared/config.yml`, and starts at user login. Do not use `sudo`; the
-boot-level variant expects system-owned config and credentials.
+The managed plist lives at
+`~/Library/LaunchAgents/com.cloudflare.cloudflared.plist`, reads
+`~/.cloudflared/config.yml`, and starts at user login. It passes
+`--no-autoupdate` because Homebrew owns the binary.
 
 Chezmoi owns the setup:
 
 - `0030-CLOUDFLARED-sync-themac-routes` synchronises DNS routes.
-- `0031-CLOUDFLARED-install-service` validates the config, installs or loads the
-  LaunchAgent, and restarts it when the managed config changes.
+- `0031-CLOUDFLARED-install-service` validates the plist, config, credential,
+  and executable; reloads the LaunchAgent; and verifies startup liveness.
 - The numeric ordering means `0030` comes first when both scripts are scheduled.
 
-Do not also run `brew services start cloudflared` or a manual connector. Multiple
-connectors for local-only origins add noise and can behave unexpectedly.
+Do not run `cloudflared service install`, `brew services start cloudflared`, or
+a manual connector alongside the managed LaunchAgent. Multiple connectors for
+local-only origins add noise and can behave unexpectedly.
 
 ### Fresh-Mac reproduction
 
@@ -338,9 +339,9 @@ cloudflared tunnel delete <name>                         # remove
 ### Service mode (macOS)
 
 ```bash
-cloudflared service install                              # install user LaunchAgent
 launchctl print "gui/$(id -u)/com.cloudflare.cloudflared"
-cloudflared service uninstall                            # remove user LaunchAgent
+launchctl kickstart -k "gui/$(id -u)/com.cloudflare.cloudflared"
+tail -f ~/Library/Logs/com.cloudflare.cloudflared.err.log
 ```
 
 ### Files in `~/.cloudflared/`
@@ -361,6 +362,6 @@ cloudflared service uninstall                            # remove user LaunchAge
 | Run inside HAOS or K8s | Embedded (add-on / helm chart) |
 | Require login before anyone hits the service | Add Cloudflare Access app to the hostname |
 | SSH to a machine without public port 22 | Non-HTTP ingress (`ssh://...`) + `cloudflared access ssh` client |
-| Make tunnel start at macOS login | Non-sudo `cloudflared service install` |
+| Make TheMac tunnel start at macOS login | Chezmoi-managed user LaunchAgent |
 | Add redundancy (no single point of failure) | Run same tunnel on N machines (multi-connector) |
 | Reproduce TheMac automatically | 1Password runtime JSON + chezmoi scripts `0030` and `0031` |

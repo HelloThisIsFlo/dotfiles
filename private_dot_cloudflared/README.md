@@ -38,21 +38,25 @@ Dashboard-managed tunnels have no local config file -- their config lives in the
 3. On the next normal chezmoi apply, `0030` syncs the route and `0031` restarts
    the service.
 
-## Autostart on TheMac
+## LaunchAgent on TheMac
 
-Chezmoi installs the non-sudo `cloudflared` user LaunchAgent:
+Chezmoi owns the user LaunchAgent directly:
 
 ```text
 ~/Library/LaunchAgents/com.cloudflare.cloudflared.plist
 ```
+
+It runs `cloudflared tunnel --no-autoupdate --config ~/.cloudflared/config.yml
+run`. Homebrew owns binary updates.
 
 The scripts are deliberately adjacent:
 
 1. `0030-CLOUDFLARED-sync-themac-routes`
 2. `0031-CLOUDFLARED-install-service`
 
-When both are scheduled, DNS routes are synced before the connector is
-installed or restarted. Both scripts are gated to the `TheMac` universe.
+When both are scheduled, DNS routes are synced before `0031` reloads the
+managed plist and verifies that the connector remains alive. Both scripts are
+gated to the `TheMac` universe.
 
 ## Fresh Mac
 
@@ -62,5 +66,6 @@ installed or restarted. Both scripts are gated to the `TheMac` universe.
 4. Apply chezmoi.
 
 Chezmoi installs `cloudflared`, restores the config and runtime credential,
-syncs DNS routes when `cert.pem` is available, and installs the login service.
-`cloudflared tunnel login` is optional unless administrative commands are needed.
+writes and loads the user LaunchAgent, and syncs DNS routes when `cert.pem` is
+available. `cloudflared tunnel login` is optional unless administrative
+commands are needed.
