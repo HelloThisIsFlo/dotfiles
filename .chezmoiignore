@@ -7,6 +7,10 @@
 .config/fish/conf.d/03__secrets.fish
 {{ end }}
 
+{{ if or (ne .os "macos") (ne .trust_level "personal") .is_headless (ne .host_universe "TheMac") }}
+.cloudflared/a57f23b6-310d-40bd-b061-e62ecfee83f3.json
+{{ end }}
+
 {{ if ne .os "macos" }}
 .amethyst.yml
 .config/karabiner

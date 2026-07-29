@@ -22,10 +22,15 @@ Two distinct credential files in `~/.cloudflared/`:
 
 | File | Scope | When created | What dies if you lose it |
 |---|---|---|---|
-| `cert.pem` | **Account-level**. Lets you create/delete/manage tunnels for your CF account. | `cloudflared tunnel login` (once, ever) | Can't manage tunnels until you re-login |
+| `cert.pem` | **Account-level**. Lets you create/delete/manage tunnels for your CF account. | `cloudflared tunnel login` | Can't manage tunnels until you re-login |
 | `<UUID>.json` | **Tunnel-level**. Authorises a connector to RUN one specific tunnel. | `cloudflared tunnel create <name>` | That tunnel can't run — recreate or rotate |
 
 Rule of thumb: `cert.pem` is the **admin key** (rare use, sensitive). The `.json` is the **runtime key** (used every time the tunnel starts).
+
+For `TheMac`, chezmoi restores the runtime JSON from the 1Password Secure Note
+`Cloudflare Tunnel - TheMac`. `cert.pem` is intentionally not backed up because
+it can be regenerated with `cloudflared tunnel login` and is not needed to run
+the existing tunnel.
 
 > **Recreate a tunnel → new UUID → new `.json`.** Old `.json` lingers in `~/.cloudflared/` doing nothing. Delete it manually when you're done.
 
@@ -37,7 +42,8 @@ You actually use all three. Each has a niche.
 
 ### 1. CLI config file (TheMac pattern)
 
-You hand-edit a YAML, point `cloudflared` at it, and run it yourself. Source-controllable (via chezmoi).
+You hand-edit a YAML and run it through `cloudflared`. On `TheMac`, chezmoi
+source-controls the config and runs it as a user LaunchAgent.
 
 ```yaml
 # ~/.cloudflared/config-themac.yml
@@ -192,31 +198,37 @@ You did this for TheMac. Step-by-step:
 
 ---
 
-## Autostart on macOS (not currently set up on TheMac)
+## Autostart on macOS
 
-Right now you run `cloudflared tunnel run TheMac` manually each session. Two ways to make it survive reboots:
-
-### Option A: `cloudflared service install` (recommended)
+`TheMac` uses the user-level service installed by chezmoi:
 
 ```bash
-sudo cloudflared service install                  # creates LaunchDaemon
-sudo launchctl start com.cloudflare.cloudflared   # start now
-sudo launchctl stop com.cloudflare.cloudflared    # stop without uninstalling
+cloudflared service install
+launchctl print "gui/$(id -u)/com.cloudflare.cloudflared"
 ```
 
-Reads `/Library/Cloudflared/config.yml` (or `~/.cloudflared/config.yml` if symlinked there). Logs to `/Library/Logs/com.cloudflare.cloudflared/`.
+This creates `~/Library/LaunchAgents/com.cloudflare.cloudflared.plist`, reads
+`~/.cloudflared/config.yml`, and starts at user login. Do not use `sudo`; the
+boot-level variant expects system-owned config and credentials.
 
-Uninstall: `sudo cloudflared service uninstall`.
+Chezmoi owns the setup:
 
-### Option B: brew services
+- `0030-CLOUDFLARED-sync-themac-routes` synchronises DNS routes.
+- `0031-CLOUDFLARED-install-service` validates the config, installs or loads the
+  LaunchAgent, and restarts it when the managed config changes.
+- The numeric ordering means `0030` comes first when both scripts are scheduled.
 
-```bash
-brew services start cloudflared
-```
+Do not also run `brew services start cloudflared` or a manual connector. Multiple
+connectors for local-only origins add noise and can behave unexpectedly.
 
-Simpler but you have less control over the launchd plist. Fine for "I just want it running."
+### Fresh-Mac reproduction
 
-> **Pick one.** Don't run service-install AND `brew services start` AND manual `tunnel run` — three connectors will compete for the same tunnel UUID. Not catastrophic (CF tolerates it) but noisy in logs and wasteful.
+1. Install and sign in to the 1Password desktop app and CLI.
+2. Bootstrap Homebrew and chezmoi.
+3. Initialise chezmoi as a personal, graphical macOS machine in `TheMac`.
+4. Apply chezmoi. It restores the runtime JSON at mode `0400`, then installs the
+   user LaunchAgent.
+5. Run `cloudflared tunnel login` only when admin or DNS operations are needed.
 
 ---
 
@@ -296,7 +308,7 @@ If the hostname is behind Access, `cloudflared access ssh` opens a browser, you 
 | `error 502` from origin | Tunnel up, origin service down. `curl http://localhost:PORT` directly on the host |
 | `error 521` "web server is down" | Origin refused connection. Same fix as 502. |
 | Routes silently disappearing | Another tunnel/script is overwriting them with `-f`. Check what else manages routes on that domain. |
-| Logs (service-mode macOS) | `/Library/Logs/com.cloudflare.cloudflared/cloudflared.log` |
+| Logs (user LaunchAgent on macOS) | `~/Library/Logs/com.cloudflare.cloudflared.out.log` and `~/Library/Logs/com.cloudflare.cloudflared.err.log` |
 | Logs (manual run) | stderr of the process |
 
 `cloudflared tunnel info <name>` is the workhorse — shows live connectors, their datacenters, last-seen timestamps. If it shows zero connectors, no `cloudflared` is running for that tunnel.
@@ -326,10 +338,9 @@ cloudflared tunnel delete <name>                         # remove
 ### Service mode (macOS)
 
 ```bash
-sudo cloudflared service install                         # install LaunchDaemon
-sudo launchctl start com.cloudflare.cloudflared          # start
-sudo launchctl stop com.cloudflare.cloudflared           # stop
-sudo cloudflared service uninstall                       # remove
+cloudflared service install                              # install user LaunchAgent
+launchctl print "gui/$(id -u)/com.cloudflare.cloudflared"
+cloudflared service uninstall                            # remove user LaunchAgent
 ```
 
 ### Files in `~/.cloudflared/`
@@ -350,6 +361,6 @@ sudo cloudflared service uninstall                       # remove
 | Run inside HAOS or K8s | Embedded (add-on / helm chart) |
 | Require login before anyone hits the service | Add Cloudflare Access app to the hostname |
 | SSH to a machine without public port 22 | Non-HTTP ingress (`ssh://...`) + `cloudflared access ssh` client |
-| Make tunnel survive reboot (macOS) | `sudo cloudflared service install` |
+| Make tunnel start at macOS login | Non-sudo `cloudflared service install` |
 | Add redundancy (no single point of failure) | Run same tunnel on N machines (multi-connector) |
-| Sync DNS routes from YAML automatically | The chezmoi script: `Z--AFTER/0030-CLOUDFLARED-sync-themac-routes.sh.tmpl` |
+| Reproduce TheMac automatically | 1Password runtime JSON + chezmoi scripts `0030` and `0031` |

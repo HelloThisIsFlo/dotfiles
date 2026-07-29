@@ -51,7 +51,7 @@ Live chezmoi state changes frequently. Check it with `chezmoi status`; do not tr
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 secret-backend migration. |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
-| `~/.cloudflared/`                             | Partial           | Cloudflare Tunnel. Configs managed (`config-themac.yml.tmpl` homeDir-templatised, `symlink_config.yml.tmpl`, `README.md` under `private_dot_cloudflared/`). Secrets still unmanaged: `cert.pem`, `d5f42136-...json` — Phase 4 secret-backend migration. |
+| `~/.cloudflared/`                             | Managed           | TheMac config, `0400` runtime credential, DNS sync, and user LaunchAgent are reproducible through chezmoi. Runtime JSON comes from 1Password. Regenerable admin-only `cert.pem` is intentionally unmanaged. |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
 
@@ -135,12 +135,13 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] `.aws/config` + `.aws/credentials` — AWS profiles and access keys, needs secret-backend template
 - [ ] `.config/exercism/user.json` — Exercism API token (`0a877...`) + stale workspace path (`/Users/floriankempenich/`). Decide: still in use? If yes, secret-backend template + fix path. If no, delete symlink + Mackup source.
 - [ ] `.logseq/`: migrate config subset (preferences.json, config/, settings/) — deferred from Phase 3, plugin settings contain Gemini API key
-- [ ] `~/.cloudflared/`: Cloudflare Tunnel (TheMac tunnel for kempenich.dev)
-  - [ ] `cert.pem` — Argo Tunnel token (account ID + API token). Needs secret-backend template.
-  - [ ] `d5f42136-9272-4ae2-afa0-1f96eacf7dd1.json` — tunnel credentials (AccountTag, TunnelSecret, TunnelID). Needs secret-backend template.
+- [x] `~/.cloudflared/`: Cloudflare Tunnel (TheMac tunnel for kempenich.dev)
+  - [x] `cert.pem` — intentionally unmanaged. Regenerate with `cloudflared tunnel login` for admin or DNS operations; not needed to run the tunnel.
+  - [x] `a57f23b6-310d-40bd-b061-e62ecfee83f3.json` — runtime credential restored at mode `0400` from the 1Password Secure Note `Cloudflare Tunnel - TheMac`.
   - [x] `config-themac.yml` — managed as `private_dot_cloudflared/config-themac.yml.tmpl`, `credentials-file` path uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `config.yml` — managed as `private_dot_cloudflared/symlink_config.yml.tmpl`, symlink target uses `{{ .chezmoi.homeDir }}`. (2026-05-17)
   - [x] `README.md` — managed as `private_dot_cloudflared/README.md`, plain file. (2026-05-17)
+  - [x] macOS autostart — `0031-CLOUDFLARED-install-service` manages a non-sudo user LaunchAgent after the `0030` DNS route sync step. (2026-07-29)
 - [ ] `~/.ssh/` private keys — migrate via the chosen 1Password-backed template pattern. Currently unmanaged; `.ssh/config` is templatised but the keys it references are not.
   - [ ] `id_rsa` — main key. Secret-backend template.
   - [ ] `id_rsa_remarkable` — reMarkable key. Secret-backend template (or drop if reMarkable access retired).
@@ -521,9 +522,10 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-07-29 | TheMac Cloudflare Tunnel made reproducible | Added the 1Password-backed `0400` runtime credential and user LaunchAgent installer. Kept `cert.pem` intentionally unmanaged because it is regenerable and not required at runtime. |
 | 2026-07-21 | First 1Password secret migrated (Phase 4) | Configured account mode with desktop-app authorization (`prompt = false`). Migrated `FASTLANE_SESSION` to `onepasswordRead`, gated it to personal machines, and enforced `0600`; retained the matching rbw item for rollback. |
 | 2026-07-20 | Time Machine exclusions (Phase 6.5) | Added the derived `time_machine_enabled` capability and an exclusions-only script. YAML owns the exact global user-managed fixed-path `SkipPaths` set; automatic, sticky, and volume exclusions are untouched. Existing snapshots are unchanged. |
-| 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl` (homeDir-templatised credentials path), `symlink_config.yml.tmpl` (homeDir-templatised target), `README.md`. Secrets (`cert.pem`, `d5f42136-...json`) still pending 1Password templates. |
+| 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl`, `symlink_config.yml.tmpl`, and `README.md`. Secret handling and autostart were still pending. |
 | 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/chezmoi/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |

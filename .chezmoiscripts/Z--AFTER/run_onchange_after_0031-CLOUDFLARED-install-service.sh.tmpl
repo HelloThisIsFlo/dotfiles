@@ -1,0 +1,46 @@
+{{- if and (eq .chezmoi.os "darwin") (eq .trust_level "personal") (not .is_headless) (eq .host_universe "TheMac") -}}
+#!/bin/bash
+
+# Install or refresh TheMac's user-level cloudflared LaunchAgent.
+#
+# - Gated to a personal, graphical macOS host in the TheMac universe.
+# - Ordered after 0030-CLOUDFLARED-sync-themac-routes when both scripts are scheduled.
+# - Re-runs when config-themac.yml or the tunnel credential changes.
+# - Uses ~/.cloudflared/config.yml and the tunnel credential restored by chezmoi.
+#
+# Config source hash: {{ include "private_dot_cloudflared/config-themac.yml.tmpl" | sha256sum }}
+# Credential source hash: {{ include "private_dot_cloudflared/private_readonly_a57f23b6-310d-40bd-b061-e62ecfee83f3.json.tmpl" | sha256sum }}
+
+set -euo pipefail
+
+CONFIG="$HOME/.cloudflared/config.yml"
+CREDENTIAL="$HOME/.cloudflared/a57f23b6-310d-40bd-b061-e62ecfee83f3.json"
+PLIST="$HOME/Library/LaunchAgents/com.cloudflare.cloudflared.plist"
+LABEL="com.cloudflare.cloudflared"
+USER_ID="$(id -u)"
+LAUNCH_DOMAIN="gui/$USER_ID"
+SERVICE_TARGET="$LAUNCH_DOMAIN/$LABEL"
+
+command -v cloudflared >/dev/null \
+  || { echo "cloudflared service install failed: cloudflared is not installed"; exit 1; }
+[ -f "$CONFIG" ] \
+  || { echo "cloudflared service install failed: $CONFIG is missing"; exit 1; }
+[ -r "$CREDENTIAL" ] \
+  || { echo "cloudflared service install failed: $CREDENTIAL is missing or unreadable"; exit 1; }
+
+cloudflared tunnel --config "$CONFIG" ingress validate
+
+if [ ! -f "$PLIST" ]; then
+  echo "→ Installing cloudflared user LaunchAgent"
+  cloudflared service install
+elif launchctl print "$SERVICE_TARGET" >/dev/null 2>&1; then
+  echo "→ Restarting cloudflared user LaunchAgent"
+  launchctl kickstart -k "$SERVICE_TARGET"
+else
+  echo "→ Loading cloudflared user LaunchAgent"
+  launchctl bootstrap "$LAUNCH_DOMAIN" "$PLIST"
+fi
+
+launchctl print "$SERVICE_TARGET" >/dev/null
+echo "✓ cloudflared user LaunchAgent is loaded"
+{{ end -}}

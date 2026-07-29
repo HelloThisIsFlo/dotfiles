@@ -7,9 +7,18 @@ Cloudflare Tunnel configs for kempenich.dev.
 ```
 config-<tunnel>.yml   Per-tunnel config (ingress rules, credentials path)
 config.yml            Symlink to the most-used tunnel config (currently TheMac)
-<uuid>.json           Tunnel credentials (secret -- do not commit)
-cert.pem              Account certificate from `cloudflared tunnel login`
+<uuid>.json           Runtime credential restored from 1Password by chezmoi
+cert.pem              Regenerable admin credential from `cloudflared tunnel login`
 ```
+
+TheMac's runtime credential lives in the `Chezmoi` vault item
+`Cloudflare Tunnel - TheMac`. Chezmoi reads the Secure Note body through
+`op://Chezmoi/Cloudflare Tunnel - TheMac/notesPlain` and writes the JSON as
+mode `0400`. Never commit the rendered file.
+
+`cert.pem` is intentionally not backed up. It is not needed to run TheMac.
+Run `cloudflared tunnel login` again when account-level tunnel or DNS
+administration is required.
 
 ## Tunnels
 
@@ -26,4 +35,32 @@ Dashboard-managed tunnels have no local config file -- their config lives in the
 
 1. `cloudflared tunnel route dns "TheMac" themac-<service>.kempenich.dev`
 2. Add an ingress entry in `config-themac.yml`
-3. Restart `cloudflared tunnel run`
+3. On the next normal chezmoi apply, `0030` syncs the route and `0031` restarts
+   the service.
+
+## Autostart on TheMac
+
+Chezmoi installs the non-sudo `cloudflared` user LaunchAgent:
+
+```text
+~/Library/LaunchAgents/com.cloudflare.cloudflared.plist
+```
+
+The scripts are deliberately adjacent:
+
+1. `0030-CLOUDFLARED-sync-themac-routes`
+2. `0031-CLOUDFLARED-install-service`
+
+When both are scheduled, DNS routes are synced before the connector is
+installed or restarted. Both scripts are gated to the `TheMac` universe.
+
+## Fresh Mac
+
+1. Install and sign in to the 1Password desktop app and CLI.
+2. Bootstrap Homebrew and chezmoi.
+3. Initialise chezmoi as a personal, graphical macOS machine in `TheMac`.
+4. Apply chezmoi.
+
+Chezmoi installs `cloudflared`, restores the config and runtime credential,
+syncs DNS routes when `cert.pem` is available, and installs the login service.
+`cloudflared tunnel login` is optional unless administrative commands are needed.
