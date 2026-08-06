@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Flight to Calendar"
+  short_description: "Add verified flight and airport timelines"
+  default_prompt: "Use $add-flight-to-calendar to find my booking and add a fully buffered, timezone-verified itinerary to the correct calendar."
