@@ -1,0 +1,4 @@
+interface:
+  display_name: "Render Cover Letter"
+  short_description: "Format approved cover letters as polished PDFs"
+  default_prompt: "Use $render-cover-letter to turn my approved cover-letter body into a polished PDF without changing the wording."
