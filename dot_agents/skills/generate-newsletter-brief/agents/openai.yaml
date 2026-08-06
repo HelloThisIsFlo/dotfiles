@@ -1,0 +1,11 @@
+interface:
+  display_name: "Generate Newsletter Brief"
+  short_description: "Turn Fastmail Feed into a validated Obsidian brief"
+  default_prompt: "Use $generate-newsletter-brief to turn my new Fastmail Feed emails into a validated Obsidian newsletter brief."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "fastmail"
+      description: "Read and archive Fastmail Feed messages"
+policy:
+  allow_implicit_invocation: false
