@@ -62,6 +62,7 @@ claude-code = "latest"
 "pipx:graphifyy" = "latest"
 "github:radiosilence/fastmail-cli" = "latest"
 codex = "latest"
+"pipx:ipython" = "latest"
 
 
 [settings]
