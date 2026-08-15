@@ -1,0 +1,6 @@
+interface:
+  display_name: "Coordinate Interview"
+  short_description: "Coordinate interview timing, holds, and replies"
+  default_prompt: "Use $coordinate-interview to show my complete scheduling choice, protect the right time, and prepare the recruiter reply."
+policy:
+  allow_implicit_invocation: true
