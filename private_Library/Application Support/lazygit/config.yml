@@ -1,4 +1,3 @@
-
 git:
-  pagers:
-    - pager: delta-autotheme --paging=never
+  diffRenderers:
+    - command: delta-autotheme --paging=never
