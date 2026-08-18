@@ -278,6 +278,16 @@
             "command": "bash \"/Users/flo/.claude/hooks/gsd-session-state.sh\""
           }
         ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/flo/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "SubagentStop": [
