@@ -7,72 +7,28 @@ Use Obsidian vault `TheVault`.
 1. Locate the current Job Search index rather than relying on remembered filenames.
 2. Follow its live links to:
    - current career positioning
-   - current ranking context
-   - the Application Triage dashboard
+   - the 🎯 Applications system (`_AgentSandbox_/💼 Job Search/🎯 Applications/`)
    - the current CV location
-3. Inside Application Triage, read the live:
-   - candidate template
-   - triage guide
-   - Base definition
-   - candidate records
-4. Treat the dashboard candidate properties and `triage_priority` as the live ranking.
+3. Inside 🎯 Applications, read the live:
+   - `INDEX.md` (system guide, statuses, tier contract)
+   - `Jobs.base` definition
+   - one or two recent candidate notes in `Jobs/` as the schema example
+4. There is no global ranking. Tiers and the Shortlist belong to Flo; the skill never writes them.
 5. Treat dated long-form ranking notes as historical evidence, never as files to update.
 
 If an expected entry point moved, search the vault by concept and content. Do not fail merely because a remembered path changed.
 
-## 2. Reconstruct current alignment
+## 2. Load the decision context
 
-Build a temporary decision model for this run. Do not persist a separate profile and do not copy personal facts into the skill.
+Read `🎯 Applications/Decision Context.md` once. It carries the current identity, target lanes, fit-scoring guidance, proof pillars, claim boundaries, and logistics — pre-compressed from the canonical sources it links.
 
-The parent agent owns this model. Browser workers may inspect role and application evidence, but must not map Flo's experience, assign fit scores, set priority, or write candidate records.
+- **Fresh enough** (under a month old, no obvious contradiction with recent explicit decisions): use it as the decision model. Do not re-derive positioning from the vault.
+- **Missing, stale, or contradicted**: re-derive from its listed canonical sources (positioning notes, CV `README.md` → current golden master, recent journal decisions), then update `Decision Context.md` and its `context_refreshed` date before continuing.
+- Flo's direct edits to the note are current truth; never revert them during a refresh without asking.
 
-### Current CV and evidence
+Search the vault only for **role-specific** evidence the note does not answer — a particular technology claim, an interview story, a recent correction about a comparable role.
 
-1. Resolve the current CV location from the live Job Search material.
-2. Locate the containing `SecretAgents` CV workspace.
-3. Read `resources/cv/README.md`.
-4. Read the YAML named under its current section; never assume the current filename.
-5. Read `MASTER_CV.yaml` only when broader reviewed evidence is needed.
-6. Search the vault for role-specific evidence, claim boundaries, interview stories, and recent corrections.
-
-The job advert is a relevance signal, not a claim source. Candidate Fit must be supported by the CV, reviewed evidence sources, or explicit vault records.
-
-### Goals, preferences, and constraints
-
-Read current positioning and recent job-search decisions, then search outward across the vault for:
-
-- desired professional direction
-- seniority and scope
-- work that Flo wants more or less of
-- location, office, travel, compensation, and family constraints
-- explicit reactions to comparable roles
-- honest gaps and claims Flo does not want overstated
-
-Search recent material first, but expand when older linked context remains relevant. Prefer:
-
-1. recent explicit statements from Flo
-2. current source-of-truth notes and READMEs
-3. current CV and reviewed evidence
-4. recent inferred patterns across role decisions
-5. older archived positioning
-
-When sources conflict, use the newest explicit decision. Ask Flo only when recency or intent cannot resolve a material contradiction.
-
-### Targeted saturation
-
-Do not read the entire vault indiscriminately. Search in expanding passes:
-
-1. current Job Search entry points
-2. current CV and evidence sources
-3. recent journal and decision notes
-4. role/company/requirement-specific matches across the vault
-5. linked or backlinked context that changes the interpretation
-
-Stop when another pass adds no material evidence, goal, constraint, preference, or ranking distinction. Keep notes on whether each important conclusion is:
-
-- documented fact
-- expressed preference
-- agent inference
+The job advert is a relevance signal, not a claim source. Candidate Fit must be supported by the CV, the decision context, or explicit vault records. Respect every claim boundary in the note.
 
 ## 3. Establish official role facts
 
@@ -112,14 +68,7 @@ Before persisting any job-board, role or application URL:
 
 Use the Browser plugin for the official role and application pages. When authentication hides information, try the user's logged-in Chrome surface when it is available and appropriate.
 
-For a single input, the parent may perform this inspection directly.
-
-For a batch:
-
-- use the isolated persistent browser worker defined in `batch-workflow.md`
-- give it no CV, personal decision context, scores, candidate records, manifest or live queue
-- require the current attempt-specific audit packet before the worker returns
-- evaluate fit and write the candidate from the accepted packet plus the shared decision context
+Perform this inspection directly — no sub-agents, no browser workers. For multiple inputs, inspect and finish each role sequentially in the same context.
 
 Allowed browser actions:
 
@@ -178,23 +127,13 @@ Answer: **Would obtaining this role move Flo toward the professional identity an
 
 Use current vault evidence for trajectory, seniority, substantive work, logistics, compensation, and trade-offs. Do not equate comfortable skill overlap with strategic value.
 
-### Relative ranking
+### The `why` verdict
 
-Read every current candidate's scores, priority, status, and role family. Place the new role relative to the live queue using:
+Write one decisive sentence that lets Flo judge the role from the board without opening the note — the single most decision-driving trade-off or strength. It becomes the `why` property and the opening callout of the managed block.
 
-- Candidate Fit and Goal Fit
-- strategic career value
-- credible interview probability
-- seniority preservation
-- compensation and logistics
-- application effort
-- urgency or deadline
-- warm path versus cold application
-- how the role compounds Flo's strongest evidence
+There is no numeric priority and no ranking against other candidates. Never write `tier`; comparing and shortlisting are Flo's moves.
 
-Do not mechanically add the fit scores. Assign an integer `triage_priority` from 0–100. Ties are allowed. Do not renumber existing candidates merely to create space.
-
-Use only role families currently defined by the live triage guide unless the existing system clearly cannot represent the role; ask before introducing a new family.
+Use only role families currently defined in `INDEX.md` unless the existing system clearly cannot represent the role; ask before introducing a new family.
 
 ## 6. Create or update the record
 
@@ -212,28 +151,42 @@ For a new record, use the next unused numeric prefix in the current filename con
 
 ### Frontmatter
 
-Copy the live template schema rather than a schema embedded in this reference. Populate the current equivalents of:
+Copy the schema from a recent candidate note in `Jobs/` rather than a schema embedded in this reference. Populate the current equivalents of:
 
 - application route, `job_board_url`, application URL, work, and question labels
 - Candidate Fit and Goal Fit
 - company, role, and role family
-- relative priority and triage status
+- `status` and the one-sentence `why`
+- semantic dates: `added_on` and `last_checked_on`
+- leave `tier` untouched
 
 Never manually add or modify `created` or `modified`.
 Never clear an existing `job_board_url` merely because a later run starts from an official URL or pasted advert.
 
-Status rules:
+Date rules (`YYYY-MM-DD`, Europe/London):
 
-- clear poor match → `Skip`
-- viable but not prepared → blank
-- demonstrably completed preparation → `Ready to Apply`
-- CV-only Quick role → blank unless already explicitly marked ready
-- preserve an existing `Applied`, `Ready to Apply`, or user-set `Skip`
+- new record → set both `added_on` and `last_checked_on` to today
+- existing record → preserve `added_on` permanently
+- confirmed live refresh → set `last_checked_on` to today after inspecting the official advert or application flow
+- confirmed unavailable → set `last_checked_on` to today and `status: closed`
+- interrupted rerun, duplicate lookup, scoring change, preparation edit, or managed-block rewrite without a live-page check → preserve both dates
+
+Status rules (`status` values: `inbox`, `deciding`, `applied`, `passed`, `closed`):
+
+- clear poor match → `passed`
+- evaluated and viable → `deciding`
+- new records also get `shortlisted: false`
+- role verifiably gone → `closed`
+- preserve an existing `applied` or user-set `passed`
 - never downgrade an explicit user status silently
+
+### Sibling-roles block
+
+Every note carries one dataviewjs block between `<!-- sibling-roles:start -->` and `<!-- sibling-roles:end -->`, placed between the frontmatter and the managed decision block. It dynamically lists the company's other roles and warns when one is applied. On a new record, copy it verbatim from any existing note in `Jobs/`. On updates, leave it untouched (only ever replace it wholesale if the canonical version in the corpus has changed).
 
 ### Managed decision block
 
-New records use one replaceable block immediately after frontmatter:
+New records use one replaceable block after the sibling-roles block:
 
 `<!-- onboard-job-application:start -->`
 
@@ -242,7 +195,6 @@ The block contains only useful sections:
 - verdict and concise role summary
 - Candidate Fit evidence and gaps
 - Goal Fit alignment and trade-offs
-- relative ranking rationale
 - application shape and requirements
 - exact questions and instructions
 - blockers and unknowns
@@ -269,17 +221,13 @@ For a legacy record without markers:
 ## 7. Verify and report
 
 1. Confirm the candidate note is valid Obsidian Markdown and its frontmatter parses.
-2. For a single input, open the Base in Obsidian and force a live reload when external edits are cached.
-3. For a batch, use the CLI-first verification path in `batch-workflow.md` instead of opening the Base for each candidate.
-4. Confirm:
-   - the record appears
-   - the derived lane matches the audited requirements
-   - a CV-only role enters Apply Next
-   - a Ready to Apply role enters Apply Next and leaves Needs Preparation
-   - Skip and Applied records do not remain in active queues
-5. Report:
-   - verdict and both fit scores
-   - priority and nearest comparison roles
+2. Open `Jobs.base` in Obsidian (or query it via the Obsidian CLI) and force a live reload when external edits are cached. For multiple roles, one check at the end of the run covers all written records.
+3. Confirm:
+   - the record appears in the expected view (`🤔 Deciding`, `🚫 Out`, …)
+   - the derived lane emoji matches the audited requirements
+   - passed and applied records do not appear in the Deciding views
+4. Report:
+   - verdict (`why`) and both fit scores
    - application lane and remaining work
    - clickable candidate-note link
    - blockers and the exact user action needed

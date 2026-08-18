@@ -16,7 +16,7 @@ Turn Flo's logged-in Welcome to the Jungle recommendations into a compact, durab
 
 ## Fixed Boundaries
 
-- Never create or update an Application Triage candidate.
+- Never create or update a candidate note in the 🎯 Applications system.
 - Never inspect an application form as part of this workflow.
 - Never submit, save, dismiss, follow, upload, or type personal data on Welcome to the Jungle.
 - Never tailor a CV, draft application answers, or invoke application-preparation skills.
@@ -144,7 +144,7 @@ A correct URL paired with another role's reason is a failed record. Repair every
 
 ## Detect Dashboard Duplicates
 
-Read candidate frontmatter under the live Application Triage candidate folder. Do not modify it.
+Read candidate frontmatter under the live `🎯 Applications/Jobs` candidate folder. Do not modify it.
 
 Match in this order:
 
