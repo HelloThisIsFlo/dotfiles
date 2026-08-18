@@ -1,6 +1,7 @@
 **/.DS_Store
 **/__pycache__
 .research
+Main.code-workspace
 
 {{ if ne .trust_level "personal" }}
 .config/gh/hosts.yml
