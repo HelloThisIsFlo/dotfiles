@@ -34,7 +34,19 @@ Docs/reference/research: keep scannable.
 
 Design every doc backwards from that:
 
-- **The diagram is the artifact.** Lead with it. If the diagram needs supporting text to be intelligible, fix the diagram — not the prose.
+- **The diagram is the artifact.**
+  - For each explanation that benefits from a visual, lead that explanation with its diagram.
+  - Place diagrams beside the relevant section, not only at the top of the document.
+  - The reader should grasp the core idea before reading the supporting text; otherwise, improve the diagram.
+- **Choose the diagram by the relationship.**
+  - Prefer sequence diagrams for interactions, handoffs, and data movement over time.
+  - Use flowcharts for branching decisions, transformations, dependencies, or topology.
+  - A long linear flowchart is usually a sequence diagram in disguise.
+- **Make boundaries visible.**
+  - Group sequence-diagram participants by meaningful system, responsibility, or environment boundaries.
+  - Use distinct, restrained colours to improve scanning.
+  - Labels carry the meaning; colour reinforces it.
+  - Keep equivalent groups visually consistent within the same document.
 - **Sections after the diagram exist only to clarify what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Skip any section that doesn't add what the diagram missed.
 - **Visual consistency = scannability.** Use emoji on section headers as signposts. Same emoji for the same role across all docs in a project so the reader can jump.
 - **Filler costs more than space.** Cut "if you're tempted to," "you might want to," "we could consider." State what is, not what could be.
