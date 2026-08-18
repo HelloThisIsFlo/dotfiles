@@ -8,4 +8,20 @@ Avoid structured TOML rewriting here because it may reorder tables, drop comment
 # chezmoi-managed:start codex-agents-fallback
 project_doc_fallback_filenames = [".agents/AGENTS.md"]
 # chezmoi-managed:end
-{{- "\n" -}}{{ .chezmoi.stdin | replaceAllRegex "(?s)^# chezmoi-managed:start codex-agents-fallback.*?# chezmoi-managed:end\n*" "" | trimSuffix "\n" }}
+
+# chezmoi-managed:start codex-shell-execution
+# Codex commands are non-interactive. The Desktop app first captures Fish via
+# `fish -ilc`, including mise; keep the later Zsh fallback non-login so it
+# preserves that PATH instead of loading ~/.zprofile, which replaces it.
+#
+# Zsh startup matrix:
+#                       non-login                  login
+# non-interactive       .zshenv                    .zshenv + .zprofile + .zlogin
+# interactive           .zshenv + .zshrc           .zshenv + .zprofile + .zshrc + .zlogin
+allow_login_shell = false
+# chezmoi-managed:end
+{{- "\n" -}}{{ .chezmoi.stdin
+  | replaceAllRegex "(?s)^# chezmoi-managed:start codex-agents-fallback.*?# chezmoi-managed:end\n*" ""
+  | replaceAllRegex "(?s)^# chezmoi-managed:start codex-shell-execution.*?# chezmoi-managed:end\n*" ""
+  | trimSuffix "\n"
+}}
