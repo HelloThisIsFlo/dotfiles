@@ -41,7 +41,7 @@ Library/LaunchAgents/com.cloudflare.cloudflared.plist
 .codex/skills/chronicle
 .codex/skills/hatch-pet
 
-# ────── External shared skills
+# ────── External shared skills / integrations
 # ──────── Copywriting
 .claude/skills/copywriting
 .agents/skills/copywriting
@@ -88,6 +88,8 @@ Library/LaunchAgents/com.cloudflare.cloudflared.plist
 .codex/skills/gsd*
 .codex/agents/gsd*
 .codex/hooks/gsd*
+# ──────── Herdr
+.claude/hooks/herdr-agent-state.sh
 
 
 # ──── ".config/fish"
