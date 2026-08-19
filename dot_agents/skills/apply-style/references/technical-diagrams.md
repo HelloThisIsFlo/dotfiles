@@ -47,11 +47,11 @@ Mermaid's sequence `box` colour controls the fill, not an independently configur
 - Give each group a unique, fully transparent `rgba(...,0)` value.
 - Match that exact fill value with diagram-local `themeCSS`.
 - Apply the saturated version of the colour to the boundary.
-- Keep the alpha at `0`; fixed light-coloured fills become illegible in dark mode.
+- Keep the alpha at `0`; fixed fills undermine theme-safe rendering.
 - If a renderer stops supporting the selector:
   - Keep the boxes transparent and accept the renderer's neutral boundary.
   - Report the limitation.
-  - Do not fall back to fixed light fills.
+  - Do not fall back to fixed fills.
 
 ## Teaching examples
 
@@ -134,14 +134,24 @@ sequenceDiagram
     W-->>C: Return result
 ```
 
-## Verify the rendered result
+## Render only for structural uncertainty
 
-- Render every changed Mermaid diagram.
-- Inspect it in a light theme.
-- Inspect it in a dark theme against a genuinely dark background.
-- Check:
-  - Group boundaries remain distinct.
-  - Labels remain legible.
-  - Emoji improve scanning rather than add noise.
-  - The primary relationship is obvious before reading supporting text.
-- Successful parsing alone is not visual verification.
+- **Simple diagram**
+  - Review the Mermaid source against the communication goal.
+  - If the intended relationship, grouping, and direction are clear, no render is needed.
+- **Complex diagram**
+  - Render only when Mermaid's automatic layout may change or obscure the intended reading.
+  - Complexity signals:
+    - Multiple branches or handoffs
+    - Nested or competing groups
+    - Likely crossing edges
+    - Long labels or unusual width
+    - Mermaid-controlled ordering that may alter the reading path
+- **If rendered, inspect structure only**
+  - Reading direction
+  - Grouping
+  - Edge crossings
+  - Node order
+  - Label wrapping
+- Do not switch themes or assess cosmetic appearance.
+- Successful parsing validates syntax; it does not create a visual-QA requirement.

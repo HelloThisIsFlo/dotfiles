@@ -84,6 +84,7 @@ Write the restyled document back to the same file. Don't create a new file or ad
 
 If you changed Mermaid diagrams:
 
-- Render every changed diagram.
-- Inspect each diagram in both light and dark themes, using a genuinely dark background for the dark render.
-- Treat successful parsing as syntax validation, not visual verification.
+- Review the Mermaid source against the document's communication goal.
+- Simple diagrams need no render when the intended relationship and direction are clear from the source.
+- For complex diagrams, render only when Mermaid's automatic layout may obscure the structure. Use `references/technical-diagrams.md` for the complexity signals and inspection criteria.
+- If rendered, inspect structural clarity only. Do not switch themes or perform cosmetic visual QA.

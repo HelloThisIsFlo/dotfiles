@@ -54,7 +54,9 @@ Design every doc backwards from that:
   - Labels carry the meaning; colour and emoji reinforce it.
   - Keep equivalent groups visually consistent within the same document.
   - Simplify or remove groups when they compete with the main flow.
-  - Visually verify non-trivial Mermaid styling in both light and dark themes.
+  - **Render Mermaid only when complex automatic layout makes the structure uncertain.**
+    - Simple diagrams need no render.
+    - Inspect structure only; never switch themes or perform cosmetic QA.
 - **Sections after the diagram exist only to clarify what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Skip any section that doesn't add what the diagram missed.
 - **Visual consistency = scannability.** Use emoji on section headers as signposts. Same emoji for the same role across all docs in a project so the reader can jump.
 - **Filler costs more than space.** Cut "if you're tempted to," "you might want to," "we could consider." State what is, not what could be.
