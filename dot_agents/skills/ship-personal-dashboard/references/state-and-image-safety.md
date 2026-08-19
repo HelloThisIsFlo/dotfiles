@@ -37,10 +37,14 @@ Before package publication:
 - Keep ConfigMap contents out of reusable tracked manifests.
 - Mount the ConfigMap as a directory, not with `subPath`.
 - Validate and collect locally before the first Kubernetes mutation.
+- Distinguish collector determinism from publisher idempotence:
+  - When unchanged authored state represents the same snapshot, collect twice locally and require identical state hashes.
+  - Avoid current-clock fields that create meaningless churn; retain them only when publication time is intentional dashboard content.
+  - When volatile output is intentional, report that semantic choice instead of misclassifying it as an idempotence failure.
 - Apply the exact collected bytes.
 - Wait until every desired ready pod exposes the expected SHA-256.
 - Fetch the state through the ClusterIP Service and require matching bytes.
-- Make identical publication idempotent.
+- When the target already contains the exact collected bytes, skip unnecessary ConfigMap mutation and still complete served-state verification.
 - On failure, report expected and observed hashes without automatic rollback.
 
 ## ConfigMap plus PVC publication
@@ -58,7 +62,7 @@ Use the small text state as the publication boundary and publish referenced asse
 9. Remove assets no longer referenced only after the new state is verified; update the PVC manifest last.
 10. Remove the uploader Pod. Preserve the PVC and last verified state on failure.
 
-An identical publish must avoid recopying unchanged assets and still complete verification.
+An identical publish must avoid recopying unchanged assets or rewriting identical state and must still complete verification. Test collection determinism locally; do not require two full cluster publications merely to prove it.
 
 ## Existing backend escape hatch
 
@@ -66,4 +70,3 @@ An identical publish must avoid recopying unchanged assets and still complete ve
 - Put a local persistent database file on a PVC rather than a ConfigMap.
 - Keep credentials in Kubernetes Secrets or the backend's existing secret system, never in the deployment contract.
 - Ask Flo only when data migration, persistence, credentials, or public-image safety cannot be derived safely.
-

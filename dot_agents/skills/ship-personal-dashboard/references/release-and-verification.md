@@ -1,12 +1,13 @@
 # Release and verification
 
-Read this only after Flo's go-ahead to the ready-to-go handoff.
+Read this before composing the ready-to-go handoff, then re-read it after Flo's go-ahead.
 
 ## Preconditions
 
-- Reconfirm the Git remote, default branch, repository visibility, current branch, checkout state, and disclosed mutation scope.
+- Reconfirm the Git remote, default branch, repository visibility, current branch, and disclosed mutation scope.
+- Fetch origin and require a clean checkout, local `main` tracking `origin/main`, and both refs at the same commit before the first mutation. Stop and show the exact drift otherwise.
 - Reconfirm kubectl context `admin@thecluster` before every mutation entrypoint.
-- Confirm the requested hostname anonymously redirects to Cloudflare Access before real state publication.
+- Require the disclosed Tunnel route and Access setup to be underway or complete, but do not probe the protected hostname before the Service exists.
 - Stop if the contract, repository, cluster, or Cloudflare evidence has materially changed since the handoff.
 
 ## Implement and preflight
@@ -18,6 +19,7 @@ Read this only after Flo's go-ahead to the ready-to-go handoff.
 - Add ConfigMap and PVC mounts selected by the contract. Never put live contents in reusable manifests.
 - Add the standard `just` interface and testable deploy/publisher code beside the app's existing scripts.
 - Complete every local image and runtime-state safety check before pushing.
+- Prioritize the smallest real production slice that can safely publish the state-free application. Never create a dummy package merely to initialize GHCR.
 
 ## GitHub Actions and GHCR
 
@@ -26,30 +28,35 @@ Read this only after Flo's go-ahead to the ready-to-go handoff.
 - Attach `org.opencontainers.image.source` for the actual GitHub repository.
 - Build only for image-relevant paths; include the dashboard's full monorepo-relative prefix when applicable. State-only changes must not build an image.
 - Publish the full commit SHA from the onboarding branch and `main`; publish `latest` only from `main`.
-- When the workflow is new and not yet on `main`, temporarily trigger the exact onboarding branch. Remove that trigger before merging.
+- When the workflow is new and not yet on `main`, temporarily trigger the exact onboarding branch. Disclose and commit its later removal; never amend an already-published smoke commit merely to preserve a promised commit count.
 
 For a new package:
 
-1. Record `gh repo view` visibility and the exact `owner/package` identity.
+1. Record `gh repo view` visibility and the confirmed `owner/package` identity.
 2. Let the successful workflow create the package.
-3. Verify the published image is the reviewed state-free SHA.
-4. Use an authenticated browser to change only that container package to public.
-5. Verify package visibility with `gh api` and verify repository visibility is unchanged.
+3. Match the exact owner, name, container type, source repository, and reviewed state-free SHA.
+4. Open that package's settings page and ask Flo to perform the irreversible visibility confirmation at this early, disclosed checkpoint.
+5. Verify package visibility with `gh api` and verify repository visibility is byte-for-byte unchanged.
+6. Request a clean anonymous GHCR registry token and fetch the full-SHA manifest directly. Require the expected digest without using ambient Docker credentials or printing the token.
+
+For an existing private package, perform the same early manual visibility handoff after matching its identity. Skip the handoff only when the exact package is already public, then still verify anonymous manifest access.
 
 Never call an endpoint or UI control that changes repository visibility. If the package page, owner, name, confirmation copy, or browser authentication is ambiguous, stop for Flo.
 
 ## Smoke, merge, and deploy
 
-1. Require successful onboarding-branch checks and image publication.
+1. Require successful onboarding-branch checks, image publication, package visibility, and anonymous manifest access.
 2. Create the namespace and any persistent state resources without exposing a LoadBalancer, NodePort, or Ingress.
-3. Publish required initial runtime state, then deploy the exact branch SHA and wait for readiness.
-4. Verify the Service and EndpointSlice internally; use a temporary loopback-only port-forward when visual smoke review adds value.
-5. Restart the pod and require ConfigMap/PVC state to survive.
-6. Remove the temporary branch workflow trigger and commit the cleanup.
-7. Fetch origin, require the checkout to be clean and `origin/main` to be an ancestor of the reviewed HEAD, then fast-forward remote `main` from that exact HEAD and confirm it landed unchanged.
-8. Require successful main CI. Confirm the full main SHA and `latest` resolve to the same digest.
-9. Deploy the immutable main SHA, rerun state publication idempotently, and repeat health checks.
-10. Delete only the merged remote branch. Do not delete or relocate the current checkout.
+3. Deploy the exact branch SHA with no private state. Use the smallest synthetic fixture only when the UI cannot be meaningfully checked without runtime data.
+4. Wait for readiness and verify the Service and EndpointSlice internally; use a temporary loopback-only port-forward when visual smoke review adds value.
+5. Make one bounded anonymous request to the protected hostname. Require the expected Cloudflare Access redirect before publishing private state; report only status, login host, and pass/fail, never the signed query string.
+6. Publish real state, restart the pod, and require ConfigMap/PVC state to survive.
+7. Remove the temporary branch workflow trigger and commit the cleanup.
+8. Fetch origin and re-require a clean checkout, local `main` equal to and tracking `origin/main`, unchanged remote ancestry, and `origin/main` as an ancestor of the reviewed HEAD.
+9. Push the reviewed HEAD directly to remote `main` without force, fetch, switch to local `main`, fast-forward it to `origin/main`, and explicitly set or verify the `origin/main` upstream.
+10. Require local `main`, `origin/main`, and the reviewed HEAD to be identical. Require successful main CI and confirm the full main SHA and `latest` resolve to the same digest.
+11. Deploy the immutable main SHA, rerun state publication idempotently, and repeat health checks.
+12. Delete only the merged remote branch. Do not delete or relocate the current checkout.
 
 ## Final verification
 
@@ -59,9 +66,10 @@ Require all of the following:
 - Kubernetes pulls the public image without an image-pull secret.
 - Runtime state and assets are absent from the image and survive pod restart on their selected storage.
 - `just dashboard-publish-state` succeeds idempotently and the Service returns the published hashes.
-- Authenticated `https://<domain>` renders the real dashboard.
-- Anonymous `/`, every state route, and representative media routes redirect to Cloudflare Access.
+- Acquire or verify a fresh browser session immediately before checking that authenticated `https://<domain>` renders the real dashboard. If unavailable, finish automated verification and return one exact manual reload step without claiming the render was verified.
+- Anonymous `/`, every state route, and representative media routes redirect to the expected Cloudflare Access login host. Keep redirect output terse and omit signed query strings.
 - Source state, repository visibility, and unrelated files remain unchanged.
+- Local `main`, its `origin/main` upstream, and the deployed immutable SHA agree.
 - Any temporary uploader Pod and port-forward are gone; the protected hostname remains operational.
 
 ## Failure handling
@@ -71,4 +79,6 @@ Require all of the following:
 - Main CI failure: do not deploy main; fix forward.
 - Deployment or public-route failure: redeploy the recorded known-good immutable SHA and preserve ConfigMaps and PVCs.
 - First deployment without a known-good SHA: leave protected routing in place, preserve state resources, and report the failed SHA and exact verification stage.
+- Unexpected Git state: stop further mutations, inspect refs and reflogs, and repair only a provably lossless fast-forward or upstream mismatch. Ask Flo before resolving divergence, overwriting changes, or discarding commits.
+- Missing final browser session: do not block an otherwise verified release; report authenticated rendering as a precise manual remainder.
 - Never roll back or delete runtime state automatically.
