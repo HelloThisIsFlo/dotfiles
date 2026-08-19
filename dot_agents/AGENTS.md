@@ -42,11 +42,19 @@ Design every doc backwards from that:
   - Prefer sequence diagrams for interactions, handoffs, and data movement over time.
   - Use flowcharts for branching decisions, transformations, dependencies, or topology.
   - A long linear flowchart is usually a sequence diagram in disguise.
+  - For system, ownership, or environment maps, default to a left-to-right flowchart.
+  - Change direction only when horizontal width or the relationship itself makes another layout clearer.
 - **Make boundaries visible.**
-  - Group sequence-diagram participants by meaningful system, responsibility, or environment boundaries.
-  - Use distinct, restrained colours to improve scanning.
-  - Labels carry the meaning; colour reinforces it.
+  - Group diagram elements by meaningful system, responsibility, environment, or ownership boundaries.
+  - Use semantic emoji in group labels and important nodes or participants as visual landmarks.
+  - Use distinct, restrained border colours for grouped diagrams.
+  - Give sequence-diagram groups the same transparent-fill, coloured-boundary treatment as flowchart groups.
+  - Keep group fills transparent or controlled by Mermaid's active theme; avoid fixed light-coloured fills.
+  - Use nodes for actors, components, data, or durable states; put actions, transfers, and handoffs on arrows when they do not represent durable components.
+  - Labels carry the meaning; colour and emoji reinforce it.
   - Keep equivalent groups visually consistent within the same document.
+  - Simplify or remove groups when they compete with the main flow.
+  - Visually verify non-trivial Mermaid styling in both light and dark themes.
 - **Sections after the diagram exist only to clarify what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Skip any section that doesn't add what the diagram missed.
 - **Visual consistency = scannability.** Use emoji on section headers as signposts. Same emoji for the same role across all docs in a project so the reader can jump.
 - **Filler costs more than space.** Cut "if you're tempted to," "you might want to," "we could consider." State what is, not what could be.

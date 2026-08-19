@@ -11,13 +11,15 @@ You're restyling a markdown document to match Flo's writing conventions. The con
 
 1. Read the target document in full
 2. Read `references/style-reference.md` — the complete style guide. Internalize it before making any changes.
-3. If the user points to a specific section, restyle only that section (leave the rest untouched). Otherwise, restyle the entire document.
+3. If the target contains technical or system Mermaid diagrams, read `references/technical-diagrams.md`.
+4. If the user points to a specific section, restyle only that section (leave the rest untouched). Otherwise, restyle the entire document.
 
 ## What to change
 
 Everything about *how* the content is presented:
 
 - **Structure** — Reorganize sections if they'd flow better. Lead with decisions and results, not narrative buildup.
+- **Diagrams** — Treat diagrams as part of the document's form. Preserve their technical meaning while improving diagram type, layout, grouping, and presentation using `references/technical-diagrams.md`.
 - **Prose to bullets** — Convert paragraphs into bullet points. Prose is only acceptable for 1-2 sentence intros before switching to structured content.
 - **Callouts** — Identify key rules (`[!important]`), gotchas (`[!warning]`), cross-references (`[!tip]`), and side notes (`[!note]`). Content inside callouts is ALWAYS bullets — never prose paragraphs.
 - **Tables for repeated records** — When many sections repeat the same fields (lane → responsibilities → skills → proof, option → tradeoff → verdict), prefer a summary table and compact per-item tables over long repeated bullet trees.
@@ -79,3 +81,9 @@ A well-styled section typically follows this flow (not every section needs all f
 ## After restyling
 
 Write the restyled document back to the same file. Don't create a new file or add a suffix — the user is relying on `git diff` to review your changes.
+
+If you changed Mermaid diagrams:
+
+- Render every changed diagram.
+- Inspect each diagram in both light and dark themes, using a genuinely dark background for the dark render.
+- Treat successful parsing as syntax validation, not visual verification.

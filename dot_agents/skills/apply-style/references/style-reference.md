@@ -279,10 +279,10 @@ NOT used between every section — that's what headings are for.
 
 For practical guides that walk through scenarios (like the BYDAY edge cases doc), each scenario follows a rigid structure:
 
+Technical relationship diagrams follow [Technical Diagram Style](technical-diagrams.md). Use images only when the source material is inherently visual rather than a relationship Mermaid can express.
+
 ```markdown
 ## Scenario N: [Name]
-
-![](images/diagram.png)
 
 ### Setup
 
@@ -308,6 +308,7 @@ For practical guides that walk through scenarios (like the BYDAY edge cases doc)
 ```
 
 Key features of this pattern:
+- Lead with a Mermaid diagram when the technical relationship benefits from one
 - **Setup** is always bullet points with bold dates
 - **Results** is always a table with ✅/❌ emoji
 - **Why** heading includes the emoji and the gap description (e.g., "⚡ 5 day gap")
