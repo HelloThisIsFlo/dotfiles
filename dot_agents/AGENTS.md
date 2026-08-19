@@ -147,6 +147,8 @@ Login shell fish. Bash tool runs through fish, not bash.
 - Project scripts: Just for orchestration:
   - In place of Make
   - Complex bootstrap → scripts orchestrated by Just
+- Personal-project GHCR:
+  - Default to GitHub Actions as the package creator and only publisher. Avoid manual pushes unless the project explicitly requires them; the first publisher can establish permissions that later block Actions.
 
 ## Agent Asset Ownership
 

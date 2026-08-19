@@ -1,0 +1,8 @@
+interface:
+  display_name: "Ship Personal Dashboard"
+  short_description: "Ship local dashboards to Flo's protected cluster"
+  default_prompt: "Use $ship-personal-dashboard to turn this local dashboard into a protected deployment on my home Kubernetes cluster."
+
+policy:
+  allow_implicit_invocation: true
+
