@@ -80,6 +80,7 @@ Library/LaunchAgents/com.cloudflare.cloudflared.plist
 .claude/hooks/gsd*
 .claude/hooks/lib
 .claude/hooks/managed-hooks-registry.cjs
+.claude/hooks/package.json # It looks generic, but as of 2026-08-19, it only contains GSD-related config
 .agents/skills/gsd*
 .agents/agents/gsd*
 .agents/agents/subagents
@@ -88,6 +89,8 @@ Library/LaunchAgents/com.cloudflare.cloudflared.plist
 .codex/skills/gsd*
 .codex/agents/gsd*
 .codex/hooks/gsd*
+.codex/hooks/managed-hooks-registry.cjs # It looks generic, but as of 2026-08-19, it only contains GSD-related config
+.codex/hooks/package.json # It looks generic, but as of 2026-08-19, it only contains GSD-related config
 # ──────── Herdr
 .claude/hooks/herdr-agent-state.sh
 
