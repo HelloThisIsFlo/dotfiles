@@ -1,7 +1,0 @@
-interface:
-  display_name: "Skill Creator Flo"
-  short_description: "Apply Flo's preferences to skill creation"
-  default_prompt: "Use $skill-creator-flo with the official skill-creator to create or refine this skill around my preferred user experience."
-
-policy:
-  allow_implicit_invocation: true
