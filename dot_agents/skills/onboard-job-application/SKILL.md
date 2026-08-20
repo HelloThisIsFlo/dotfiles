@@ -51,10 +51,10 @@ A rerun after an interruption is safe: duplicate detection finds the already-wri
 ## Autonomy
 
 - Write automatically when the evidence is sufficient.
-- Ask only when a consequential ambiguity would materially change the record, score, status, or duplicate choice.
+- Ask only when a consequential ambiguity would materially change the record, score, application status, or duplicate choice.
 - Apply obvious states only:
-  - clearly poor opportunity → `status: passed`
-  - otherwise → `status: deciding`
+  - clearly poor opportunity → `application_status: passed`
+  - otherwise → `application_status: deciding`
 - Initialize new records with `shortlist: false`. Never promote or remove an existing role from Flo's shortlist.
 - Never edit `why` on an existing record unless the run produced materially new evidence; Flo may have rewritten it.
 

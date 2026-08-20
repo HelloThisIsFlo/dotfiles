@@ -156,7 +156,13 @@ Copy the schema from a recent candidate note in `Jobs/` rather than a schema emb
 - application route, `job_board_url`, application URL, work, and question labels
 - Candidate Fit and Goal Fit
 - company, role, and role family
-- `status` and the one-sentence `why`
+- list-valued type membership and application status:
+  ```yaml
+  type:
+    - "[[Job Application]]"
+  application_status: deciding
+  ```
+- the one-sentence `why`
 - semantic dates: `added_on` and `last_checked_on`
 - preserve the existing `shortlist` value on updates
 
@@ -168,17 +174,17 @@ Date rules (`YYYY-MM-DD`, Europe/London):
 - new record → set both `added_on` and `last_checked_on` to today
 - existing record → preserve `added_on` permanently
 - confirmed live refresh → set `last_checked_on` to today after inspecting the official advert or application flow
-- confirmed unavailable → set `last_checked_on` to today and `status: closed`
+- confirmed unavailable → set `last_checked_on` to today and `application_status: closed`
 - interrupted rerun, duplicate lookup, scoring change, preparation edit, or managed-block rewrite without a live-page check → preserve both dates
 
-Status rules (`status` values: `inbox`, `deciding`, `applied`, `passed`, `closed`):
+Application-status rules (`application_status` values: `inbox`, `deciding`, `applied`, `passed`, `closed`):
 
 - clear poor match → `passed`
 - evaluated and viable → `deciding`
 - new records also get `shortlist: false`
 - role verifiably gone → `closed`
 - preserve an existing `applied` or user-set `passed`
-- never downgrade an explicit user status silently
+- never downgrade an explicit user-set `application_status` silently
 
 ### Sibling-roles block
 
