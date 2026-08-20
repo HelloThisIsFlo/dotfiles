@@ -3063,21 +3063,21 @@ def frontmatter(
         "---",
         f"date: {source['session_date']}",
         f"generated_at: {manifest['created_at']}",
-        "WL Type: Walk & Learn",
-        f"review-config_template: {SCHEMA_VERSION}",
-        f"review-input_file: {source['input_file']}",
-        f"review-input_sha256: {source['sha256']}",
-        f"review-run_id: {manifest['run_id']}",
-        f"review-summary_type: {summary_type}",
-        f"review-publication_status: {publication_status}",
-        f"review-audit_status: {audit_status or manifest['audit']['status']}",
+        "kind: Walk & Learn",
+        f"review_config_template: {SCHEMA_VERSION}",
+        f"review_input_file: {source['input_file']}",
+        f"review_input_sha256: {source['sha256']}",
+        f"review_run_id: {manifest['run_id']}",
+        f"review_summary_type: {summary_type}",
+        f"review_publication_status: {publication_status}",
+        f"review_audit_status: {audit_status or manifest['audit']['status']}",
     ]
     if index is not None:
-        lines.append(f"review-candidate_index: {index}")
+        lines.append(f"review_candidate_index: {index}")
     if revision is not None:
-        lines.append(f"review-candidate_revision: {revision}")
+        lines.append(f"review_candidate_revision: {revision}")
     if accepted is not None:
-        lines.append(f"review-accepted: {'true' if accepted else 'false'}")
+        lines.append(f"review_accepted: {'true' if accepted else 'false'}")
     lines.extend(["---", "", ""])
     return "\n".join(lines)
 

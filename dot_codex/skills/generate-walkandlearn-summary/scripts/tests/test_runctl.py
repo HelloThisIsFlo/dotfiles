@@ -1802,8 +1802,12 @@ class RunControllerTests(unittest.TestCase):
         self.assertFalse(list(folder.glob("result_*.md")))
         emotional = (folder / "emotional_0.md").read_text(encoding="utf-8")
         self.assertIn("date: 2026-07-10", emotional)
-        self.assertIn("review-config_template: codex-native-v2", emotional)
-        self.assertIn(f"review-run_id: {run_id}", emotional)
+        self.assertIn("kind: Walk & Learn", emotional)
+        self.assertNotIn("\ntype:\n", emotional)
+        self.assertIn("review_config_template: codex-native-v2", emotional)
+        self.assertIn(f"review_run_id: {run_id}", emotional)
+        self.assertNotIn("WL Type:", emotional)
+        self.assertNotIn("review-", emotional)
         public = json.loads((folder / "run.json").read_text(encoding="utf-8"))
         self.assertEqual(public["schema_version"], "codex-native-v2")
         self.assertEqual(public["publication"]["files"], 8)
@@ -1822,7 +1826,7 @@ class RunControllerTests(unittest.TestCase):
             line = next(
                 line
                 for line in (folder / filename).read_text(encoding="utf-8").splitlines()
-                if line.startswith("review-audit_status:")
+                if line.startswith("review_audit_status:")
             )
             return line.split(":", 1)[1].strip().lower()
 
