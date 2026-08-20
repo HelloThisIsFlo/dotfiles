@@ -182,7 +182,13 @@ Status rules (`status` values: `inbox`, `deciding`, `applied`, `passed`, `closed
 
 ### Sibling-roles block
 
-Every note carries one dataviewjs block between `<!-- sibling-roles:start -->` and `<!-- sibling-roles:end -->`, placed between the frontmatter and the managed decision block. It dynamically lists the company's other roles and warns when one is applied. On a new record, copy it verbatim from any existing note in `Jobs/`. On updates, leave it untouched (only ever replace it wholesale if the canonical version in the corpus has changed).
+Every note carries one dataviewjs block between `<!-- sibling-roles:start -->` and `<!-- sibling-roles:end -->`, placed between the frontmatter and the managed decision block. The block delegates to the shared view:
+
+```dataviewjs
+await dv.view("__meta__/_Dataview_/jobSiblingRoles");
+```
+
+On a new record, insert this canonical call. On updates, leave the markers and call intact. Never copy the shared implementation into a role note.
 
 ### Managed decision block
 
