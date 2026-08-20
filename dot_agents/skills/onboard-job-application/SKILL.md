@@ -55,7 +55,7 @@ A rerun after an interruption is safe: duplicate detection finds the already-wri
 - Apply obvious states only:
   - clearly poor opportunity → `status: passed`
   - otherwise → `status: deciding`
-- Never set or change `tier` — tiers belong to Flo alone.
+- Initialize new records with `shortlist: false`. Never promote or remove an existing role from Flo's shortlist.
 - Never edit `why` on an existing record unless the run produced materially new evidence; Flo may have rewritten it.
 
 ## Existing CV-Tailoring Skill

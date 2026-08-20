@@ -10,10 +10,10 @@ Use Obsidian vault `TheVault`.
    - the 🎯 Applications system (`_AgentSandbox_/💼 Job Search/🎯 Applications/`)
    - the current CV location
 3. Inside 🎯 Applications, read the live:
-   - `INDEX.md` (system guide, statuses, tier contract)
+   - `INDEX.md` (system guide, statuses, shortlist contract)
    - `Jobs.base` definition
    - one or two recent candidate notes in `Jobs/` as the schema example
-4. There is no global ranking. Tiers and the Shortlist belong to Flo; the skill never writes them.
+4. There is no global ranking. The Shortlist belongs to Flo; the skill initializes new roles as unselected and never changes an existing shortlist choice.
 5. Treat dated long-form ranking notes as historical evidence, never as files to update.
 
 If an expected entry point moved, search the vault by concept and content. Do not fail merely because a remembered path changed.
@@ -131,7 +131,7 @@ Use current vault evidence for trajectory, seniority, substantive work, logistic
 
 Write one decisive sentence that lets Flo judge the role from the board without opening the note — the single most decision-driving trade-off or strength. It becomes the `why` property and the opening callout of the managed block.
 
-There is no numeric priority and no ranking against other candidates. Never write `tier`; comparing and shortlisting are Flo's moves.
+There is no numeric priority and no ranking against other candidates. Never promote or remove a role from the Shortlist; comparing and shortlisting are Flo's moves.
 
 Use only role families currently defined in `INDEX.md` unless the existing system clearly cannot represent the role; ask before introducing a new family.
 
@@ -158,7 +158,7 @@ Copy the schema from a recent candidate note in `Jobs/` rather than a schema emb
 - company, role, and role family
 - `status` and the one-sentence `why`
 - semantic dates: `added_on` and `last_checked_on`
-- leave `tier` untouched
+- preserve the existing `shortlist` value on updates
 
 Never manually add or modify `created` or `modified`.
 Never clear an existing `job_board_url` merely because a later run starts from an official URL or pasted advert.
