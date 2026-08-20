@@ -175,7 +175,7 @@ Status rules (`status` values: `inbox`, `deciding`, `applied`, `passed`, `closed
 
 - clear poor match → `passed`
 - evaluated and viable → `deciding`
-- new records also get `shortlisted: false`
+- new records also get `shortlist: false`
 - role verifiably gone → `closed`
 - preserve an existing `applied` or user-set `passed`
 - never downgrade an explicit user status silently
