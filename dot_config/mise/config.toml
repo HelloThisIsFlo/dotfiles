@@ -66,6 +66,9 @@ codex = "latest"
 
 
 [settings]
+# Wait before adopting new releases to reduce supply-chain risk.
+minimum_release_age = '12h'
+
 #
 # Allow mise to read .python-version, .node-version, .ruby-version, .java-version files.
 # 
