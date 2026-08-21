@@ -10,6 +10,27 @@
 <body>
   <div id="app"></div>
   <script>
+    window.renderMermaid = async () => {
+      if (!window.mermaidLoader) {
+        window.mermaidLoader = import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+          .then((module) => {
+            const mermaid = module.default;
+            mermaid.initialize({
+              startOnLoad: false,
+              securityLevel: 'loose',
+              flowchart: { htmlLabels: true },
+            });
+            return mermaid;
+          });
+      }
+
+      const mermaid = await window.mermaidLoader;
+      await mermaid.run({
+        nodes: document.querySelectorAll('.mermaid'),
+        suppressErrors: true,
+      });
+    };
+
     window.$docsify = {
       name: 'Chezmoi Cheatsheets',
       loadSidebar: true,
@@ -18,6 +39,24 @@
         placeholder: 'Search cheatsheets...',
         noData: 'No results',
       },
+      plugins: [
+        function(hook) {
+          hook.afterEach(function(html, next) {
+            const withMermaid = html.replace(
+              /<pre[^>]*><code class="(?:lang|language)-mermaid">([\s\S]*?)<\/code><\/pre>/g,
+              function(_, code) {
+                const withLineBreaks = code.replace(/&(amp;)?lt;br\s*\/?&(amp;)?gt;/gi, '<br/>');
+                return `<pre class="mermaid">${withLineBreaks}</pre>`;
+              }
+            );
+            next(withMermaid);
+          });
+
+          hook.doneEach(function() {
+            window.renderMermaid();
+          });
+        },
+      ],
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
