@@ -1,30 +1,90 @@
 # Mise Tool Management — Cheat Sheet
 
-Managing tool versions with mise: installing, upgrading, pinning, pruning, and running tools ad-hoc. Covers the full lifecycle from "I need node 20" to "clean up old versions."
+You want every project and machine to use the right tool versions without
+manually juggling installers or PATH entries. This covers the practical
+lifecycle: declare, install, upgrade, lock, run temporarily, and clean up.
 
 ---
 
 ## Daily workflow (opinionated)
 
-**One-time setup:** enable auto-locking so `mise.lock` stays in sync automatically.
+> **For a reproducible project:** enable auto-locking in the project's config so
+> `mise.lock` stays in sync automatically.
+>
+> ```toml
+> # mise.toml
+> [settings]
+> lockfile = true
+> ```
+>
+> Global config is different: create its separate lockfile explicitly with
+> `mise lock --global` if you actually want to maintain one.
 
-```toml
-# ~/.config/mise/config.toml (or project mise.toml)
-[settings]
-lockfile = true
+### Install from config
+
+You just cloned a repo, pulled changes, or edited `mise.toml` by hand. Sync your tools to match:
+
+```bash
+mise install                  # install tools from the active config stack
+mise install --dry-run        # preview what would be installed
 ```
 
-**From here, the core loop is three commands:**
+### Add a new tool
 
-| What | Command | What happens |
-|---|---|---|
-| Install everything from config | `mise install` | Reads `mise.toml`, installs missing tools, auto-updates `mise.lock` |
-| Upgrade within constraints | `mise upgrade` | e.g. `python = '3.13'` gets latest 3.13.x, lockfile updates |
-| Upgrade past constraints | `mise upgrade --bump` | Jumps to latest major/minor, rewrites `mise.toml` + lockfile |
-| Try a version temporarily | `mise x node@22 -- node -v` | Uses node 22 for one command, touches nothing |
-| Add a new tool | `mise use eza@latest` | Installs + writes to `mise.toml` + updates lockfile |
+For a project, let mise update the config and install the tool:
 
-After any change, commit both `mise.toml` and `mise.lock`. On another machine, `mise install` reproduces the exact same versions — no resolution, no API calls.
+```bash
+mise use eza@latest           # writes to mise.toml + installs + updates lockfile
+```
+
+For your chezmoi-managed global config, keep the source of truth in chezmoi:
+
+```bash
+chezmoi edit ~/.config/mise/config.toml
+chezmoi apply
+```
+
+The full apply deploys the config, then your run-on-change script runs
+`mise install` automatically when that config changed.
+
+### Upgrade within constraints
+
+Stays within your version spec. `python = '3.14'` gets the latest eligible
+3.14.x. `node = 'lts'` follows the current eligible LTS release, which can move
+to a newer LTS major:
+
+```bash
+mise upgrade                  # upgrade all tools
+mise upgrade node             # upgrade just node
+mise upgrade --dry-run        # preview first
+```
+
+### Upgrade past constraints
+
+Jumps to the latest eligible version and rewrites the config at the same
+precision:
+
+```bash
+mise upgrade --bump           # upgrade all + update config
+mise upgrade node --bump      # bump just node
+```
+
+### Try a version temporarily
+
+`mise x` is the short alias for `mise exec`. It uses the version for one command
+and touches neither config nor lockfile:
+
+```bash
+mise x node@22 -- node -v
+mise x python@3.12 -- python script.py
+```
+
+### After any change
+
+For a project using a lockfile, commit both `mise.toml` and `mise.lock`. On
+another machine, `mise install` reuses the locked versions and available
+artifact metadata. Strict mode is required if you also want to forbid provider
+API resolution.
 
 ---
 
@@ -49,12 +109,12 @@ All of these work — pick the granularity you need:
 
 | Spec | Meaning | Example from your config |
 |------|---------|--------------------------|
-| `latest` | absolute latest release | `delta = 'latest'` |
+| `latest` | newest eligible release | `delta = 'latest'` |
 | `lts` | latest LTS release (node-specific) | `node = 'lts'` |
 | `stable` | latest stable release | `rust = 'stable'` |
 | `3` | latest 3.x.x (prefix match) | `ruby = '3'` |
-| `3.13` | latest 3.13.x | `python = '3.13'` |
-| `1.19.5-otp-28` | exact version with variant | `elixir = '1.19.5-otp-28'` |
+| `3.14` | latest eligible 3.14.x | `python = '3.14'` |
+| `1.20.1-otp-29` | exact version with variant | `elixir = '1.20.1-otp-29'` |
 | `temurin-21` | named distribution + version | `java = 'temurin-21'` |
 
 ### Fuzzy vs pinned
@@ -73,9 +133,11 @@ mise use --pin node@20        # saves "20.15.1" in config (exact resolved versio
 - `--force` — reinstall even if already installed
 - `--remove <tool>` — remove a tool from config
 - `--dry-run` — preview what would happen
-- `--before <date>` — restrict to versions released before a date (`2024-06-01` or `90d`)
+- `--minimum-release-age <age-or-date>` — ignore newer releases when the backend provides release timestamps (`12h`, `2026-08-01`)
 
-**Verdict:** This is the primary command for managing tools. Use it instead of editing `mise.toml` by hand + running `mise install`.
+**Verdict:** This is the primary command for project or unmanaged config. For
+your chezmoi-managed global config, use the repo's `edit → apply` workflow
+instead; the apply hook installs changed tools automatically.
 
 ---
 
@@ -84,13 +146,13 @@ mise use --pin node@20        # saves "20.15.1" in config (exact resolved versio
 **The problem:** You want to install a specific version without writing it to any config file. Or you want to install everything declared in config.
 
 ```bash
-mise install                  # install all tools from mise.toml
+mise install                  # install all tools from active configs
 mise install node@20.15.1     # install a specific version (doesn't touch config)
 mise install --force          # reinstall even if present
 mise install --dry-run        # preview what would be installed
 ```
 
-- **With no args:** installs everything in the current `mise.toml`.
+- **With no args:** installs everything resolved from the active config stack.
 - **With args:** installs the specified version to `~/.local/share/mise/installs/<tool>/<version>`.
 - **Important:** installing alone does NOT activate the tool (won't appear in PATH). Use `mise use` to activate, or `mise exec` for one-off runs.
 
@@ -101,7 +163,9 @@ Mise auto-installs missing tools by default when you:
 - Run `mise run` (tasks)
 - Type a command handled by the "command not found" hook
 
-Controlled by `auto_install = true` (default) in settings. Disable per-tool with `auto_install_disable_tools`.
+Each path has its own setting: `exec_auto_install`, `task.run_auto_install`, and
+`not_found_auto_install`. The broader `auto_install` setting is also enabled by
+default.
 
 **Good for:** Pre-fetching a version you're not ready to switch to, or bootstrapping a fresh machine (`mise install` with no args).
 
@@ -114,7 +178,7 @@ Controlled by `auto_install = true` (default) in settings. Disable per-tool with
 ```bash
 mise ls                       # all installed tools + their source config
 mise ls node                  # just node versions
-mise ls --current             # only tools specified in a mise.toml
+mise ls --current             # only tools active in the current context
 mise ls --global              # only tools from global config
 mise ls --missing             # tools declared in config but not installed
 mise ls --installed           # opposite — only show what's actually on disk
@@ -139,13 +203,13 @@ mise outdated --json          # structured output
 ```
 
 Output columns:
-- **Requested** — what your config says (e.g. `3.13`)
-- **Current** — what's installed (e.g. `3.13.1`)
-- **Latest** — newest version matching your constraint (or absolute latest with `--bump`)
+- **Requested** — what your config says (e.g. `3.14`)
+- **Current** — what's installed (e.g. `3.14.1`)
+- **Latest** — newest eligible version matching your constraint (or beyond it with `--bump`)
 
 The difference between default and `--bump`:
-- Default: `python = '3.13'` only shows newer 3.13.x releases
-- `--bump`: also shows 3.14.x, 3.15.x, etc.
+- Default: `python = '3.14'` only shows newer eligible 3.14.x releases
+- `--bump`: also shows eligible releases beyond the 3.14 constraint
 
 **Good for:** Periodic maintenance. Run `mise outdated` to see what's stale, then decide what to upgrade.
 
@@ -170,9 +234,13 @@ mise upgrade --bump           # upgrade AND update mise.toml to new major/minor
 mise upgrade node --bump      # bump just node
 ```
 
-Without `--bump`: respects your config constraint. `node = 'lts'` stays on current LTS line, `python = '3.13'` stays on 3.13.x.
+Without `--bump`: respects your config constraint. `python = '3.14'` stays on
+3.14.x. Dynamic selectors such as `node = 'lts'` continue to follow their
+eligible channel and may cross a major boundary.
 
-With `--bump`: upgrades to absolute latest AND rewrites `mise.toml` to match. Preserves your precision — if config says `'3'`, it writes `'3'` (not `'3.15.2'`). If config says `'3.13'`, it writes `'3.15'`.
+With `--bump`: upgrades to the latest eligible version and rewrites the config
+selector while preserving its precision. An exact selector remains exact; a
+major/minor selector remains major/minor.
 
 ### Lockfile interaction
 
@@ -184,7 +252,8 @@ See [`mise lock`](#mise-lock--pin-versions-for-reproducible-installs) below. Whe
 
 ## `mise lock` — pin versions for reproducible installs
 
-**The problem:** Fuzzy specs like `node = 'lts'` and `python = '3.13'` resolve to whatever the latest matching release is *today*. Tomorrow a new patch ships, and your teammate gets a different binary. `mise lock` freezes the resolution.
+**The problem:** Fuzzy specs like `node = 'lts'` and `python = '3.14'` can resolve
+to different releases over time. `mise lock` records the current resolution.
 
 ```bash
 mise lock                     # generate/update mise.lock from current mise.toml
@@ -193,22 +262,26 @@ mise lock                     # generate/update mise.lock from current mise.toml
 ### What `mise.lock` contains
 
 ```toml
-[tools.node]
+[[tools.node]]
 version = "22.14.0"
+backend = "core:node"
 
-[tools.node.assets."macos-arm64"]
+[tools.node.platforms.macos-arm64]
 checksum = "sha256:abc123..."
+size = 30485721
 url = "https://nodejs.org/dist/v22.14.0/node-v22.14.0-darwin-arm64.tar.gz"
 ```
 
-Each entry pins the **exact version**, **download URL**, and **checksum** — per platform. With a lockfile present, `mise install` skips all version resolution and API calls entirely.
+Each entry pins an **exact version**. Supported backends can also record the
+platform's download URL, checksum, and size. Backend support varies, so an
+ordinary lockfile does not guarantee that every install avoids provider APIs.
 
 ### The workflow
 
 1. `mise use node@lts` — writes fuzzy spec to `mise.toml`
 2. `mise lock` — resolves and freezes to `mise.lock`
 3. Commit both `mise.toml` + `mise.lock`
-4. On another machine: `mise install` reads `mise.lock` — no resolution, no API calls, same binary
+4. On another machine: `mise install` reuses the recorded resolution and any available artifact metadata
 
 ### Auto-locking
 
@@ -218,13 +291,20 @@ Each entry pins the **exact version**, **download URL**, and **checksum** — pe
 lockfile = true
 ```
 
-With `lockfile = true`, `mise use`, `mise upgrade`, and `mise install` all auto-update `mise.lock` — no need to run `mise lock` manually.
+With `lockfile = true`, install and version-changing commands create or maintain
+the project lockfile. Without it, mise still reads and updates an existing
+lockfile, but does not create one automatically. A global lockfile is created
+explicitly with `mise lock --global`.
 
 ### Strict mode (`MISE_LOCKED=1`)
 
-Refuses to install any tool not in the lockfile. Zero network resolution. Ideal for CI where you want fully reproducible, offline-capable installs.
+Requires a locked URL for the current platform and avoids provider resolution
+APIs. The artifact can still require a network download unless it is cached.
 
-**Verdict: Use it.** Commit `mise.lock` alongside `mise.toml` — it's your `package-lock.json` equivalent. See [Security & Trust](security-trust.md) for checksums, provenance verification, and strict mode details.
+**Verdict:** Use and commit it for projects where reproducibility matters. Treat
+the global lockfile as an explicit choice rather than an automatic companion to
+your chezmoi-managed global config. See [Security & Trust](security-trust.md)
+for checksums, provenance verification, and strict mode details.
 
 ---
 
@@ -240,11 +320,14 @@ mise prune --tools            # only prune unused tool versions
 mise prune --configs          # only prune broken config links
 ```
 
-A version is "unused" if it's not referenced by any tracked config file (mise checks `~/.local/state/mise/tracked-configs`).
+A version is "unused" if it is not referenced by a tracked config file (mise
+checks `~/.local/state/mise/tracked-configs`). Versions used only through
+`MISE_<TOOL>_VERSION` or a one-off `mise exec` can still be considered prunable.
 
 Preview first: `mise ls --prunable` shows what would go.
 
-**Good for:** Periodic cleanup. Safe to run regularly — it won't touch anything actively referenced.
+**Good for:** Periodic cleanup. Preview first if you rely on environment-only or
+one-off versions.
 
 ---
 
@@ -299,29 +382,38 @@ Output is one path per line — the directories containing the actual executable
 
 ---
 
-## Version resolution order — how mise decides which version to use
+## Version resolution — how mise decides which version to use
 
 **The problem:** You have `mise.toml` in your project, a global config, and maybe a `.python-version` file. Which one wins?
 
-### Config file precedence (highest to lowest, per directory)
+Mise merges global config, ancestor directories, the project directory, local
+overrides, environment-specific config, and enabled idiomatic version files.
+Closer or higher-precedence sources win per tool, while non-conflicting entries
+continue to merge.
 
-1. `mise.local.toml` (git-ignored local overrides)
-2. `mise.toml`
-3. `mise/config.toml`
-4. `.mise/config.toml`
-5. `.config/mise.toml`
-6. `.config/mise/config.toml`
-7. `.config/mise/conf.d/*.toml` (alphabetical)
+### Config file precedence
 
-### Directory tree resolution
+Within one directory, these are checked from highest to lowest precedence:
 
-Mise walks **up** from your current directory to `/`. Closer configs win:
+| Priority | File |
+|---|---|
+| 1 | `mise.local.toml` |
+| 2 | `mise.toml` |
+| 3 | `mise/config.toml` |
+| 4 | `.mise/conf.d/*.toml` (alphabetical) |
+| 5 | `.config/mise.toml` |
+| 6 | `.config/mise/config.toml` |
+| 7 | `.config/mise/conf.d/*.toml` (alphabetical) |
 
-```
-~/src/work/myproj/mise.toml    <-- wins for this project
-~/src/work/mise.toml            <-- applies if myproj doesn't override
-~/.config/mise/config.toml      <-- global fallback
-```
+> **Dotfile and environment variants.** Paths beginning with `mise` can also
+> begin with a dot, such as `.mise.toml`. `MISE_ENV` adds environment-specific
+> variants such as `mise.production.toml`; local variants take precedence.
+
+### Directory precedence
+
+Mise walks upward from your current directory. A config in the current project
+overrides a conflicting value from its parent directory or the global config,
+but all non-conflicting values still merge.
 
 ### Idiomatic version files
 
@@ -333,22 +425,32 @@ Mise walks **up** from your current directory to `/`. Closer configs win:
 idiomatic_version_file_enable_tools = ['python', 'node', 'ruby', 'java']
 ```
 
-When enabled, these files are evaluated alongside `mise.toml` at the same directory level. The `mise.toml` entry wins if both exist in the same directory.
+When enabled, these files are evaluated alongside mise config at the same
+directory level. Mise config wins for the same tool.
 
-### Environment-specific configs
-
-Set `MISE_ENV=production` and mise also loads `mise.production.toml`, which overrides the base `mise.toml`.
-
-**Key insight:** The resolution is always "most specific directory + most specific file wins." Global config is just the fallback, not a floor.
+Use `mise config ls` to see loaded config files, `mise ls --current` to see the
+resolved tools, and `mise which <tool>` to see the selected binary. See
+[Config Hierarchy](config-hierarchy.md) for the full merge rules and
+environment-specific resolution.
 
 ---
 
-## Quick decision guide
+## Related
+
+- [Backends](backends.md) — aqua, cargo, npm, and other install backends
+- [Config Hierarchy](config-hierarchy.md) — config file resolution and merge semantics
+- [Language Features](language-features.md) — Python, Node, Ruby, Java-specific settings
+- [Security & Trust](security-trust.md) — lockfile checksums, provenance verification, strict mode
+- [Settings](settings.md) — auto_install, pin, and other tool management settings
+
+---
+
+## Quick reference
 
 | I want to... | Use |
 |---|---|
 | Add a tool to my project | `mise use node@20` |
-| Add a tool globally | `mise use -g node@lts` |
+| Add a tool to chezmoi-managed global config | `chezmoi edit` → `chezmoi apply` |
 | Pin exact version in config | `mise use --pin node@20` |
 | Install without changing config | `mise install node@20.15.1` |
 | Install everything from config | `mise install` |
@@ -362,14 +464,5 @@ Set `MISE_ENV=production` and mise also loads `mise.production.toml`, which over
 | Find where a tool is installed | `mise where node` |
 | Debug PATH issues | `mise bin-paths` |
 | See what version would be used here | `mise ls --current` |
-| Pin exact versions for reproducible installs | `mise lock` (commit `mise.lock`) |
-
----
-
-## Related
-
-- [Backends](backends.md) — aqua, cargo, npm, and other install backends
-- [Config Hierarchy](config-hierarchy.md) — config file resolution and merge semantics
-- [Language Features](language-features.md) — Python, Node, Ruby, Java-specific settings
-- [Security & Trust](security-trust.md) — lockfile checksums, provenance verification, strict mode
-- [Settings](settings.md) — auto_install, pin, and other tool management settings
+| Lock a project for reproducible installs | `mise lock` (commit `mise.lock`) |
+| Lock the global config explicitly | `mise lock --global` |
