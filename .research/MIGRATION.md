@@ -21,33 +21,39 @@ Each phase checklist includes Mackup cleanup items — a phase is not done until
 
 ## Current State
 
-Last broad audit: 2026-03-03
+Last broad audit: 2026-08-21
 
 Live chezmoi state changes frequently. Check it with `chezmoi status`; do not treat this tracker as a live status snapshot.
 
+The 2026-08-21 audit had full template coverage, no target-side edits or
+two-sided conflicts, and one source-driven Mise `run_onchange` script pending.
+
 ### Summary
 
+**Active phase:** Phase 4, secret migration.
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
-| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | `[data]` prompts for email/trust_level/is_headless; derives `time_machine_enabled`; 1Password account mode uses desktop authorization; delta diff; autoCommit off |
-| Install hook (`.ensure-password-manager-installed.sh`) | Done     | Installs `rbw`, replaces old `.install-password-manager.sh`                |
-| 1Password                                     | Migration active  | `Chezmoi` vault; account mode with `prompt = false`; `FASTLANE_SESSION` is the first migrated consumer |
+| chezmoi config (`.chezmoi.toml.tmpl`)         | Done              | Prompts for email, trust, headless, and host universe; derives Time Machine capability; configures 1Password, delta, and manual Git commits |
+| Install hook (`.hooks/read-source-state.pre/01-ensure-password-manager.sh`) | Done | Ensures `rbw` is installed before source templates are read |
+| 1Password                                     | Migration active  | `Chezmoi` vault; account mode with `prompt = false`; Fastlane and Cloudflare are migrated consumers |
 | `rbw` / Bitwarden                             | Migration fallback | Retained for rollback and unmigrated consumers; remove only after the final rbw reference is converted |
-| `.chezmoiignore`                              | Created           | Ignores `CLAUDE.md` (repo instructions) and `.research/` from target       |
+| `.chezmoiignore`                              | Managed           | Excludes research, runtime files, machine-ineligible targets, and ignored external agent assets |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
 | Time Machine exclusions                       | Managed           | `time_machine_enabled` is derived for personal GUI Macs; YAML is authoritative for the global user-managed fixed-path `SkipPaths` set |
-| Mackup public dotfiles                        | Nearly done       | 1 symlink remains (`.logseq/` — deferred to Phase 4, has API key). `.npmrc` dropped. `.spacemacs.d/`, `.ipython/` migrated. |
-| Mackup secret dotfiles                        | Still symlinked   | 6 symlinks → `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
-| macOS plists                                  | Forgotten         | All plists removed from chezmoi (`chezmoi forget`). Will re-add as `defaults write` scripts in Phase 5 |
+| Mackup public dotfiles                        | Nearly done       | 1 active symlink remains (`.logseq/`); legacy unlinked sources still need Phase 7 cleanup |
+| Mackup secret dotfiles                        | Still symlinked   | 6 active symlinks: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
+| macOS plists                                  | Forgotten         | No plist files remain tracked; selected preferences still need deterministic Phase 5 scripts |
+| macOS defaults framework                      | Partial           | Data-driven YAML + `run_onchange` script exists; currently manages one OmniFocus setting |
 | `.gitconfig`                                  | Done              | Managed as `private_dot_gitconfig.tmpl`, templatised (email, homeDir)      |
 | `.gitignore_global`                           | Done              | Managed as `private_dot_gitignore_global`, audited and modernized          |
-| `~/.claude/CLAUDE.md`                         | Done              | Managed as `dot_claude/CLAUDE.md`, plain file                              |
+| Shared agent instructions                     | Done              | `~/.agents/AGENTS.md` is canonical; Claude and Codex global adapters symlink to it |
+| `~/.claude/CLAUDE.md`                         | Done              | Managed by `dot_claude/symlink_CLAUDE.md.tmpl` as an adapter to the shared source |
 | `~/.claude/settings.json`                     | Done              | Managed as `dot_claude/settings.json`, plain file (target-authoritative)   |
 | `~/.claude/commands/daily-summary.md`         | Done              | Managed as `dot_claude/commands/daily-summary.md`, plain file              |
-| `~/.claude/skills/` (symlinks)                | Done              | `explore-and-present` + `flo-cheatsheet` as `.tmpl` symlinks, trust_level guarded |
-| `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 5 project memories, plain files (target-authoritative)                     |
+| `~/.claude/skills/` (symlinks)                | Done              | 26 managed shared-skill adapters; external and GSD assets remain ignored by policy |
+| `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 6 managed project memory roots; 12 currently exist live                    |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 secret-backend migration. |
 | `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
@@ -67,7 +73,7 @@ Live chezmoi state changes frequently. Check it with `chezmoi status`; do not tr
 
 ### What's broken or degraded
 
-- **Mackup symlinks are a ticking clock** — macOS 14+ (Sonoma) breaks `cfprefsd` symlinks in `~/Library/Preferences`. See [migration-status.md known issue](2026-02-17/migration-status.md#important-going-back-to-mackup-is-not-viable).
+- **Mackup retirement is incomplete** — seven active config/secret symlinks still depend on legacy source directories. No preference-plist symlinks remain, so the old Sonoma `cfprefsd` breakage no longer affects the active set.
 
 ---
 
@@ -88,7 +94,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `chezmoi forget` all noisy plists (Bartender, Clocker, iStat Menus, Moom, Raycast, Ice, Mos, VLC) — deferred to Phase 5
 - [x] `chezmoi forget` empty `Library/` directories, `CLAUDE.md`, `doc/`
 - [x] Create `.chezmoiignore` — excludes `CLAUDE.md` and `.research/` from target
-- [x] Move `~/CLAUDE.md` → `~/.claude/CLAUDE.md` (repo CLAUDE.md stays at root for Claude Code, home dir instructions live in `~/.claude/`)
+- [x] Remove inherited `~/CLAUDE.md`; deploy shared global instructions at `~/.agents/AGENTS.md` with Claude and Codex adapters
 - [x] Disable `autoCommit` in `.chezmoi.toml.tmpl` — prefer semantic commits over mechanical per-operation commits
 - [x] Decision: **delta is a requirement everywhere** — no `lookPath` guards in config or templates. Phase 6.5 will ensure delta is installed on all platforms
 
@@ -100,7 +106,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `.gitconfig`: delete source from Mackup folder (commit deferred to Phase 7 cleanup)
 - [x] `.gitignore_global`: break symlink, `chezmoi add`, delete from Mackup, audited and modernized
 - [x] `.ssh/config`: added to chezmoi, templatised (UseKeychain OS guard, trust_level personal block, $ts Tailscale var, stale hosts removed)
-- [x] Add `~/.claude/CLAUDE.md` to chezmoi (`dot_claude/CLAUDE.md`)
+- [x] Add `~/.claude/CLAUDE.md` to chezmoi; later convert it to a symlink adapter for `~/.agents/AGENTS.md`
 
 ### Phase 3: Triage + Migrate Mackup Symlinks ✅ (`.logseq/` deferred to Phase 4)
 
@@ -113,9 +119,9 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `.spacemacs.d/`: migrated `init.el` + `layers/the-standalones/packages.el` (archived config, not actively used)
 - [x] `.ipython/`: migrated `profile_default/ipython_config.py` only (skipped runtime dirs)
 - [x] Cleanup: `.tmux.conf` deprecated section removed + 4 QoL settings added; `.ansible.cfg` stale inventory removed; `.amethyst.yml` floating list updated
-- [x] Verify `~/config-in-the-cloud/dotfiles/restored_via_mackup/` has only `Library/` and `.logseq/` (deferred)
+- [x] Verify `.logseq/` is the only remaining active public Mackup symlink; unlinked legacy sources are deferred to Phase 7 cleanup
 
-### Phase 3.5: Non-Mackup Unmanaged Config ⬜
+### Phase 3.5: Non-Mackup Unmanaged Config ✅
 
 - [x] `~/.config/karabiner/karabiner.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
 - [x] `~/.config/linearmouse/linearmouse.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
@@ -153,6 +159,8 @@ At-a-glance view of every task. Check items off as they're completed.
 
 ### Phase 5: Volatile Plists → `defaults write` Scripts ⬜
 
+- [x] Create the data-driven `.chezmoidata/macos_defaults.yaml` + `run_onchange_after_0011-MACOS-defaults.sh.tmpl` framework
+- [x] Forget all raw plist files before rebuilding selected preferences declaratively
 - [ ] **Control Center:** `com.apple.controlcenter.plist` — back up macOS Control Center preferences via `defaults write` script. Also: audit other common macOS system plists worth backing up (Dock, Finder, NSGlobalDomain, keyboard/trackpad settings, etc.) and prompt Flo to decide which to include.
 - [ ] ShiftIt: `defaults write` for all `*KeyCode`/`*Modifiers` keys
 - [ ] Rocket: `defaults write` for trigger char, launch-at-login, use-fuzzy-search
@@ -160,8 +168,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [ ] Keyboard Maestro: manage `Macros.plist` as binary file; serial via 1Password template
 - [ ] SteerMouse: manage `Device.smsetting` as binary file (not a plist)
 - [ ] iTerm2: `defaults write` for `GlobalKeyMap`, `Profiles`, `TabStyle` (do last — most complex)
-- [ ] Moom, Clocker, iStat Menus: already in chezmoi as plists — convert to run scripts
-- [ ] `chezmoi forget` raw plist files as each script replaces them
+- [ ] Moom, Clocker, iStat Menus: decide which settings are still worth restoring, then add only those keys to the defaults framework
 - [ ] Pock, Spotify, Telegram, WhatsApp: document decision (noise-only plists — no user config to preserve, only window positions/update timestamps/session data)
 
 ### Phase 6: Multi-Machine Testing ⬜
@@ -206,8 +213,8 @@ Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 - [ ] Clean `~/config-in-the-cloud/dotfiles-binary/restored_via_mackup/`
 - [ ] Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to 1Password, archive stale contexts
 - [ ] Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
-- [ ] Build Claude Code assistant skill for health checks
-- [ ] Rewrite CLAUDE.md — remove migration section
+- [x] Build the shared `chezmoi-status` health skill and Claude adapter (manual-only while migration remains active)
+- [ ] Rewrite repo instructions — remove migration section
 - [ ] Archive MIGRATION.md
 - [ ] Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
 
@@ -231,7 +238,7 @@ When migration is complete:
 - Volatile plists replaced by `run_onchange_` scripts with `defaults write`
 - `.chezmoi.toml.tmpl` prompts for machine type, email, headless flag
 - `chezmoi init --apply <github-user>` works from scratch on Mac + Linux
-- A Claude Code skill handles ongoing health checks and triage
+- The shared `chezmoi-status` skill handles ongoing health checks and triage
 - `~/config-in-the-cloud/*/restored_via_mackup/` directories cleaned up or archived
 
 ---
@@ -272,7 +279,7 @@ Reference: [next-actions.md §Phase 2](2026-02-25/next-actions.md#phase-2-first-
 
 Reference: [migration-status.md §Mackup symlinks](2026-02-17/migration-status.md#whats-still-symlinked-by-mackup)
 
-**Triage table** — verified from live symlinks (`find ~ -maxdepth 1 -type l`, 2026-02-26).
+**Triage table** — historical decisions from the 2026-02-26 live-symlink audit.
 
 Public (`~/config-in-the-cloud/dotfiles/restored_via_mackup/`):
 
@@ -281,11 +288,11 @@ Public (`~/config-in-the-cloud/dotfiles/restored_via_mackup/`):
 | `~/.gitconfig`           | Migrate (Phase 2)          | Template with email/name/homeDir                                          |
 | `~/.gitignore_global`    | Migrate (Phase 2)          | Referenced by .gitconfig                                                  |
 | `~/.tmux.conf`           | Migrate                    | Plain file, no templating needed                                          |
-| `~/.tool-versions`       | Migrate                    | asdf version pins (18 tools)                                              |
+| `~/.tool-versions`       | Migrated, later retired    | Global tool ownership moved to Mise                                      |
 | `~/.npmrc`               | Migrate (check for tokens) | May need a password-manager template if auth tokens are present           |
 | `~/.ideavimrc`           | Migrate                    | JetBrains vim bindings, plain file                                        |
 | `~/.ansible.cfg`         | Migrate                    | Sets default inventory path; low priority but real config                 |
-| `~/.asdfrc`              | Migrate                    | Plain file (`java_macos_integration_enable`)                              |
+| `~/.asdfrc`              | Migrated, later retired    | Source removed with asdf; an unmanaged live remnant still needs cleanup  |
 | `~/.pythonrc`            | Migrate                    | 1 byte file                                                               |
 | `~/.amethyst.yml`        | Migrate                    | Actively used window manager (11KB, recently updated)                     |
 | `~/.carbon-now.json`     | Migrate                    | Code screenshot tool settings; low priority but real config               |
@@ -338,7 +345,7 @@ These files live in `~/.config/` but were never managed by Mackup — they were 
 
 Reference: [next-actions.md §Phase 3](2026-02-25/next-actions.md#phase-3-secrets)
 
-**Active Mackup secret symlinks** (verified 2026-03-03, all point to `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
+**Active Mackup secret symlinks** (re-verified 2026-08-21, all point to `~/config-in-the-cloud/dotfiles-secret/restored_via_mackup/`):
 
 | Symlink | Contents | Notes |
 |---|---|---|
@@ -382,20 +389,23 @@ Reference: [migration-status.md §The Plist Question](2026-02-17/migration-statu
 **Per-app approach:**
 - **Simple `defaults write` apps:** ShiftIt, Rocket, Bartender — small number of meaningful keys, straightforward scripts
 - **Binary file apps:** Keyboard Maestro (`Macros.plist`), SteerMouse (`Device.smsetting`) — manage as binary files in chezmoi, not `defaults write`
-- **Already in chezmoi (convert to scripts):** Moom, Clocker, iStat Menus — currently tracked as raw plists with MM drift, replace with run scripts
+- **Previously tracked, now forgotten:** Moom, Clocker, iStat Menus — decide which settings still matter, then add only those keys to the data-driven defaults framework
 - **Complex:** iTerm2 — most keys, do last
 - **Skip (noise-only):** Pock, Spotify, Telegram, WhatsApp — no user config in git history, only window positions/session data
 
-For each app: create `run_onchange_after_configure-<app>.sh.tmpl`, then `chezmoi forget` the raw plist
+Prefer adding stable keys to `.chezmoidata/macos_defaults.yaml`, which is rendered
+by the shared `0011-MACOS-defaults` script. Use a dedicated script or managed
+binary only when the shared defaults framework does not fit.
 
 ### Source Audit: config-in-the-cloud/
 
-Full audit completed 2026-02-26. Reference table for all subfolders:
+Initial full audit completed 2026-02-26; active symlink counts refreshed
+2026-08-21. Reference table for all subfolders:
 
 | Subfolder | Contents | Status | Feeds into |
 |---|---|---|---|
-| `dotfiles/restored_via_mackup/` | 14 public dotfile symlinks | Active | Phase 2–3 |
-| `dotfiles-secret/restored_via_mackup/` | 5 secret dotfile symlinks | Active | Phase 4 |
+| `dotfiles/restored_via_mackup/` | 1 active symlink plus legacy unlinked sources | `.logseq/` active; cleanup pending | Phase 4 + Phase 7 |
+| `dotfiles-secret/restored_via_mackup/` | 6 active secret symlinks | Active | Phase 4 |
 | `dotfiles-binary/restored_via_mackup/` | App plists + Library data (copy-not-symlink) | Active | Phase 5 |
 | `dotfiles-binary/plist_human_readable/` | XML versions of binary plists | Reference | Phase 5 analysis |
 | `secrets/` | TLS certs (5 contexts), SSH keys, DO tokens | Partially stale | Phase 4 + Phase 7 |
@@ -457,8 +467,8 @@ Design pattern: tool lists in `.chezmoi.toml.tmpl` `[data.tools]` tables, run sc
 - Clean all `~/config-in-the-cloud/*/restored_via_mackup/` directories
 - Audit `~/config-in-the-cloud/secrets/` — migrate live tokens to 1Password, archive stale contexts
 - Audit `~/config-in-the-cloud/ansible-magic/` — archive after SSH config migrated in Phase 2
-- Build Claude Code assistant skill for chezmoi health checks
-- Rewrite CLAUDE.md — remove migration section, add maintenance guidance
+- Shared `chezmoi-status` skill + Claude adapter built ✅
+- Rewrite repo instructions — remove migration section, add maintenance guidance
 - Archive MIGRATION.md
 - Update Notion "Dev Environment Steps" — mark automated steps, link to chezmoi repo
 
@@ -489,29 +499,33 @@ Steps:
 
 | Before (now)                                  | After (post-migration)                                             |
 | --------------------------------------------- | ------------------------------------------------------------------ |
-| CLAUDE.md has "Migration in progress" section | Replaced with maintenance-mode operating instructions              |
-| Agents guided to help with migration phases   | Agents use the assistant skill for health checks                   |
+| Repo `AGENTS.md` has a migration section      | Replaced with maintenance-mode operating instructions              |
+| Agents check both tracker files manually      | Shared health skill becomes the primary status workflow            |
 | MIGRATION.md is the primary coordination doc  | Archived — moved to `.research/2026-xx-xx/` or marked `[COMPLETE]` |
 | Mixed Mackup symlinks + chezmoi files         | Everything in chezmoi, Mackup retired                              |
-| Plist files tracked as binary blobs           | `defaults write` scripts, deterministic and diffable               |
+| Raw plists are forgotten; selected prefs partial | Chosen preferences use deterministic `defaults write` automation |
 
 
 ### The assistant skill
 
-A Claude Code skill replaces this migration document as the ongoing agent workflow. Rationale and full spec: [assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md).
+The shared `chezmoi-status` skill already exists, with a Claude adapter. It is
+manual-only and read-only while migration remains active. After transition, it
+replaces this document as the primary health workflow. Historical rationale:
+[assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md).
 
 The skill handles:
 
-- **Health check / triage** — run `chezmoi status` + `chezmoi diff`, classify each change as "apply", "re-add", or "conflict"
-- **Target-authoritative file detection** — know which directories (e.g., `~/.claude/`) need `re-add` before `apply`
-- **Safety enforcement** — always re-add target-authoritative files before apply, warn on overwrites
-- **Semantic commits** — group related changes into meaningful commits
-- **File flow awareness** — encoded in a manifest (`.chezmoi-workflow.yaml` or similar)
-- **Unmanaged file detection** — run `chezmoi unmanaged` on watched directories (`~/.claude/agents/`, `~/.claude/commands/`, `~/.claude/skills/`) at session start. Alert if new files exist that should be added to chezmoi. This is the only way to catch newly-created files since chezmoi doesn't auto-discover target-side additions.
+- **Managed-state coverage** — distinguishes full template verification from partial non-template coverage
+- **Git and WIP triage** — inspects dirty themes and reconciles them with `.research/WIP.md`
+- **Agent-asset health** — finds unmanaged shared skills and broken Claude adapters without requiring duplicate Codex adapters
+- **Migration routing** — reads this tracker and reports the active phase, next action, and contradictions
+- **Strict read-only operation** — never applies, re-adds, stages, or commits
 
-### When to build it
+### Current status
 
-After Phases 1–5 are complete. The skill needs a real, fully-set-up repo to be useful — building it against a half-migrated repo would encode workarounds for incomplete config.
+Built on 2026-07-11 and made explicitly manual-only on 2026-07-21. Keep that
+boundary until the migration is complete; any maintenance-mode expansion is a
+separate design decision.
 
 ---
 
@@ -522,11 +536,17 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-08-21 | Tracker audit and shared instruction docs | Reconciled WIP, migration, and repo-instruction summaries with live Git, chezmoi, Mackup, plist, Mise, and agent-adapter state. |
+| 2026-08-21 | Shared Codex and Claude instructions documented | Added the instruction-system cheat sheet and clarified shared source, adapters, Codex fallback discovery, and Cowork limits. |
 | 2026-07-29 | Cloudflare LaunchAgent repaired | Replaced `cloudflared service install` output, which omitted `tunnel run`, with a chezmoi-owned plist. Added deterministic Homebrew update ownership, reload handling, and startup liveness verification. |
 | 2026-07-29 | TheMac Cloudflare Tunnel made reproducible | Added the 1Password-backed `0400` runtime credential and user LaunchAgent installer. Kept `cert.pem` intentionally unmanaged because it is regenerable and not required at runtime. |
 | 2026-07-21 | First 1Password secret migrated (Phase 4) | Configured account mode with desktop-app authorization (`prompt = false`). Migrated `FASTLANE_SESSION` to `onepasswordRead`, gated it to personal machines, and enforced `0600`; retained the matching rbw item for rollback. |
+| 2026-07-21 | Chezmoi health skill made manual-only | Kept the shared status collector read-only and required explicit `$chezmoi-status` invocation. |
 | 2026-07-20 | Time Machine exclusions (Phase 6.5) | Added the derived `time_machine_enabled` capability and an exclusions-only script. YAML owns the exact global user-managed fixed-path `SkipPaths` set; automatic, sticky, and volume exclusions are untouched. Existing snapshots are unchanged. |
+| 2026-07-11 | Shared chezmoi health skill built | Added schema-v2 collection and evidence-backed Git, managed-state, agent-asset, WIP, and migration reporting. |
 | 2026-05-17 | Cloudflared configs onboarded (Phase 4 partial) | Non-secret files added under `private_dot_cloudflared/`: `config-themac.yml.tmpl`, `symlink_config.yml.tmpl`, and `README.md`. Secret handling and autostart were still pending. |
+| 2026-04-12 | Data-driven macOS defaults framework | Added YAML-owned defaults entries and a shared `run_onchange` renderer; currently used for one OmniFocus setting. |
+| 2026-04-03 | Mise bootstrap automated | Added Mise installation, global config ownership, and a config-hashed `mise install` run script. |
 | 2026-03-26 | Brewfile major cleanup                   | Removed all `tap` lines (fully-qualified names auto-tap). Pruned ~60 unused deps (languages, build tools, stale formulas). Removed 115 `vscode` lines (VS Code Settings Sync handles extensions). Added modern CLI tools: difftastic, hyperfine, lazygit, sd, zoxide. Created [modern-replacements cheatsheet](cheatsheets/cli/modern-replacements.md). |
 | 2026-03-04 | **Phase 3.5 complete**                 | `~/.config/gh/` added (config.yml customized, hosts.yml personal-only). `~/.config/git/ignore` deleted (redundant, 11× duplicate). Renamed trust_level `server` → `untrusted`. |
 | 2026-03-03 | Brew bundle hardened + comparison guide    | Added `--no-upgrade` to `run_onchange_after_brew-bundle.sh.tmpl` to prevent `brew bundle --adopt` creating zombie cask state. Wrote [brew-management-approaches.md](cheatsheets/chezmoi/brew-management-approaches.md) comparing three chezmoi-blessed approaches (dot_Brewfile, .chezmoidata, inline template). Migration to data-driven approach deferred pending decision. |
@@ -556,7 +576,7 @@ Reverse-chronological log.
 
 - **VS Code settings sync:** VS Code has built-in Settings Sync — extensions managed there, not in Brewfile. 115 `vscode "..."` lines removed from `dot_Brewfile` on 2026-03-26. If Brewfile-managed extensions are ever wanted again, use `brew bundle dump --vscode` to regenerate the list.
 - **Ice.plist:** Forgotten from chezmoi. Will be handled in Phase 5 if needed.
-- **`.claude/` directory:** Managed: `CLAUDE.md`, `settings.json`, `commands/daily-summary.md`, skill symlinks, 5 project memories. Not managed (by design): `settings.local.json`, `hooks/`, `agents/` (all GSD), `get-shit-done/`, runtime dirs. Target-authoritative files use `re-add` workflow.
+- **`.claude/` directory:** Managed: shared `CLAUDE.md` adapter, `settings.json`, `commands/daily-summary.md`, one non-GSD hook, 26 shared-skill adapters, and 6 project memory roots. The live directory currently has 34 skill symlinks and 12 project memory roots because ignored external/GSD/runtime assets coexist. Use `re-add` only for plain target-authoritative files, not adapters or shared source assets.
 - **SteerMouse:** Still in use? Affects whether to invest in chezmoi management of `Device.smsetting`.
 - **`secrets/awesometeam-*`:** Confirm stale before archiving in Phase 7.
 - **`.logseq/git/`:** Check if this is config or state — migrate if config, skip if state.
@@ -574,8 +594,8 @@ Reverse-chronological log.
 | Phased action plan            | [next-actions.md](2026-02-25/next-actions.md)                           | Detailed instructions per phase                   |
 | Migration assessment (Feb 17) | [migration-status.md](2026-02-17/migration-status.md)                   | What's managed, what's symlinked, plist deep dive |
 | Original CLAUDE.md            | [ORIGINAL_CLAUDE.md](2026-02-17/ORIGINAL_CLAUDE.md)                     | Pre-migration CLAUDE.md snapshot                  |
-| Assistant skill spec          | [assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md) | Why a skill, what it does, when to build          |
-| Cheatsheet index              | [cheatsheets/INDEX.md](cheatsheets/INDEX.md)                            | 10 topic cheatsheets for chezmoi                  |
+| Assistant skill rationale     | [assistant-skill-rationale.md](2026-02-25/assistant-skill-rationale.md) | Historical design rationale; implementation now exists |
+| Cheatsheet index              | [cheatsheets/INDEX.md](cheatsheets/INDEX.md)                            | Current topic index                               |
 | Plist tutorial                | [plist-chezmoi-tutorial.html](2026-02-17/plist-chezmoi-tutorial.html)   | HTML reference on plist management                |
 | config-in-the-cloud/ audit   | MIGRATION.md §Source Audit                                              | Subfolder inventory                               |
 | Ansible SSH config template  | `ansible-magic/.../base_ssh_config`                                     | Source for `~/.ssh/config`                        |

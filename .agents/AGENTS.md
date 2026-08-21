@@ -37,16 +37,16 @@ The GitHub remote is **public** (intentionally — secrets are kept out of sourc
 
 ## Migration in progress
 
-> **Temporary section.** Once migration completes, this is replaced with maintenance-mode operating instructions and an assistant skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
+> **Temporary section.** A manual-only chezmoi health skill already exists. Once migration completes, this section is replaced with maintenance-mode operating instructions and that skill becomes the primary agent workflow. See MIGRATION.md §Post-Migration Transition.
 
 This repo is migrating from Mackup symlinks to fully chezmoi-managed config. Current state:
 
 - **Tracker:** `.research/MIGRATION.md` — the living migration document. Read it for full status, phase checklists, and what's broken.
-- **~20 files still Mackup-symlinked** — `.gitconfig`, VS Code settings, secret env files, and others. Not yet in chezmoi.
-- **Plist drift** — 5 plists show MM (modified-modified) status. Apps write runtime data into tracked files. These will be replaced by `defaults write` scripts.
+- **7 active Mackup symlinks remain** — `.logseq/` plus six secret-bearing paths. Phase 4 owns all seven.
+- **Raw plists are no longer tracked** — Phase 5 is about rebuilding selected preferences with deterministic scripts, not resolving current plist drift.
 - **Secrets migration underway** — new migrations use 1Password; rbw remains temporarily for rollback and unmigrated consumers.
 
-**For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with `chezmoi apply` — plist drift means it can silently overwrite target changes. **After completing any migration work, update the Progress Checklist in `.research/MIGRATION.md` — check off finished items, update the Current State table, and add an entry to the Completed Items log.**
+**For agents:** When the user works on this repo, proactively check `.research/MIGRATION.md` for current phase status and suggest next migration steps if relevant to the task at hand. Be careful with broad `chezmoi apply` runs because they can execute pending scripts; inspect status first and scope applies when practical. **After completing any migration work, update the Progress Checklist in `.research/MIGRATION.md` — check off finished items, update the Current State table, and add an entry to the Completed Items log.**
 
 ## CLI exploration (parallel track)
 
