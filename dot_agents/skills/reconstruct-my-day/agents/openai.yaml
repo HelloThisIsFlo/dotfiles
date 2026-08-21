@@ -1,4 +1,4 @@
 interface:
   display_name: "Reconstruct My Day"
-  short_description: "Evidence-backed reconstruction of a recent day"
-  default_prompt: "Use $reconstruct-my-day to reconstruct yesterday from my Codex, ChatGPT, calendar, and local activity."
+  short_description: "Computer History-first evidence recap"
+  default_prompt: "Use $reconstruct-my-day for a fast Computer History-first recap of yesterday, with options to go deeper or hand the agreed timeline to Structured."
