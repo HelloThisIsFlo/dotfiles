@@ -20,6 +20,7 @@ project_doc_fallback_filenames = [".agents/AGENTS.md"]
 # interactive           .zshenv + .zshrc           .zshenv + .zprofile + .zshrc + .zlogin
 allow_login_shell = false
 # chezmoi-managed:end
+{{- /* The regexes remove old managed blocks; trimSuffix only keeps the final separator stable. */ -}}
 {{- "\n" -}}{{ .chezmoi.stdin
   | replaceAllRegex "(?s)^# chezmoi-managed:start codex-agents-fallback.*?# chezmoi-managed:end\n*" ""
   | replaceAllRegex "(?s)^# chezmoi-managed:start codex-shell-execution.*?# chezmoi-managed:end\n*" ""

@@ -2,6 +2,8 @@
 - **CLI**
 - [Modern Replacements](cli/modern-replacements.md)
 - [Candidates to Explore](cli/candidates.md)
+- **Agents**
+- [Codex and Claude Instructions](agents/codex-claude-instructions-cheatsheet.md)
 - **Cloudflare**
 - [Tunnels](cloudflare/tunnels.md)
 - **Keybinds**
