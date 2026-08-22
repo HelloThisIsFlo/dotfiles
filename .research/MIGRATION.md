@@ -181,26 +181,23 @@ At-a-glance view of every task. Check items off as they're completed.
 
 Source: `.research/2026-02-26/Dev Environment Steps (from Notion).md`
 
-**Design pattern:** Tool lists live in `.chezmoi.toml.tmpl` as `[data.tools]` tables (pip, npm, cargo, go). Run scripts iterate over those lists with `{{ range }}`. This decouples *what* to install from *how* — same pattern as the existing Brewfile/brew-bundle workflow. When you add a tool to the data list, chezmoi detects the change hash and re-runs the script.
+**Current implementation:** Mise provides one inventory for versioned languages
+and most cross-platform CLI tools. Homebrew remains the macOS package layer.
+This captures most of the original central-inventory goal without custom
+per-ecosystem automation.
 
-```toml
-# In .chezmoi.toml.tmpl [data] section:
-[data.tools]
-    pip = ["hierarchy", "glances", "ipython", "pre-commit", "poetry", "awscli", "homeassistant-cli", "black[d]"]
-    npm = ["yarn", "pragmatic-motd"]
-    cargo = ["git-delta"]
-    go = ["github.com/cheat/cheat/cmd/cheat@latest"]
-```
+**Low-priority design option:** A chezmoi-owned `[data.tools]` layer could still
+unify tool declarations across Homebrew, pip, npm, Cargo, Go, and similar
+ecosystems. It is neither planned nor rejected. Investigate it only if Mise's
+split from Homebrew or its backend model creates a concrete limitation.
 
 - [x] Time Machine exclusions — derive the `time_machine_enabled` machine capability and reconcile the exact global user-managed fixed-path `SkipPaths` set
-- [ ] Add `[data.tools]` tables to `.chezmoi.toml.tmpl`
+- [x] Manage versioned languages and cross-platform CLI tools in `dot_config/mise/config.toml`
+- [x] Install Mise during bootstrap with `run_once_before_0001-MISE-install-mise.sh.tmpl`
+- [x] Run `mise install` when the global config changes with `run_onchange_after_0002-CORE-MISE-run-mise-install.sh.tmpl`
 - [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
-- [ ] ~~Verify asdf deps are in `dot_Brewfile`~~ — asdf removed, mise handles tool installation
-- [ ] `run_onchange_after_install-mise-tools.sh.tmpl` — runs `mise install` (reads `config.toml` or `.tool-versions`)
-- [ ] `run_onchange_after_install-pip-tools.sh.tmpl` — iterates `{{ range .tools.pip }}`, hash includes list
-- [ ] `run_onchange_after_install-npm-tools.sh.tmpl` — iterates `{{ range .tools.npm }}`
-- [ ] `run_onchange_after_install-cargo-tools.sh.tmpl` — iterates `{{ range .tools.cargo }}` (**must include `git-delta`** — it's a hard requirement for `.gitconfig` and chezmoi diff, no `lookPath` guards)
-- [ ] `run_onchange_after_install-go-tools.sh.tmpl` — iterates `{{ range .tools.go }}`
+- [x] Remove asdf from the active tool-management design; Mise currently owns tool installation
+- [ ] **Low priority:** investigate `[data.tools]` only if the current Mise + Homebrew split becomes limiting
 - [ ] `run_once_after_clone-repos.sh` — `hierarchy` command (clones all repos)
 - [ ] `run_once_after_install-antigen.sh` — `git clone` antigen
 - [ ] `run_once_after_setup-vim.sh` — trigger vim plugin install
@@ -452,11 +449,23 @@ Reference: [next-actions.md §Phase 5](2026-02-25/next-actions.md#phase-5-multi-
 
 Source: [Dev Environment Steps (from Notion)](2026-02-26/Dev%20Environment%20Steps%20(from%20Notion).md)
 
-Design pattern: tool lists in `.chezmoi.toml.tmpl` `[data.tools]` tables, run scripts iterate with `{{ range }}`. Same decoupling as Brewfile workflow — *what* to install vs. *how*.
+Current implementation: `dot_config/mise/config.toml` is the declarative source
+for versioned languages and most cross-platform CLI tools. A content hash in
+the Mise `run_onchange` script keeps installation coupled to that file.
+
+Original aspiration: keep Homebrew, pip, npm, Cargo, Go, language runtimes, and
+other tool declarations visible from one central inventory. The concrete
+`[data.tools]` proposal would have added chezmoi-owned ecosystem lists and
+installer scripts alongside the Brewfile. Mise now provides most of that value
+with much less custom machinery.
+
+Deferred option: retain `[data.tools]` as a very-low-priority design to
+investigate if a concrete limitation appears. It is not the current plan and
+has not been discarded.
 
 - Xcode CLI tools (`run_once_before_`)
-- asdf plugins + versions from `.tool-versions` (`run_onchange_after_`)
-- pip/npm/cargo/go tool lists from `[data.tools]` (`run_onchange_after_` per ecosystem)
+- Mise bootstrap + global config installation (`run_once_before_` + `run_onchange_after_`) ✅
+- `[data.tools]` unification: deferred unless Mise + Homebrew exposes a concrete limitation
 - Repo cloning via `hierarchy` (`run_once_after_`)
 - Antigen + vim plugin bootstrapping (`run_once_after_`)
 
