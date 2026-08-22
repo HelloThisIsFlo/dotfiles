@@ -30,7 +30,9 @@ two-sided conflicts, and one source-driven Mise `run_onchange` script pending.
 
 ### Summary
 
-**Active phase:** Phase 4, secret migration.
+**Active phase:** Phase 4, secret migration. Next, privately triage one
+remaining path and decide whether to migrate it, drop it, or keep it local
+before changing anything. No specific path has been selected yet.
 
 | Area                                          | Status            | Notes                                                                      |
 | --------------------------------------------- | ----------------- | -------------------------------------------------------------------------- |
