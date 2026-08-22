@@ -6,6 +6,18 @@ Parallel track to the Mackup → chezmoi migration. Evaluating, learning, and in
 
 ---
 
+## Future Improvements
+
+### Unified tool inventory
+
+- **Status:** parked until after the chezmoi migration; not a migration task or exit criterion
+- **Idea:** investigate a chezmoi-owned `[data.tools]` layer spanning Homebrew, pip, npm, Cargo, Go, language runtimes, and similar ecosystems
+- **Current solution:** Mise plus Homebrew provides most of the practical benefit with far less custom machinery
+- **Revisit when:** the split inventory or Mise's backend model creates a concrete limitation
+- **Preservation rule:** current Mise adoption does not reject this idea; remove it only after an explicit evaluation and decision
+
+---
+
 ## To Explore
 
 ### Fuzzy finding & search

@@ -186,10 +186,11 @@ and most cross-platform CLI tools. Homebrew remains the macOS package layer.
 This captures most of the original central-inventory goal without custom
 per-ecosystem automation.
 
-**Low-priority design option:** A chezmoi-owned `[data.tools]` layer could still
-unify tool declarations across Homebrew, pip, npm, Cargo, Go, and similar
-ecosystems. It is neither planned nor rejected. Investigate it only if Mise's
-split from Homebrew or its backend model creates a concrete limitation.
+**Post-migration idea, not a migration requirement:** A chezmoi-owned
+`[data.tools]` layer could still unify tool declarations across Homebrew, pip,
+npm, Cargo, Go, and similar ecosystems. It is neither planned nor rejected.
+It does not block Phase 6.5 or migration completion. The durable backlog entry
+lives in [CLI-EXPLORATION.md](CLI-EXPLORATION.md#unified-tool-inventory).
 
 - [x] Time Machine exclusions — derive the `time_machine_enabled` machine capability and reconcile the exact global user-managed fixed-path `SkipPaths` set
 - [x] Manage versioned languages and cross-platform CLI tools in `dot_config/mise/config.toml`
@@ -197,7 +198,6 @@ split from Homebrew or its backend model creates a concrete limitation.
 - [x] Run `mise install` when the global config changes with `run_onchange_after_0002-CORE-MISE-run-mise-install.sh.tmpl`
 - [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
 - [x] Remove asdf from the active tool-management design; Mise currently owns tool installation
-- [ ] **Low priority:** investigate `[data.tools]` only if the current Mise + Homebrew split becomes limiting
 - [ ] `run_once_after_clone-repos.sh` — `hierarchy` command (clones all repos)
 - [ ] `run_once_after_install-antigen.sh` — `git clone` antigen
 - [ ] `run_once_after_setup-vim.sh` — trigger vim plugin install
@@ -459,13 +459,14 @@ other tool declarations visible from one central inventory. The concrete
 installer scripts alongside the Brewfile. Mise now provides most of that value
 with much less custom machinery.
 
-Deferred option: retain `[data.tools]` as a very-low-priority design to
-investigate if a concrete limitation appears. It is not the current plan and
-has not been discarded.
+Post-migration improvement: retain `[data.tools]` as a very-low-priority design
+to investigate if a concrete limitation appears. It is not a Phase 6.5 task,
+a migration exit criterion, or the current plan. Preserve it until explicitly
+evaluated rather than inferring that Mise supersedes it. Durable entry:
+[CLI-EXPLORATION.md](CLI-EXPLORATION.md#unified-tool-inventory).
 
 - Xcode CLI tools (`run_once_before_`)
 - Mise bootstrap + global config installation (`run_once_before_` + `run_onchange_after_`) ✅
-- `[data.tools]` unification: deferred unless Mise + Homebrew exposes a concrete limitation
 - Repo cloning via `hierarchy` (`run_once_after_`)
 - Antigen + vim plugin bootstrapping (`run_once_after_`)
 
