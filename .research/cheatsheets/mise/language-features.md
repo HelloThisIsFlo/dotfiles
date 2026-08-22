@@ -175,12 +175,12 @@ java = 'temurin-21'     # Eclipse Adoptium (recommended for LTS)
 ### JAVA_HOME
 
 - Mise sets `JAVA_HOME` automatically
-- macOS apps that use `/usr/libexec/java_home` need manual symlink setup:
-  ```bash
-  sudo mkdir -p /Library/Java/JavaVirtualMachines/temurin-21.jdk
-  sudo ln -s ~/.local/share/mise/installs/java/temurin-21/Contents \
-    /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents
-  ```
+
+> **Work in progress.** Java is configured but not actively used or fully
+> tested. When Java work resumes, verify `JAVA_HOME`, `java`/`javac`, Gradle and
+> IDE discovery, then investigate macOS `/usr/libexec/java_home` integration
+> only if the real workflow needs it. Do not document a manual integration as
+> the preferred setup until it has been tested.
 
 ### `.java-version` / `.sdkmanrc`
 

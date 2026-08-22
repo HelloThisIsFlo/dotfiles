@@ -198,6 +198,7 @@ lives in [CLI-EXPLORATION.md](CLI-EXPLORATION.md#unified-tool-inventory).
 - [x] Run `mise install` when the global config changes with `run_onchange_after_0002-CORE-MISE-run-mise-install.sh.tmpl`
 - [ ] `run_once_before_install-xcode-cli.sh` — `xcode-select --install` (macOS only)
 - [x] Remove asdf from the active tool-management design; Mise currently owns tool installation
+- [x] Remove the final unmanaged `~/.asdfrc` remnant and orphaned Homebrew asdf formula; keep Java integration marked untested in the Mise language cheat sheet
 - [ ] `run_once_after_clone-repos.sh` — `hierarchy` command (clones all repos)
 - [ ] `run_once_after_install-antigen.sh` — `git clone` antigen
 - [ ] `run_once_after_setup-vim.sh` — trigger vim plugin install
@@ -289,7 +290,7 @@ Public (`~/config-in-the-cloud/dotfiles/restored_via_mackup/`):
 | `~/.npmrc`               | Migrate (check for tokens) | May need a password-manager template if auth tokens are present           |
 | `~/.ideavimrc`           | Migrate                    | JetBrains vim bindings, plain file                                        |
 | `~/.ansible.cfg`         | Migrate                    | Sets default inventory path; low priority but real config                 |
-| `~/.asdfrc`              | Migrated, later retired    | Source removed with asdf; an unmanaged live remnant still needs cleanup  |
+| `~/.asdfrc`              | Retired                    | Chezmoi source, live remnant, and Homebrew asdf formula removed; future Java setup belongs to Mise |
 | `~/.pythonrc`            | Migrate                    | 1 byte file                                                               |
 | `~/.amethyst.yml`        | Migrate                    | Actively used window manager (11KB, recently updated)                     |
 | `~/.carbon-now.json`     | Migrate                    | Code screenshot tool settings; low priority but real config               |
@@ -546,6 +547,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-08-22 | Final asdf remnants retired | Deleted unmanaged `~/.asdfrc` and uninstalled the orphaned Homebrew asdf formula. The setting affected only `asdf-java`; Java execution and optional macOS system discovery under Mise remain intentionally untested. |
 | 2026-08-21 | Tracker audit and shared instruction docs | Reconciled WIP, migration, and repo-instruction summaries with live Git, chezmoi, Mackup, plist, Mise, and agent-adapter state. |
 | 2026-08-21 | Shared Codex and Claude instructions documented | Added the instruction-system cheat sheet and clarified shared source, adapters, Codex fallback discovery, and Cowork limits. |
 | 2026-07-29 | Cloudflare LaunchAgent repaired | Replaced `cloudflared service install` output, which omitted `tunnel run`, with a chezmoi-owned plist. Added deterministic Homebrew update ownership, reload handling, and startup liveness verification. |
