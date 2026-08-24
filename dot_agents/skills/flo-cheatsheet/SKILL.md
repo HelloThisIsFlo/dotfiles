@@ -1,6 +1,6 @@
 ---
 name: flo-cheatsheet
-description: Create cheat sheets that match Flo's preferred learning style — practical, opinionated, problem-first documentation with real-world examples and honest tradeoff assessments. Use this skill whenever the user asks for a cheat sheet, reference guide, quick guide, learning document, or says things like "write me a cheat sheet on X", "create a guide for Y", "help me understand Z", "document how to use X". Also trigger when the user asks to turn a conversation or learning session into a reusable document. Always use this skill for any documentation or cheat sheet creation, even if the topic seems simple.
+description: Create durable, practical cheat sheets and operational reference guides that match Flo's problem-first learning style. Use for cheat sheets, command or tool guides, quick-reference documents, "document how to use X" requests, and reusable documentation distilled from a learning session. Do not use for temporary Mermaid-first mental models, pure Markdown restyling, status reports, or factual project documentation.
 ---
 
 # Flo's Cheat Sheet Style
