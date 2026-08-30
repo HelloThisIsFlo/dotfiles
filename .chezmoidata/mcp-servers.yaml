@@ -26,23 +26,23 @@ mcp_servers:
     chezmoi_filter:
       os: macos              # OmniFocus is macOS-only
 
-  - name: fastmail
-    # Fastmail MCP keeps losing auth when added as a regular "HTTP" MCP in Codex
-    # This solution/trick comes from the following guide: https://ai.sulat.com/how-to-connect-codex-to-fastmail-mcp-3488e8cb2bb7
-    startup_timeout_sec: 300
-    command: npx
-    args:
-      - -y
-      - mcp-remote@latest
-      - https://api.fastmail.com/mcp
-      - --transport
-      - http-only
-      - --resource
-      - https://api.fastmail.com/mcp
-      - --static-oauth-client-metadata
-      - '{ "scope": "https://www.fastmail.com/dev/mcp offline_access" }'
-      - --auth-timeout
-      - "300"
+#   - name: fastmail
+#     # Fastmail MCP keeps losing auth when added as a regular "HTTP" MCP in Codex
+#     # This solution/trick comes from the following guide: https://ai.sulat.com/how-to-connect-codex-to-fastmail-mcp-3488e8cb2bb7
+#     startup_timeout_sec: 300
+#     command: npx
+#     args:
+#       - -y
+#       - mcp-remote@latest
+#       - https://api.fastmail.com/mcp
+#       - --transport
+#       - http-only
+#       - --resource
+#       - https://api.fastmail.com/mcp
+#       - --static-oauth-client-metadata
+#       - '{ "scope": "https://www.fastmail.com/dev/mcp offline_access" }'
+#       - --auth-timeout
+#       - "300"
 
   # Example — a server needing a secret (commented, for reference):
   # - name: github
