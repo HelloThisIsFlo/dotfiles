@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Job Application"
+  short_description: "Draft fast, factual job application text"
+  default_prompt: "Use $write-job-application to turn this vacancy into concise, ready-to-review application text."
