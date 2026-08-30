@@ -19,12 +19,13 @@ You're restyling a markdown document to match Flo's writing conventions. The con
 Everything about *how* the content is presented:
 
 - **Structure** — Reorganize sections if they'd flow better. Lead with decisions and results, not narrative buildup.
+- **Heading landmarks** — In dense documents, promote distinct concerns into semantic `###` headings. Use `####` only when one subsection contains genuinely different evidence groups or modes. Keep short documents lean.
 - **Diagrams** — Treat diagrams as part of the document's form. Preserve their technical meaning while improving diagram type, layout, grouping, and presentation using `references/technical-diagrams.md`.
 - **Prose to bullets** — Convert paragraphs into bullet points. Prose is only acceptable for 1-2 sentence intros before switching to structured content.
 - **Callouts** — Identify key rules (`[!important]`), gotchas (`[!warning]`), cross-references (`[!tip]`), and side notes (`[!note]`). Content inside callouts is ALWAYS bullets — never prose paragraphs.
 - **Tables for repeated records** — When many sections repeat the same fields (lane → responsibilities → skills → proof, option → tradeoff → verdict), prefer a summary table and compact per-item tables over long repeated bullet trees.
 - **Quote blocks for prompts/questions** — Example interview questions, facilitation prompts, or spoken scripts should usually be separate markdown quote blocks, one per question, not list items and not code fences.
-- **Emoji** — Assign semantic emoji to modes/variants and use them consistently throughout. Use expressive emoji for edge cases/gotchas (severity should be instantly clear). Never decorative.
+- **Emoji** — Assign semantic emoji to modes, variants, and meaningful scan landmarks, then reuse them consistently. Use expressive emoji for edge cases/gotchas (severity should be instantly clear). Never decorative.
 - **Tone** — Direct, conversational, confident. No hedging, no filler, no trailing summaries.
 - **Inline formatting** — `code` for API values/field names/enum names, **bold** for key terms/concepts, `→` for mappings, `—` for inline explanations, `=>` for implications/conclusions.
 - **Hierarchy** — Use nested bullets when sub-points exist. Don't flatten everything to one level.
@@ -56,6 +57,18 @@ The user stages their file before applying this skill, so they get a clean diff.
 | Prose inside a callout | Bullets inside a callout (always) |
 | Wall of text explaining an edge case | Pattern C callout: statement → detail bullets → bold action item |
 | Scattered "see also" links | Two-tier references: tip callout OR italic footnote |
+
+## Structural landmarks
+
+For dense documents, the heading hierarchy should expose the document's map before the reader enters the bullets:
+
+- `##` names the major concern or question.
+- `###` names the semantic scan paths inside it.
+- `####` is reserved for genuinely distinct evidence groups, modes, or examples inside one scan path.
+- Meaningful scan headings carry semantic emoji; equivalent concepts reuse the same emoji.
+- Short sections stay as bullets rather than being fragmented into unnecessary headings.
+
+**Heading test:** scan only the headings and emoji. If the document's major concerns are still unclear, improve the hierarchy before polishing the prose.
 
 ## When format is uncertain
 

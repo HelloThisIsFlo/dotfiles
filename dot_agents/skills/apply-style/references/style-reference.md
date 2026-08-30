@@ -185,7 +185,24 @@ Not every section needs all four. Small sections might just be intro + callout.
 
 **Punchline-first rule:** When a section's core insight is a contrast, duality, or non-obvious conclusion, open with a `[!note]` callout that captures it *before* the detail bullets. Don't make the reader wade through the explanation to find the point — put the point up top, then explain. This is Pattern E from §2.2.
 
-### 4.2 Reference Links — Two Tiers of Emphasis
+### 4.2 Headings as Scan Landmarks
+
+Dense documents need a visible map, not merely better-formatted bullets.
+
+- **`##` headings** identify the document's major concerns or questions.
+- **`###` headings** identify the semantic scan paths inside a major concern.
+  - Examples: mission, ownership, direct evidence, gaps, trajectory, logistics.
+- **`####` headings** separate genuinely distinct evidence groups, modes, or examples inside one scan path.
+  - Do not use them for every bullet cluster.
+- **Semantic emoji** make those scan paths recognisable at a glance.
+  - Reuse the same emoji for the same concept within the document.
+  - Keep leaf bullets mostly undecorated so the landmarks remain visible.
+- **Short sections** should remain compact bullets.
+  - Do not manufacture heading depth when the content already scans cleanly.
+
+**Heading test:** read only the headings and emoji. They should reveal the document's major concerns and let the reader jump directly to the part they need.
+
+### 4.3 Reference Links — Two Tiers of Emphasis
 
 When linking to other documents, Flo uses two distinct visual tiers to signal "definitely read this" vs. "available if you need it":
 
@@ -213,7 +230,7 @@ _For raw empirical data and experiment methodology, see [omnifocus-repetition-be
 
 The visual contrast between the two is the point — the callout draws the eye, the italic footnote doesn't.
 
-### 4.3 Document Layering
+### 4.4 Document Layering
 
 When a topic has multiple documents at different depths:
 
