@@ -14,6 +14,7 @@ The vault is the source of truth. This skill defines how to discover and apply t
 - Use `obsidian-cli` for vault lookup, reads, writes, and verification.
 - Use `obsidian-markdown` for Obsidian-valid candidate notes.
 - Use `obsidian-bases` to inspect the live schema and verify the resulting Base view.
+- Use `apply-style` as the presentation contract inside the managed decision block. This skill's frontmatter, marker, and preservation boundaries remain authoritative.
 - Use `browser:control-in-app-browser` for public role and application inspection.
 - Use `chrome:control-chrome` when an existing logged-in Chrome session may expose otherwise gated information.
 - Follow those browser skills' surface-selection and setup rules exactly.
@@ -42,7 +43,7 @@ The vault is the source of truth. This skill defines how to discover and apply t
 4. Load the decision context from `🎯 Applications/Decision Context.md` (refresh it from sources only when missing, stale, or contradicted).
 5. Read the live system guide (`🎯 Applications/INDEX.md`), one recent candidate note as the schema example, and `Jobs.base` once per run.
 6. Process inputs sequentially in the supplied order — no sub-agents, no batch manifests, no browser workers. Finish and verify each role before starting the next.
-7. For each role: inspect the role and application flow, score Candidate Fit and Goal Fit, write the one-sentence `why` verdict, then create or safely update the candidate record.
+7. For each role: inspect the role and application flow; capture what the job involves and why it might interest Flo; score Candidate Fit and Goal Fit with an explicit rationale for each exact score; write the one-sentence `why` verdict; then create or safely update the candidate record with the semantic heading and emoji hierarchy defined in `references/workflow.md`.
 8. Verify each record and its derived lane in `Jobs.base`.
 9. Report per role: verdict, record path, application requirements, and any blocked information.
 

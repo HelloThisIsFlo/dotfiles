@@ -121,11 +121,15 @@ Use the live score meaning documented in the current ranking material. Preserve 
 - meaningful gaps
 - claims that must not be overstated
 
+Open the Candidate Fit section with `### 🔢 Why This Score`. Make the score legible through a short strength-versus-gate summary, then organise the proof under semantic evidence, gap, and claim-boundary headings. The structure must make that exact score understandable rather than merely listing matching keywords.
+
 ### Goal Fit
 
 Answer: **Would obtaining this role move Flo toward the professional identity and working conditions he currently wants?**
 
 Use current vault evidence for trajectory, seniority, substantive work, logistics, compensation, and trade-offs. Do not equate comfortable skill overlap with strategic value.
+
+Open the Goal Fit section with `### 🔢 Why This Score`. Make the strategic alignment and decisive trade-offs legible first, then organise trajectory, seniority, work shape, and logistics under semantic headings. The structure must explain why obtaining this particular role would or would not advance Flo's current direction.
 
 ### The `why` verdict
 
@@ -202,20 +206,65 @@ New records use one replaceable block after the sibling-roles block:
 
 `<!-- onboard-job-application:start -->`
 
-The block contains only useful sections:
+Use `apply-style` inside this block. Its structure, hierarchy, and semantic-emoji guidance controls presentation; this workflow's evidence, frontmatter, marker, and preservation rules remain authoritative.
 
-- verdict and concise role summary
-- Candidate Fit evidence and gaps
-- Goal Fit alignment and trade-offs
-- application shape and requirements
-- exact questions and instructions
-- blockers and unknowns
-- job-board, official job and application links
+The opening callout is a compact decision map:
 
-Keep the block concise without imposing a word limit:
+- Use the verdict-appropriate callout type (`success`, `warning`, `question`, or `failure`) and a short hook.
+- Leave a blank `>` line after the title.
+- Keep the body bullet-only.
+- Show:
+  - `🧩 **Candidate Fit** → **X/5**`
+  - `🎯 **Goal Fit** → **X/5**`
+  - `✅ **Why it works**`
+  - `⚠️ **What holds it back**`
+  - `🔑 **Bottom line**`
+- Preserve the decision encoded by the frontmatter `why`, but split its pull and gate into scannable bullets rather than repeating one long sentence.
+- Do not use the callout as a substitute for the role summary or score rationales.
 
-- state each role fact, trade-off and application requirement once
-- preserve exact questions, evidence boundaries and material blockers even when they make the block longer
+After the callout, use this hierarchy:
+
+1. `## 🧭 Role Summary`
+   - `### 🎯 Mission`
+   - `### 🛠️ What You'd Own`
+   - `### 🤝 How You'd Work`
+   - Describe the team or product mission, actual responsibilities, ownership or seniority, and substantive technology or AI content.
+   - Keep this source-backed and role-focused. Do not mix in evidence that Flo can perform it.
+2. `## ✨ Why It Might Be Interesting`
+   - Use role-specific semantic `###` headings for the genuinely attractive dimensions.
+   - Connect the actual work to Flo's direction or working preferences, including when the role ultimately scores poorly.
+3. `## 🧩 Candidate Fit · X/5`
+   - `### 🔢 Why This Score`
+   - `### ✅ Direct Evidence`
+   - `### 🔄 Transferable Evidence` when applicable
+   - `### ⚠️ Material Gaps`
+   - `### 🧱 Claim Boundary`
+   - Use selective `####` headings only when a dense evidence section contains genuinely distinct stories, skills, or proof groups.
+4. `## 🎯 Goal Fit · X/5`
+   - `### 🔢 Why This Score`
+   - `### 🚀 Professional Direction`
+   - `### 🧭 Seniority & Scope`
+   - `### ⚖️ Work Shape`
+   - `### 📍 Logistics`
+   - `### 🚦 Application Constraint` when relevant
+5. `## 📝 Application Shape`
+   - `### ✍️ Lane`
+   - `### 📦 Required`
+   - `### ➕ Optional` when applicable
+   - `### 🚫 Not Required` when known
+   - `### ❓ Exact Questions` when available; preserve one question per quote block
+   - `### 📝 Supporting Instructions` when available; preserve exact wording in quote blocks
+   - Record material blockers and unknowns under a clearly named semantic heading when needed.
+6. `## 🔗 Sources`
+   - Preserve job-board, official-role, and application links as applicable.
+
+Omit inapplicable groups rather than emitting empty headings. Use semantic emoji consistently, keep leaf bullets mostly undecorated, and make the document's map legible from its headings alone.
+
+Scannability comes from hierarchy, not factual compression:
+
+- preserve every substantive role fact, rationale, trade-off, application requirement, exact question, evidence boundary, and material blocker
+- state each fact once when restructuring makes duplication unnecessary
+- impose no word limit
 
 `<!-- onboard-job-application:end -->`
 
