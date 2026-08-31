@@ -26,7 +26,9 @@ Reuse the candidate note when its role analysis and application audit are curren
 - prose fields or their exact instructions are not verified
 - the supplied advert contradicts the record
 
-When no clear current record exists, use `$onboard-job-application` to create or refresh it. That role audit may write automatically under its own contract. It must not write application prose. Resume this workflow after onboarding instead of repeating its role analysis.
+Before invoking onboarding, load and validate Decision Context under section 2. If it is missing or unusable, stop without changing the candidate record.
+
+When no clear current record exists, use `$onboard-job-application` to create or refresh it. That role audit may write automatically under its own contract. It must not write application prose or maintain Decision Context. Resume this workflow after onboarding instead of repeating its role analysis.
 
 Invocation means Flo has decided to apply. Existing fit scores, gaps, and `why` inform evidence selection and claim safety; they are not a reason to debate, refuse, or reopen the application decision. Never change the candidate's shortlist or status merely because this skill was invoked.
 
@@ -34,7 +36,7 @@ If the input is a pasted advert without a URL, search for the exact official rol
 
 ## 2. Load Shared Career Context
 
-Read the materialized application Decision Context once. Use it as the high-level map when it is under one month old and not contradicted.
+Read the materialized application Decision Context once. Treat it as the stable, read-only policy for this workflow.
 
 It supplies:
 
@@ -46,7 +48,17 @@ It supplies:
 - links to canonical career sources
 - the current CV root
 
-Do not recursively re-derive Flo's career. If the Decision Context is missing, stale, or contradicted, let the onboarding workflow refresh it from its canonical sources before drafting.
+`context_refreshed` records when Flo last deliberately reviewed the policy. It is provenance, not an expiry date.
+
+- Never reconstruct, refresh, or edit Decision Context during application writing.
+- Never ask onboarding to refresh it; onboarding may refresh only the candidate's role and application audit.
+- Age alone is never a warning and never justifies a refresh suggestion.
+- If Decision Context is missing or unusable, stop before drafting and report the blocker.
+- If Flo's current instruction materially conflicts with it, follow the direct instruction for this run, identify the exact mismatch, leave the note unchanged, and offer a separate deliberate context review.
+  - A run-specific override may change preferences, target lanes, logistics, or positioning emphasis.
+  - It never relaxes fixed workflow boundaries or turns an unsupported claim into evidence. Treat a new factual claim as evidence only when Flo explicitly supplies it.
+
+Do not recursively re-derive Flo's career.
 
 Resolve the CV from the live CV root:
 

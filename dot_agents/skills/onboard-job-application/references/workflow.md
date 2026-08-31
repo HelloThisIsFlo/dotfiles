@@ -20,17 +20,46 @@ If an expected entry point moved, search the vault by concept and content. Do no
 
 ## 2. Load the decision context
 
-Read `🎯 Applications/Decision Context.md` once. It carries the current identity, target lanes, fit-scoring guidance, proof pillars, claim boundaries, and logistics — pre-compressed from the canonical sources it links.
+Read `🎯 Applications/Decision Context.md` once. It carries the stable identity, target lanes, fit-scoring guidance, proof pillars, claim boundaries, and logistics used by both opportunity review and onboarding.
 
-- **Fresh enough** (under a month old, no obvious contradiction with recent explicit decisions): use it as the decision model. Do not re-derive positioning from the vault.
-- **Missing, stale, or contradicted**: re-derive from its listed canonical sources (positioning notes, CV `README.md` → current golden master, recent journal decisions), then update `Decision Context.md` and its `context_refreshed` date before continuing.
-- Flo's direct edits to the note are current truth; never revert them during a refresh without asking.
+- Treat it as authoritative, read-only policy for this workflow.
+- `context_refreshed` records when Flo last deliberately reviewed the policy. It is provenance, not an expiry date.
+- Never reconstruct, refresh, or edit the note during onboarding.
+- Age alone is never a warning and never justifies a refresh suggestion.
+- If the note is missing or unusable, stop and report the blocker rather than reconstructing it implicitly.
+- If Flo's current instruction materially conflicts with the note, follow the direct instruction for this run, identify the exact mismatch, leave the note unchanged, and offer a separate deliberate context review.
+  - A run-specific override may change preferences, target lanes, logistics, or scoring interpretation.
+  - It never relaxes fixed workflow boundaries or turns an unsupported claim into evidence. Treat a new factual claim as evidence only when Flo explicitly supplies it.
 
 Search the vault only for **role-specific** evidence the note does not answer — a particular technology claim, an interview story, a recent correction about a comparable role.
 
 The job advert is a relevance signal, not a claim source. Candidate Fit must be supported by the CV, the decision context, or explicit vault records. Respect every claim boundary in the note.
 
-## 3. Establish official role facts
+## 3. Resolve review-journal handoffs
+
+When Flo refers to roles from `$review-job-opportunities`, use the journal entry as the durable handoff rather than asking him to paste every URL again.
+
+Resolve the entry in this order:
+
+1. Explicit journal link or date and timestamp.
+2. Source-qualified reference, such as “today's Apple review” or “the latest LinkedIn batch.”
+3. The review completed in the active conversation.
+4. The latest unambiguous matching review entry.
+
+Ask only when multiple entries remain plausible. Never silently combine distinct review runs.
+
+Unless Flo names a narrower subset:
+
+1. Read role links from `Potentially interesting` in their ranked order.
+2. Then read role links from `Not sure` in their journal order.
+3. Exclude `Probably not`.
+4. Include roles marked `Already tracked` or `Possible duplicate`; the normal candidate duplicate rules decide whether to update or skip them.
+
+Extract the external role link from each role block. Also carry any `Already tracked` or `Possible duplicate` candidate wikilink as duplicate-resolution evidence; it is not the external role input. Accept both the legacy WTTJ journal shape and the generic source-aware shape. A compact zero-new review contains no onboarding inputs.
+
+Treat each extracted link exactly like a directly supplied input. Preserve a WTTJ or LinkedIn URL as `job_board_url` before following an official role or application link.
+
+## 4. Establish official role facts
 
 Use the supplied advert or URL as the starting point. Before following its links, classify and retain the starting URL:
 
@@ -64,7 +93,7 @@ Before persisting any job-board, role or application URL:
 - when redaction breaks access, store the public URL or page descriptor and record that a live session is required
 - never copy the sensitive value into a candidate note or batch artifact
 
-## 4. Inspect the role and application
+## 5. Inspect the role and application
 
 Use the Browser plugin for the official role and application pages. When authentication hides information, try the user's logged-in Chrome surface when it is available and appropriate.
 
@@ -108,7 +137,7 @@ If blocked:
 
 If browser control is unavailable, use read-only web retrieval for official role facts, mark the form audit unverified, and report the limitation.
 
-## 5. Evaluate fit
+## 6. Evaluate fit
 
 ### Candidate Fit
 
@@ -139,15 +168,28 @@ There is no numeric priority and no ranking against other candidates. Never prom
 
 Use only role families currently defined in `INDEX.md` unless the existing system clearly cannot represent the role; ask before introducing a new family.
 
-## 6. Create or update the record
+## 7. Create or update the record
 
 ### Duplicate detection
 
 Search candidates in this order:
 
-1. exact or canonicalized `job_board_url`
-2. exact or canonicalized job/application URL
-3. normalized company plus normalized role title
+1. A journal `Already tracked` target whose stable role identity matches the incoming role.
+2. Exact stable source identity in canonicalized `job_board_url`, job URL, or application URL:
+   - source requisition or posting ID
+   - LinkedIn numeric job ID
+   - canonical public role URL when no separate ID exists
+3. Exact or canonicalized `job_board_url`.
+4. Exact or canonicalized job/application URL.
+5. Normalized company plus normalized role title, but only when the available URLs and IDs do not prove that the openings are distinct.
+
+Open a journal duplicate target before deciding:
+
+- `Already tracked` is strong identity evidence, not permission to overwrite blindly. Verify that its URLs or stable source ID match the incoming role.
+- `Possible duplicate` is a candidate to inspect, never proof of identity.
+- Compare identities within their source. A shared official requisition or posting ID confirms the same opening; different official IDs from the same source prove distinct openings even when company, title, or canonical URL match.
+- Different LinkedIn IDs prove distinct openings only when no shared official identity maps them to the same opening. A LinkedIn ID and an official requisition ID are complementary rather than conflicting.
+- When official IDs are absent or non-conflicting, compare canonical URLs and substantive responsibilities and preserve uncertainty rather than collapsing two openings.
 
 Update the existing record when one clear match exists. Ask when multiple plausible matches remain.
 
@@ -175,7 +217,8 @@ Never clear an existing `job_board_url` merely because a later run starts from a
 
 Date rules (`YYYY-MM-DD`, Europe/London):
 
-- new record → set both `added_on` and `last_checked_on` to today
+- new record from a review-journal handoff → set `added_on` to that review entry's date and `last_checked_on` to today after the live audit
+- other new record → set both `added_on` and `last_checked_on` to today
 - existing record → preserve `added_on` permanently
 - confirmed live refresh → set `last_checked_on` to today after inspecting the official advert or application flow
 - confirmed unavailable → set `last_checked_on` to today and `application_status: closed`
@@ -279,7 +322,7 @@ For a legacy record without markers:
 - preserve the entire existing body untouched
 - do not attempt a broad rewrite or deduplication
 
-## 7. Verify and report
+## 8. Verify and report
 
 1. Confirm the candidate note is valid Obsidian Markdown and its frontmatter parses.
 2. Open `Jobs.base` in Obsidian (or query it via the Obsidian CLI) and force a live reload when external edits are cached. For multiple roles, one check at the end of the run covers all written records.

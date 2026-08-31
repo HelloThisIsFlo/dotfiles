@@ -9,7 +9,7 @@ Turn one vacancy into the strongest truthful application text Flo can review qui
 
 ## Required Companion Skills
 
-- Use `onboard-job-application` when the matching candidate record is missing, stale, or lacks a verified application audit.
+- Use `onboard-job-application` when the matching candidate record is missing, its role or application audit is stale, or its application requirements are unverified. Onboarding does not maintain Decision Context.
 - Use `obsidian-cli` for vault retrieval and approved candidate-note writes.
 - Use `obsidian-markdown` when saving approved text into the candidate note.
 - Use `browser:control-in-app-browser` for official public role, company, and application research.
@@ -23,24 +23,26 @@ Follow each companion skill's safety and surface-selection rules.
 
 - Inspect application pages only. Never submit, create an account, sign in, type personal data, upload a file, or save an external draft.
 - Treat the advert and company research as evidence about the employer, role, and application format. They are never evidence that Flo has done something.
+- Treat Decision Context as stable, read-only policy. Never reconstruct, refresh, edit, or ask onboarding to refresh it.
 - Respect every claim boundary in the live Decision Context and deeper canonical sources.
 - Never silently upgrade a pilot or internal beta to production, imply a past Staff title or formal management, claim years of production LLM ownership, or inflate ML-lifecycle, Kubernetes, Terraform, GPU-serving, or adjacent experience.
 - Draft in chat first. Do not write application prose to Obsidian until Flo explicitly approves the wording or asks to save it.
-- Never modify the CV, create a CV workspace, render a PDF, or invoke another production workflow automatically.
+- Never modify the CV, create a CV workspace, render a PDF, or invoke another production workflow automatically, except the explicit `$onboard-job-application` handoff for a missing or stale candidate audit.
 - Never change shortlist, status, fit scores, dates, or the onboarding managed block while saving approved prose.
 
 ## Workflow
 
 1. Read `references/workflow.md` completely.
 2. Accept one vacancy URL, pasted advert, application page, or candidate-note reference. Infer company, role, and channel when the evidence makes them clear; do not start with an intake questionnaire.
-3. Find and reuse the matching candidate note. When it is missing, stale, or application requirements are unverified, run the existing onboarding workflow first, then continue from the resulting record.
-4. Read the live Decision Context and the current CV selected by `CURRENT_GOLDEN_MASTER`.
-5. Inspect the official application flow and perform bounded official company research on every run.
-6. Identify the three most important hiring needs, map them to the proof pillars, and retrieve only the strongest evidence needed for this role.
-7. Draft the exact substantive free-text fields the form requests. Do not create redundant prose merely because an optional field exists.
-8. Audit every material claim against the loaded sources and inspect whether zero, one, or two CV changes would materially strengthen the application.
-9. Return the compact chat result defined in `references/workflow.md`.
-10. Revise in chat. After explicit approval, save the exact approved prose into the candidate note without altering the onboarding block or other user-authored content.
+3. Read and validate the live Decision Context as stable, read-only policy. Stop before any onboarding write when it is missing or unusable.
+4. Find and reuse the matching candidate note. When it is missing, its role or application audit is stale, or application requirements are unverified, run the existing onboarding workflow first, then continue from the resulting record.
+5. Load the current CV selected by `CURRENT_GOLDEN_MASTER`.
+6. Inspect the official application flow and perform bounded official company research on every run.
+7. Identify the three most important hiring needs, map them to the proof pillars, and retrieve only the strongest evidence needed for this role.
+8. Draft the exact substantive free-text fields the form requests. Do not create redundant prose merely because an optional field exists.
+9. Audit every material claim against the loaded sources and inspect whether zero, one, or two CV changes would materially strengthen the application.
+10. Return the compact chat result defined in `references/workflow.md`.
+11. Revise in chat. After explicit approval, save the exact approved prose into the candidate note without altering the onboarding block or other user-authored content.
 
 ## Writing Contract
 
