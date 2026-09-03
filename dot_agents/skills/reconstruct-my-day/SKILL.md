@@ -12,7 +12,7 @@ Rebuild one local calendar day as a concise, evidence-backed account of what Flo
 - Remain strictly read-only.
   - Do not send messages, change calendars, update Structured, write notes, modify repositories, or create reconstruction artifacts.
 - Do not invoke or inspect Chronicle.
-- Default to yesterday when Flo gives no date.
+- Default to today when Flo gives no date.
 - Use Flo's current timezone when available, otherwise `Europe/London`.
 - Bound the day as `[00:00, next 00:00)` in that timezone.
   - Never pull next-day activity backward across midnight.
