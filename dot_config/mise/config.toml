@@ -63,6 +63,7 @@ claude-code = "latest"
 "github:radiosilence/fastmail-cli" = "latest"
 codex = "latest"
 "pipx:ipython" = "latest"
+herdr = "latest"
 
 
 [settings]
