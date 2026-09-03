@@ -1,0 +1,15 @@
+agent_integrations:
+  claude:
+    - gsd
+    - herdr
+
+  codex:
+    - gsd
+    - herdr
+
+  cursor:
+    - gsd
+    - herdr
+
+  antigravity:
+    - gsd

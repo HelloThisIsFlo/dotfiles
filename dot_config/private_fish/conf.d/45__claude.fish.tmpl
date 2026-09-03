@@ -1,16 +1,15 @@
+{{- $gsdEnvironments := list -}}
+{{- range $agent, $integrations := .agent_integrations -}}
+{{- if has "gsd" $integrations -}}
+{{- $gsdEnvironments = append $gsdEnvironments $agent -}}
+{{- end -}}
+{{- end -}}
 # Claude Code
 alias claude 'claude --allow-dangerously-skip-permissions'
 
 function gsd-update --description "Update GSD across all AI CLIs"
-    # ────────────────────────────────────────────────
-    # Environments to update — edit this list to add/remove
-    # ────────────────────────────────────────────────
-    set -l envs \
-        claude \
-        codex \
-        cursor \
-        antigravity
-    # ────────────────────────────────────────────────
+    # Environment inventory: .chezmoidata/agent-integrations.yaml
+    set -l envs {{ $gsdEnvironments | sortAlpha | join " " }}
 
     argparse 'statusline' -- $argv
     or return

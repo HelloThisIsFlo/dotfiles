@@ -1,11 +1,14 @@
 {{- $herdrVersion := output "/bin/sh" "-c" `"$1" current herdr 2>/dev/null || printf '%s\n' 'not-installed'` "herdr-version" .mise_bin | trim -}}
 #!/bin/bash
 # Ensure integrations for herdr {{ $herdrVersion }}
+# Integration inventory: .chezmoidata/agent-integrations.yaml
 set -euo pipefail
 
 mise_bin="{{ .mise_bin }}"
 herdr_bin="$("$mise_bin" which herdr)"
 
-"$herdr_bin" integration install claude
-"$herdr_bin" integration install codex
-"$herdr_bin" integration install cursor
+{{- range $agent, $integrations := .agent_integrations }}
+{{- if has "herdr" $integrations }}
+"$herdr_bin" integration install {{ $agent | quote }}
+{{- end }}
+{{- end }}

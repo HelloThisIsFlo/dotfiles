@@ -43,7 +43,7 @@ before changing anything. No specific path has been selected yet.
 | `.chezmoiignore`                              | Managed           | Excludes research, runtime files, machine-ineligible targets, and ignored external agent assets |
 | Shell config (`.zshrc`)                       | Managed           | `private_dot_zshrc` — working, no templates yet                            |
 | Homebrew bundle                               | Managed           | `dot_Brewfile` + `run_onchange_after_` script — `--no-upgrade` to avoid `--adopt` bug. Cleaned 2026-03-26: taps removed (fully-qualified names), ~60 deps pruned, vscode extensions removed (use Settings Sync), modern CLI tools added. Migration to data-driven approach pending (see [comparison guide](cheatsheets/chezmoi/brew-management-approaches.md)) |
-| Herdr                                         | Managed           | Installed cross-platform by Mise (`herdr = "latest"`); the fully commented `~/.config/herdr/config.toml` is managed directly, and a run-on-change after script reinstalls Claude, Codex, and Cursor integrations when the installed Herdr version changes |
+| Herdr                                         | Managed           | Installed cross-platform by Mise (`herdr = "latest"`); the fully commented config is managed directly, while a shared agent-integration inventory drives both Herdr installation and GSD updates |
 | Time Machine exclusions                       | Managed           | `time_machine_enabled` is derived for personal GUI Macs; YAML is authoritative for the global user-managed fixed-path `SkipPaths` set |
 | Mackup public dotfiles                        | Nearly done       | 1 active symlink remains (`.logseq/`); legacy unlinked sources still need Phase 7 cleanup |
 | Mackup secret dotfiles                        | Still symlinked   | 6 active symlinks: `.secrets.env`, `.tadl-pass`, `.tadl-minion`, `.cli_chat.json`, `.aws/`, `.config/exercism/` |
@@ -131,7 +131,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `~/.config/cheat/` — `conf.yml` + 12 personal cheatsheets added (community cheatsheets excluded — re-downloadable)
 - [x] `~/.config/gh/` — added `config.yml` (preferences, customized: bat pager, editor prompt enabled) + `hosts.yml` (personal identity, ignored on non-personal machines via `.chezmoiignore`). No secrets — OAuth token lives in macOS keychain.
 - [x] `~/.config/git/ignore` — deleted. Had `**/.claude/settings.local.json` duplicated 11× (Claude Code kept appending it). Fully redundant — `.gitignore_global` already covers it via `core.excludesFile`.
-- [x] `~/.config/herdr/config.toml` — full commented Herdr configuration managed on macOS and Linux; Mise owns the binary, and a run-on-change after script reinstalls Claude, Codex, and Cursor integrations when the installed Herdr version changes without tracking generated hooks.
+- [x] `~/.config/herdr/config.toml` — full commented Herdr configuration managed on macOS and Linux; Mise owns the binary, and a shared YAML inventory generates the version-triggered Herdr installation commands and GSD update environments without tracking generated hooks.
 
 ### Phase 4: Wire Secrets into Templates ⬜
 
@@ -551,7 +551,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| 2026-09-03 | Herdr configuration made reproducible | Moved binary ownership from Homebrew to cross-platform Mise, onboarded the fully commented config, and added version-triggered installation for Claude, Codex, and Cursor integrations while leaving generated hooks unmanaged. |
+| 2026-09-03 | Herdr configuration made reproducible | Moved binary ownership from Homebrew to cross-platform Mise, onboarded the fully commented config, and centralized the Herdr and GSD agent lists in one YAML inventory while leaving generated hooks unmanaged. |
 | 2026-08-22 | Final asdf remnants retired | Deleted unmanaged `~/.asdfrc` and uninstalled the orphaned Homebrew asdf formula. The setting affected only `asdf-java`; Java execution and optional macOS system discovery under Mise remain intentionally untested. |
 | 2026-08-21 | Tracker audit and shared instruction docs | Reconciled WIP, migration, and repo-instruction summaries with live Git, chezmoi, Mackup, plist, Mise, and agent-adapter state. |
 | 2026-08-21 | Shared Codex and Claude instructions documented | Added the instruction-system cheat sheet and clarified shared source, adapters, Codex fallback discovery, and Cowork limits. |
