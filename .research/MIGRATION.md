@@ -59,7 +59,7 @@ before changing anything. No specific path has been selected yet.
 | `~/.claude/projects/*/memory/MEMORY.md`       | Done              | 6 managed project memory roots; 12 currently exist live                    |
 | `.ssh/config`                                 | Done              | Managed as `private_dot_ssh/private_config.tmpl`, templatised (OS guard, trust_level conditional, Tailscale var) |
 | `~/.ssh/` private keys                         | Unmanaged         | `id_rsa`, `id_rsa_remarkable`, `move_key` — not in chezmoi. Config references them but keys deploy from nowhere. Phase 4 secret-backend migration. |
-| `~/.config/gh/`                               | Done              | GitHub CLI config — `config.yml` (preferences, bat pager, editor prompt) + `hosts.yml` (personal identity, ignored on non-personal). No secrets (OAuth in keychain). |
+| `~/.config/gh/`                               | Done              | `config.yml` preferences are managed; tool-owned `hosts.yml` authentication and active-account state remain local, with OAuth credentials in the OS credential store. |
 | `~/.cloudflared/`                             | Managed           | TheMac config, `0400` runtime credential, DNS sync, and chezmoi-owned user LaunchAgent are reproducible. Homebrew owns binary updates. Regenerable admin-only `cert.pem` is intentionally unmanaged. |
 | `~/.config/git/ignore`                        | Deleted           | Was XDG global gitignore with 11× duplicate line. Fully redundant — `.gitignore_global` already covers the pattern via `core.excludesFile`. |
 
@@ -129,7 +129,7 @@ At-a-glance view of every task. Check items off as they're completed.
 - [x] `~/.config/karabiner/karabiner.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
 - [x] `~/.config/linearmouse/linearmouse.json` — added to chezmoi (plain file, macOS guard in `.chezmoiignore`)
 - [x] `~/.config/cheat/` — `conf.yml` + 12 personal cheatsheets added (community cheatsheets excluded — re-downloadable)
-- [x] `~/.config/gh/` — added `config.yml` (preferences, customized: bat pager, editor prompt enabled) + `hosts.yml` (personal identity, ignored on non-personal machines via `.chezmoiignore`). No secrets — OAuth token lives in macOS keychain.
+- [x] `~/.config/gh/` — `config.yml` preferences are managed; `hosts.yml` authentication and active-account state remain local and unmanaged on every machine, with OAuth credentials in the OS credential store.
 - [x] `~/.config/git/ignore` — deleted. Had `**/.claude/settings.local.json` duplicated 11× (Claude Code kept appending it). Fully redundant — `.gitignore_global` already covers it via `core.excludesFile`.
 - [x] `~/.config/herdr/config.toml` — full commented Herdr configuration managed on macOS and Linux; Mise owns the binary, and a shared YAML inventory generates the version-triggered Herdr installation commands and GSD update environments without tracking generated hooks.
 
@@ -338,7 +338,7 @@ These files live in `~/.config/` but were never managed by Mackup — they were 
 - `~/.config/karabiner/karabiner.json` — keyboard remapping (complex JSON, actively used) ✅
 - `~/.config/linearmouse/linearmouse.json` — mouse acceleration/scroll settings ✅
 - `~/.config/cheat/` — `conf.yml` (cheat tool config) + personal cheatsheets directory ✅
-- `~/.config/gh/` — GitHub CLI config. `config.yml` has preferences + aliases (`co: pr checkout`), `hosts.yml` has username + git protocol. No secrets (OAuth token in macOS keychain). Cross-platform.
+- `~/.config/gh/` — GitHub CLI preferences in `config.yml` are managed cross-platform. Tool-owned `hosts.yml` remains local and unmanaged because it contains authentication and active-account state; OAuth credentials belong in the OS credential store.
 - `~/.config/git/ignore` — XDG global gitignore. Currently has `**/.claude/settings.local.json` duplicated 11 times. `.gitconfig` already points to `.gitignore_global` via `core.excludesFile`. Git reads both files. Options: (a) clean up to 1 line and add to chezmoi, or (b) merge into `.gitignore_global` and delete this file.
 
 ### Phase 4: Wire Secrets into Templates
@@ -551,6 +551,7 @@ Reverse-chronological log.
 
 | Date       | What                                     | Details                                                                                                  |
 | ---------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 2026-09-03 | GitHub CLI authentication state made local | Stopped managing `hosts.yml`, removed its plaintext OAuth-token copies, and verified that GitHub CLI uses the valid macOS Keychain credential. `config.yml` remains managed. |
 | 2026-09-03 | Herdr configuration made reproducible | Moved binary ownership from Homebrew to cross-platform Mise, onboarded the fully commented config, and centralized the Herdr and GSD agent lists in one YAML inventory while leaving generated hooks unmanaged. |
 | 2026-08-22 | Final asdf remnants retired | Deleted unmanaged `~/.asdfrc` and uninstalled the orphaned Homebrew asdf formula. The setting affected only `asdf-java`; Java execution and optional macOS system discovery under Mise remain intentionally untested. |
 | 2026-08-21 | Tracker audit and shared instruction docs | Reconciled WIP, migration, and repo-instruction summaries with live Git, chezmoi, Mackup, plist, Mise, and agent-adapter state. |

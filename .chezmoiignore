@@ -4,7 +4,6 @@
 Main.code-workspace
 
 {{ if ne .trust_level "personal" }}
-.config/gh/hosts.yml
 .config/fish/conf.d/03__secrets.fish
 {{ end }}
 
