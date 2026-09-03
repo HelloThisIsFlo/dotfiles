@@ -97,7 +97,8 @@ Library/LaunchAgents/com.cloudflare.cloudflared.plist
 
 # ──── ".config/fish"
 .config/fish/conf.d/fish_frozen_theme.fish.bak
-.config/fish/fish_variables
+# Adding `*` at the end, because Fish leaves random-suffixed temp files while updating universal variables.
+.config/fish/fish_variables*
 # See cache_completions.fish
 .config/fish/completions/*
 .config/fish/.*-completions-version
