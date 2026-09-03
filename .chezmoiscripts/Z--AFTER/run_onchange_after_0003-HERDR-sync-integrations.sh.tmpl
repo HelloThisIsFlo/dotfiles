@@ -1,0 +1,45 @@
+{{- $herdrVersion := output "/bin/sh" "-c" `
+mise_bin="$1"
+if [ -x "$mise_bin" ]; then
+    herdr_bin="$("$mise_bin" which herdr 2>/dev/null || true)"
+    if [ -n "$herdr_bin" ] && [ -x "$herdr_bin" ]; then
+        "$herdr_bin" --version
+        exit 0
+    fi
+fi
+printf '%s\n' 'herdr not-installed'
+` "herdr-version" .mise_bin | trim -}}
+#!/bin/bash
+# Ensure integrations for {{ $herdrVersion }}
+set -euo pipefail
+
+mise_bin="{{ .mise_bin }}"
+herdr_bin="$("$mise_bin" which herdr)"
+installed_integrations=()
+
+install_integration() {
+    local integration="$1"
+    local config_dir="$2"
+
+    [[ -d "$config_dir" ]] || return 0
+
+    "$herdr_bin" integration install "$integration"
+    installed_integrations+=("$integration")
+}
+
+install_integration "claude" "${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+install_integration "codex" "${CODEX_HOME:-$HOME/.codex}"
+install_integration "cursor" "${CURSOR_CONFIG_DIR:-$HOME/.cursor}"
+
+((${#installed_integrations[@]} > 0)) || exit 0
+integration_status="$("$herdr_bin" integration status)"
+
+for integration in "${installed_integrations[@]}"; do
+    if ! awk -F': ' -v integration="$integration" '
+        $1 == integration && $2 ~ /^current / { current = 1 }
+        END { exit(current ? 0 : 1) }
+    ' <<< "$integration_status"; then
+        echo "Herdr integration is not current after installation: $integration" >&2
+        exit 1
+    fi
+done
