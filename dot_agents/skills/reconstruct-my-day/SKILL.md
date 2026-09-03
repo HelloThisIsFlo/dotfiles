@@ -31,6 +31,8 @@ Use **deep mode** when Flo:
 
 Do not silently escalate from fast to deep because coverage is incomplete. Disclose the gap and offer deep mode.
 
+Closing the continuation chain of an already relevant Codex task whose evidence is visibly partial is targeted fast-mode corroboration, not a deep-mode sweep.
+
 ## Start every reconstruction
 
 1. Resolve the target date and local-day boundary.
@@ -75,7 +77,7 @@ Use Computer History as the chronological spine and Fastmail as the schedule bas
 
 Consult slower sources only where they clarify a meaningful outcome or gap:
 
-- **Codex:** inspect relevant tasks when Computer History shows agent work, when a background outcome matters, or when the user's steering is unclear.
+- **Codex:** inspect relevant tasks when Computer History shows agent work, when a background outcome matters, or when the user's steering is unclear. If an inspected task returns empty, truncated, compacted, incompletely paginated, or contradictory same-day evidence, follow its available continuation segments until the target window is closed, using local sessions or rollout summaries as a partial read-only fallback when available. Do not expand this check to unrelated tasks.
 - **Git or filesystem:** verify a concrete outcome only after an observed app, document, or Codex task supplies a safe project root.
 - **ChatGPT:** control the logged-in browser only when a meaningful gap may involve phone, voice, or synced conversations, or when direct conversation evidence is needed.
 
@@ -90,8 +92,11 @@ Use Computer History as the chronological spine, then perform the comprehensive 
 - Prefer connected thread-list and thread-read tools.
 - Discover plausible tasks with activity inside the local-day window, including older tasks resumed that day.
 - Treat thread metadata as candidate discovery, not proof of attention.
-- Read candidates deeply enough to identify same-day user turns, decisions, corrections, delegated work, concrete outcomes, completion times, and working directories.
-- If connected tools are unavailable, use local sessions or rollout summaries as a partial, read-only fallback.
+- For every candidate task, enumerate all available continuation segments inside the target day. Include connected pages and multiple local session or rollout records that share the task or thread identity.
+- Read the complete same-day chain deeply enough to identify the first and last direct user interactions, decisive questions, corrections, approvals and choices, delegated work, concrete outcomes, completion times, and working directories.
+- Treat an empty, truncated, compacted, incompletely paginated, or evidence-inconsistent connected read as partial rather than terminal. Use local sessions or rollout summaries as a partial, read-only fallback when available.
+- Reconcile each initiative's final same-day state and distinguish later user participation from background-only work.
+- Do not treat `updatedAt`, task status, completion or final markers, or empty turn containers as proof that attention ended.
 - Never equate an open task or total agent runtime with Flo's attention.
 
 ### Direct and synced ChatGPT
@@ -166,7 +171,11 @@ Assign confidence to claims, not entire sources. Keep the claim no broader than 
 
 ## Synthesize the day
 
+- In deep mode, when the day is still in progress, refresh candidate discovery immediately before synthesis and incorporate any new target-day continuations.
 - Build meaningful chronological blocks, not a telemetry dump.
+- Where direct conversation exists, use Flo's concerns, questions, corrections, decisions, and turning points as the narrative spine. Use commits, tests, repositories, and tooling as supporting evidence rather than as a substitute for that story.
+- Preserve a directly expressed reaction only when it materially distinguishes a chapter. Quote it or paraphrase its meaning conservatively; do not infer or intensify emotion from punctuation, repetition, corrections, or agent commentary. Use it in a chapter title only when it is the defining memory hook, otherwise keep it in supporting detail.
+- Read the chronological block titles alone before reporting. Together they should recover the recognizable shape of the day without requiring the notes. When it improves recognition, connect familiar project, tool, or life-area language to the human problem, decision, or outcome; move opaque internal labels into supporting detail.
 - Use exact times only when supported and do not smooth unknown gaps into continuous work.
 - Keep scheduled-only and ambient evidence out of attention rankings.
 - Do not invent percentages or durations.

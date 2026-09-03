@@ -80,8 +80,11 @@ The retrospective goal is a coherent, glanceable memory of the day, not a forens
 
 ### Titles and Notes
 
-- Titles should explain the memorable activity and outcome, not the source app, tool, or reconstruction process.
-- Use notes for absorbed follow-ups, secondary outcomes, and intentional timing approximations.
+- Before previewing or finishing, read the retrospective chapter titles without their notes. Together they should recover the recognizable shape of the day; rewrite them before continuing when they do not.
+- Titles should explain the memorable activity and outcome, not the source app or reconstruction process. Pair familiar project, tool, or life-area language with the human problem, intention, decision, or outcome when that improves recognition. Keep a technical label when it is genuinely the memory hook; otherwise move it into the note.
+- Preserve a directly expressed reaction from the source reconstruction only when it materially frames the chapter. Quote it or paraphrase its meaning conservatively; never infer or intensify emotion from punctuation, repetition, corrections, or agent commentary. Use it in the title only when it is the defining memory hook, otherwise keep it in the note.
+- Write retrospective notes in natural first person when useful. Capture the trigger, decisive correction or choice, concrete end state, and consequential parallel work when they are material, without narrating every step.
+- Use notes for absorbed follow-ups, secondary outcomes, intentional timing approximations, and consequential activity that should remain visible without becoming another chapter.
 - Do not add reconstruction provenance such as `Computer History reconstruction` unless an important uncertainty needs to remain visible.
 
 ### Final Coherence Check
