@@ -1,3 +1,6 @@
 git:
   diffRenderers:
-    - command: delta-autotheme --paging=never
+    - name: delta unified
+      command: delta-autotheme --paging=never
+    - name: delta side-by-side
+      command: delta-autotheme --side-by-side --paging=never
