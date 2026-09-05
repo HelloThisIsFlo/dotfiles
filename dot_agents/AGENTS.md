@@ -1,6 +1,8 @@
-# Global Preferences
+# Global Agent Guidance
 
-## Output Style - Important
+## Shared Guidance
+
+### Output Style
 
 Responses should feel enjoyable to read, not like a chore.
 
@@ -12,9 +14,9 @@ Responses should feel enjoyable to read, not like a chore.
 - **Emoji on headers + top-level bullets.** Don't decorate every sub-bullet.
 - Conversational tone.
 - **Outline style applies everywhere, including rationale.** "Explain why," "walk me through," "what's the reasoning" — still emoji + bullets, not essay. Caveman mode (when active) compresses words inside this structure; it does not override it.
-- This overrides the general "avoid emoji / avoid over-formatting" defaults
+- These output preferences override general "avoid emoji / avoid over-formatting" defaults.
 
-## Documentation Style
+### Documentation Style
 
 **Goal = instant recall.** Reading the doc once should bring back the whole conversation it captures. If context has to be re-derived, the doc failed.
 
@@ -28,14 +30,13 @@ Docs/reference/research: keep scannable.
 - Pick whatever structure fits the content — no fixed template.
 - Emoji on headers; on top-level bullets only when semantic (each one carries meaning at a glance). Sub-bullets stay clean. Lean fewer when in doubt — density should serve scannability, not signal effort.
 
-### For technical / system docs (pipelines, agents, architectures, sub-graphs)
+#### Technical explanations and diagrams
 
-**Reader: highly visual, scans not reads, often on mobile. Should grasp ~70% from the diagram alone. Every word past the diagram earns its keep.**
+**Reader: highly visual, scans rather than reads, often on mobile.** Choose the representation that makes the subject easiest to grasp; a simple file hierarchy can be a plain-text tree.
 
-Design every doc backwards from that:
+When a diagram helps explain a system or relationship, aim to convey ~70% of the explanation through the diagram itself:
 
-- **The diagram is the artifact.**
-  - For each explanation that benefits from a visual, lead that explanation with its diagram.
+- **Lead visual explanations with their diagram.**
   - Place diagrams beside the relevant section, not only at the top of the document.
   - The reader should grasp the core idea before reading the supporting text; otherwise, improve the diagram.
 - **Choose the diagram by the relationship.**
@@ -57,17 +58,12 @@ Design every doc backwards from that:
   - **Render Mermaid only when complex automatic layout makes the structure uncertain.**
     - Simple diagrams need no render.
     - Inspect structure only; never switch themes or perform cosmetic QA.
-- **Sections after the diagram exist only to clarify what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Skip any section that doesn't add what the diagram missed.
+- **Supporting text should add what the diagram cannot show** (rationale, exact verdict palette, output record shape, sharp boundaries, locked vs open status). Omit sections that only repeat the diagram.
 - **Visual consistency = scannability.** Use emoji on section headers as signposts. Same emoji for the same role across all docs in a project so the reader can jump.
 - **Filler costs more than space.** Cut "if you're tempted to," "you might want to," "we could consider." State what is, not what could be.
 - **Describe current state as if the reader has no past context.** No "vN vs vN+1" framings.
 
-Two hard rules where intent doesn't pin down the choice:
-
-- **Diagrams = mermaid, not ASCII or images.** Mobile-friendly, scales, accessible.
-- **Code blocks ONLY for data** (YAML preferred for record shapes; JSON only when the system uses JSON natively). Never for diagrams.
-
-## Voice Transcription
+### Voice Transcription
 
 Voice transcription ~99% of input — phrases garbled: cut short, merged words, phonetically off (homophones, dropped syllables).
 
@@ -76,7 +72,7 @@ Voice transcription ~99% of input — phrases garbled: cut short, merged words, 
 
 Bar = "weird _and_ matters," not "minor error."
 
-## Home Directory Context
+### Home Directory Context
 
 When the current working directory is exactly `$HOME`, treat it as a personal admin shell, not a project repository.
 
@@ -84,7 +80,7 @@ When the current working directory is exactly `$HOME`, treat it as a personal ad
 - Prefer direct, concise help for one-off admin, file management, scripting, and research tasks.
 - If the user references a project, `cd` into that project and check for its own instruction files.
 
-## Chezmoi-Managed Home Files
+### Chezmoi-Managed Home Files
 
 Before editing an existing path under `$HOME` that is outside a Git working tree, run `chezmoi source-path -- <absolute-target-path>`.
 
@@ -92,6 +88,35 @@ Before editing an existing path under `$HOME` that is outside a Git working tree
 - **Explicitly unmanaged or outside chezmoi’s destination:** edit the original target normally. Stop the chezmoi workflow.
 - **Any other nonzero exit:** stop and report the error.
 - Never run an unscoped `chezmoi apply` through this workflow. A broad apply requires an explicit user request.
+
+### Shell
+
+Shell tools may run Fish or zsh. If a command fails because of shell syntax, check which shell the tool uses and adapt the command.
+
+- Run commands individually; avoid compound chains.
+- Use `python3 -c` or a temporary script file for complex scripting.
+
+### Coding Preferences
+
+- Project scripts:
+  - Use Just instead of Make for orchestration.
+  - Keep complex bootstrap logic in scripts called by Just.
+- Personal-project GHCR:
+  - Default to GitHub Actions as the package creator and only publisher. Avoid manual pushes unless the project explicitly requires them; the first publisher can establish permissions that later block Actions.
+
+### Agent Asset Ownership
+
+- Create shared personal skills in `~/.agents/skills`.
+- Create repo-specific skills in `<repo>/.agents/skills`.
+
+### Prompts for Sub-Agents
+
+Treat capable agents as **peers, not interns**.
+
+- **Lead with intent.** Explain the objective and why it matters; trust the agent to determine the steps. Use concise prose rather than a numbered procedure.
+- **Make the brief self-contained.** Include the relevant context, constraints, and expected result without unnecessary rules or background.
+- **Choose context deliberately.** For independent work, prefer agents without inherited conversation history. Inherit relevant history when the assignment needs it, and follow any explicit context requirements in the applicable skill. This preference does not limit agent count.
+- **Use step-by-step instructions when useful.** Mechanical tasks (formatters, scripts) or observed agent drift can justify a prescribed procedure.
 
 <!-- GSD:profile-start -->
 ## Developer Profile
@@ -133,30 +158,25 @@ Multiple modes — Flo decides, can shift mid-conversation:
 **Learning** — Guided walkthroughs, concrete examples. Explain 'why', offer experiments he runs. Path to answer, not just answer.
 <!-- GSD:profile-end -->
 
-## Shell
+## Claude-Specific Guidance
 
-Login shell fish. Bash tool runs through fish, not bash.
-
-- No bash syntax: `for/do/done`, `[[ ]]`, `$(( ))`, arrays, etc.
-- Run commands individually, no compound chain
-- Complex scripting → `python3 -c` or temp script file
-
-## Coding Preferences
+### Task Tracking
 
 - Multi-step tasks: TodoWrite first, work sequentially with TodoRead.
-- Project scripts: Just for orchestration:
-  - In place of Make
-  - Complex bootstrap → scripts orchestrated by Just
-- Personal-project GHCR:
-  - Default to GitHub Actions as the package creator and only publisher. Avoid manual pushes unless the project explicitly requires them; the first publisher can establish permissions that later block Actions.
 
-## Agent Asset Ownership
+### Agent Asset Ownership
 
-- Shared personal skills live in `~/.agents/skills`.
-- Repo-specific skills live in `<repo>/.agents/skills`.
 - `~/.claude/skills` is an adapter surface, usually symlinks to `~/.agents/skills`.
+
+## Codex-Specific Guidance
+
+### Subagent Context
+
+To start a subagent without the parent's conversation history, use `fork_turns="none"` when the tool supports that argument.
+
+### Agent Asset Ownership
+
 - `~/.codex/skills` is Codex-local, plugin/system, or legacy compatibility space.
-- Do not create new shared personal skills under `~/.codex/skills`.
 - Skip Codex per-skill adapters unless verification proves Codex cannot load `~/.agents/skills`.
 
 ### Intentional Codex-only skills
@@ -164,15 +184,4 @@ Login shell fish. Bash tool runs through fish, not bash.
 - `generate-walkandlearn-summary`
   - Requires Codex-native sub-agent orchestration and `fork_turns="none"`.
   - Do not flag it as an unmigrated shared skill or add a Claude adapter.
-  - Reconsider only when deliberately porting its orchestration contract.
-
-## Prompts for Sub-Agents
-
-Treat capable agents (Opus, Claude API, sub-agents) as **peers, not interns**.
-
-- **Default = intent-driven.** Tell the agent what you're trying to achieve; trust it to find the steps. Capable agents react better when they understand than when they're instructed.
-- **Lean over bloated.** Shorter intent beats longer rules. Rule-laden prompts treat clever agents like children → worse output.
-- **The prompt itself follows the principle.** When writing a sub-agent prompt, write intent-driven prose, not numbered checklists.
-- **Exception:** step-by-step is fine when the output is genuinely mechanical (formatters, scripts) or when calibration has shown the agent drifts without guardrails.
-
-Tested: intent-driven version of a Flo-style doc-prompt produced clean output on first try; rule-heavy version produced ASCII art + wrong emojis + JSON-not-YAML.
+  - Reconsider this skill's Codex-only status only when deliberately porting its orchestration contract.
