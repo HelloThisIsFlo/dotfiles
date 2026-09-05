@@ -136,6 +136,14 @@ prefix = "alt+space"
 # width = "80%"
 # height = "80%"
 
+[[keys.command]]
+key = "prefix+f"
+type = "popup"
+command = "fish"
+description = "open floating Fish shell"
+width = "80%"
+height = "80%"
+
 # Legacy indexed shortcut config is still parsed for compatibility.
 # Prefer switch_tab, switch_workspace, and focus_agent for new configs.
 # [keys.indexed]
