@@ -72,6 +72,11 @@ Voice transcription ~99% of input — phrases garbled: cut short, merged words, 
 
 Bar = "weird _and_ matters," not "minor error."
 
+### Preferred App Access
+
+- For email and calendar work, prefer the Fastmail MCP over computer use.
+- For task management, prefer the OmniFocus Operator MCP over computer use.
+
 ### Home Directory Context
 
 When the current working directory is exactly `$HOME`, treat it as a personal admin shell, not a project repository.
