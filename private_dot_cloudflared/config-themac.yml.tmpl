@@ -11,15 +11,26 @@ tunnel: a57f23b6-310d-40bd-b061-e62ecfee83f3
 credentials-file: {{ .chezmoi.homeDir }}/.cloudflared/a57f23b6-310d-40bd-b061-e62ecfee83f3.json
 
 ingress:
+
+  # PUBLIC — anything served here is accessible to everyone
+  - hostname: public.kempenich.dev
+    service: http://localhost:9999
+
+  # SANDBOX
   - hostname: sandbox.kempenich.dev
     service: http://localhost:1234
+
+  # APP-SPECIFIC
   - hostname: sketchpad.kempenich.dev
     service: http://localhost:8000
   - hostname: outpost.kempenich.dev
     service: http://localhost:8080
   - hostname: jay-6.kempenich.dev
     service: http://localhost:5173
+
   # Add more local services here, e.g.:
   # - hostname: other-service.kempenich.dev
   #   service: http://localhost:3000
+
+  # DEFAULT — 404 for anything not listed above
   - service: http_status:404
