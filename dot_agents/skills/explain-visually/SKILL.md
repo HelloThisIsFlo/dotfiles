@@ -1,5 +1,6 @@
 ---
 name: explain-visually
+compatibility: Mermaid validation requires Node.js 22+, npm/npx, and network access on first use.
 description: Create or revise a temporary Mermaid-first Markdown explanation when Flo wants a visual mental model or is confused about how concepts, components, layers, or products relate. Use for visual explanation requests and focused questions about how one thing fits with another. Do not use for durable operational references, restyling an existing document, broad multi-perspective research, or Agent Sandbox notes.
 ---
 
@@ -19,7 +20,7 @@ Design backward from the distinction or relationship that should become obvious.
 - Let later diagrams extend or refine the model instead of restarting it from scratch.
 - Use no fixed sequence, diagram count, or topic template.
 
-Read `../apply-style/references/technical-diagrams.md` before creating or revising Mermaid. It is the canonical visual grammar; do not reproduce it here.
+Read `../apply-style/references/technical-diagrams.md` before creating or revising Mermaid. It is the canonical visual grammar and contains the pinned validation command. Run it on the final working artifact; keep the command and its version in that shared reference.
 
 ## Keep One Working Artifact
 

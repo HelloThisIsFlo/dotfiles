@@ -1,5 +1,6 @@
 ---
 name: apply-style
+compatibility: Mermaid validation requires Node.js 22+, npm/npx, and network access on first use.
 description: Rewrite markdown documents to match Flo's documentation style — scannable, outline-dense, callout-rich, emoji-semantic. Use this whenever the user says "apply my style", "style this", "make it look like mine", "format this doc in my style", or wants a markdown document reformatted to their personal conventions. Also trigger when the user references their "style guide" or "style reference" in the context of reformatting a document. Even if the user just says "now make it pretty" or "clean up the formatting" after drafting content, this is likely the right skill.
 ---
 

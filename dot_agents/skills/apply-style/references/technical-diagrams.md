@@ -134,6 +134,28 @@ sequenceDiagram
     W-->>C: Return result
 ```
 
+## Syntax safety
+
+- In sequence-diagram messages and notes, avoid literal semicolons. Reword the label or escape the semicolon as `#59;`.
+- After the final edit, run the shared validator below and fix syntax errors before delivery.
+- If the parser cannot be run, report that syntax validation remains incomplete.
+- Parsing checks syntax. Rendering remains limited to structural uncertainty.
+
+### Shared validation command
+
+Use the published [mermaid-lint CLI](https://github.com/jasonworden/mermaid-lint), pinned below. Requires Node.js 22+ and npm/npx. This follows the [Agent Skills guidance for existing tools](https://agentskills.io/skill-creation/using-scripts#one-off-commands).
+
+```sh
+npx --yes @mermaid-lint/cli@0.53.1 --no-semantic --format json /absolute/path/to/document.md
+```
+
+- Pass explicit file paths, including untracked drafts. The same command accepts raw `.mmd` files and multiple input paths.
+- `npx` downloads into npm's cache on first use and reuses it later. No global install, skill-local `node_modules`, or separate setup step.
+- `--no-semantic` disables additional diagram lint rules. Validation uses a Rust/WASM fast path with Mermaid's parser as fallback; it does not render. Do not use `--fix` for a validation pass.
+- Check both the exit code and JSON results: `0` means no reported errors, `1` means validation failed, `2` means a usage/input error. A zero-diagram result does not prove validation.
+- Confirm the reported diagrams cover every intended diagram. This version misses blockquoted fences and scans Mermaid examples nested inside larger code fences. For those cases, copy each intended diagram body into a temporary `.mmd` file and validate it with the same command; do not change the document's formatting to accommodate the scanner.
+- If execution fails or coverage is incomplete, report the gap. The sibling `explain-visually` skill uses this same command and version.
+
 ## Render only for structural uncertainty
 
 - **Simple diagram**
