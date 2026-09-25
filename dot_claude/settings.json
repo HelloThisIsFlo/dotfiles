@@ -406,7 +406,7 @@
   "autoUpdatesChannel": "latest",
   "minimumVersion": "2.1.50",
   "tui": "fullscreen",
-  "autoMemoryEnabled": false,
+  "autoMemoryEnabled": true,
   "showThinkingSummaries": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "auto",
