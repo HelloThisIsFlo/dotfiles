@@ -93,7 +93,6 @@
     ],
     "defaultMode": "bypassPermissions"
   },
-  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
