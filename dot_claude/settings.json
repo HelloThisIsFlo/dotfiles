@@ -361,7 +361,8 @@
     "playwright@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
     "caveman@caveman": true,
-    "eli5@claude-community": true
+    "eli5@claude-community": true,
+    "claude-mermaid@claude-mermaid": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -380,6 +381,12 @@
       "source": {
         "source": "github",
         "repo": "anthropics/claude-plugins-community"
+      }
+    },
+    "claude-mermaid": {
+      "source": {
+        "source": "github",
+        "repo": "veelenga/claude-mermaid"
       }
     }
   },
