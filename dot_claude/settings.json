@@ -129,10 +129,7 @@
       "Read(**/secrets/*)",
       "Read(**/*credential*)",
       "Read(**/*.pem)",
-      "Read(**/*.key)",
-      "Read(.env)",
-      "Read(.env.*)",
-      "Read(.secrets)"
+      "Read(**/*.key)"
     ],
     "defaultMode": "bypassPermissions"
   },
@@ -163,7 +160,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -173,7 +170,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-read-injection-scanner.js\"",
             "timeout": 5
           }
         ]
@@ -195,8 +192,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-worktree-path-guard.js\"",
-            "timeout": 5
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-worktree-path-guard.js\"",
+            "timeout": 120
           }
         ]
       },
@@ -205,8 +202,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
-            "timeout": 5
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 120
           }
         ]
       },
@@ -215,7 +212,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-read-guard.js\"",
             "timeout": 5
           }
         ]
@@ -225,8 +222,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
-            "timeout": 5
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-workflow-guard.js\"",
+            "timeout": 120
           }
         ]
       },
@@ -236,7 +233,7 @@
           {
             "type": "command",
             "command": "bash \"/Users/flo/.claude/hooks/gsd-validate-commit.sh\"",
-            "timeout": 5
+            "timeout": 120
           }
         ]
       },
@@ -245,8 +242,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-agent-isolation-guard.js\"",
-            "timeout": 5
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-agent-isolation-guard.js\"",
+            "timeout": 120
           }
         ]
       },
@@ -255,8 +252,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-write-guard.js\"",
-            "timeout": 5
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-write-guard.js\"",
+            "timeout": 120
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-secret-read-guard.js\"",
+            "timeout": 120
           }
         ]
       }
@@ -266,7 +273,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-check-update.js\""
           }
         ]
       },
@@ -294,7 +301,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -305,7 +312,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -316,7 +323,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-context-monitor.js\"",
             "timeout": 10
           }
         ]
@@ -328,7 +335,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-config-reload.js\"",
+            "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-config-reload.js\"",
             "timeout": 8
           }
         ]
@@ -340,7 +347,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "\"/Users/flo/.local/share/mise/shims/node\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
+    "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "claude-code-setup@claude-plugins-official": true,
