@@ -345,6 +345,7 @@
   "worktree": {
     "baseRef": "head"
   },
+  "enableWorkflows": true,
   "statusLine": {
     "type": "command",
     "command": "\"$(for n in \"/Users/flo/.local/share/mise/shims/node\" \"$(command -v node)\" /usr/local/bin/node /usr/bin/node; do [ -x \"$n\" ] && { [ \"${n#/}\" != \"$n\" ] || [ \"${n#?:}\" != \"$n\" ]; } && printf '%s' \"$n\" && break; done)\" \"/Users/flo/.claude/hooks/gsd-statusline.js\""
