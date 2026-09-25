@@ -14,7 +14,7 @@
     "ui_phase": true,
     "ui_safety_gate": true,
     "ui_review": true,
-    "tdd_mode": true,
+    "tdd_mode": false,
     "research_before_questions": true,
     "skip_discuss": false,
     "use_worktrees": true
