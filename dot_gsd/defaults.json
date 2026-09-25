@@ -2,7 +2,7 @@
   "mode": "interactive",
   "model_profile": "balanced",
   "commit_docs": true,
-  "parallelization": false,
+  "parallelization": true,
   "workflow": {
     "research": true,
     "plan_check": true,
@@ -17,7 +17,7 @@
     "tdd_mode": true,
     "research_before_questions": true,
     "skip_discuss": false,
-    "use_worktrees": false
+    "use_worktrees": true
   },
   "plan_review": {
     "source_grounding": true
