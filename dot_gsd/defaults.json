@@ -28,7 +28,7 @@
   "hooks": {
     "context_warnings": true
   },
-  "granularity": "coarse",
+  "granularity": "standard",
   "model_overrides": {
     "gsd-debugger": "opus"
   }
