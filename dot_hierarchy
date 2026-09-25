@@ -217,9 +217,6 @@ repos:
 
   - path: ~/Work/Private/Dev/Misc
     url: git@github.com:HelloThisIsFlo/Reed-Market-Analyzer.git
-
-  - path: ~/Work/Private/Dev/Misc
-    url: git@github.com:HelloThisIsFlo/SteamDeckScripts.git
   # ------- Misc --------------------------------------------------------- }}}
 
   # ------- Learning ----------------------------------------------------- {{{
@@ -323,6 +320,17 @@ repos:
   - path: ~/Work/Private/Dev/Keyboard
     url: git@github.com:HelloThisIsFlo/zmk.git
   # ------- Keyboard ----------------------------------------------------- }}}
+
+  # ------- Gaming ------------------------------------------------------- {{{
+  - path: ~/Work/Private/Dev/Gaming
+    url: git@github.com:HelloThisIsFlo/SteamDeckScripts.git
+
+  - path: ~/Work/Private/Dev/Gaming
+    url: git@github.com:HelloThisIsFlo/SteamDeck-Pipewire.git
+
+  - path: ~/Work/Private/Dev/Gaming
+    url: git@github.com:HelloThisIsFlo/Deckpad.git
+  # ------- Gaming ------------------------------------------------------- }}}
 
   # ----- Dev ---------------------------------------------------------------- }}}
 
