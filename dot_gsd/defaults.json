@@ -1,6 +1,6 @@
 {
   "mode": "interactive",
-  "model_profile": "inherit",
+  "model_profile": "balanced",
   "commit_docs": true,
   "parallelization": false,
   "workflow": {
@@ -29,6 +29,7 @@
     "context_warnings": false
   },
   "granularity": "coarse",
-  "resolve_model_ids": "omit",
-  "runtime": "codex"
+  "model_overrides": {
+    "gsd-debugger": "opus"
+  }
 }
