@@ -79,13 +79,10 @@
       "Edit(STATE.md)"
     ],
     "deny": [
-      "Read(.env)",
-      "Read(.env.*)",
       "Read(!.env.example)",
       "Read(!.env.sample)",
       "Read(!.env.template)",
       "Read(!.env.dist)",
-      "Read(.secrets)",
       "Read(**/secrets/**)",
       "Read(**/*credential*)",
       "Read(**/*.pem)",
