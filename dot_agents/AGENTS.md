@@ -167,7 +167,7 @@ Multiple modes — Flo decides, can shift mid-conversation:
 
 ### Task Tracking
 
-- Multi-step tasks: TodoWrite first, work sequentially with TodoRead.
+- No to-do tool, by design: on Claude 5 models, TodoWrite and the Task* tools are opt-in, because newer models track multi-step work without a checklist. Removed on purpose (30 Sept 2026); don't re-add. Source: Claude Code tools docs, "Task tool availability".
 
 ### Asking Questions
 
