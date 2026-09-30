@@ -169,6 +169,19 @@ Multiple modes — Flo decides, can shift mid-conversation:
 
 - Multi-step tasks: TodoWrite first, work sequentially with TodoRead.
 
+### Asking Questions
+
+Use `AskUserQuestion` when it saves Flo time; skip it when it doesn't.
+
+- **Use it for:**
+  - Quick checklists — rapid yes/no or pick-one confirmations
+  - Choosing between a few clear paths
+- **Skip it for:**
+  - Questions that need a lot of context to answer well
+  - Brainstorming — Flo would rather record a long voice message
+- **Show drafts and proposals in a normal message before asking.**
+  - Text written right before an `AskUserQuestion` call can be hidden while the question is open.
+
 ### Agent Asset Ownership
 
 - `~/.claude/skills` is an adapter surface, usually symlinks to `~/.agents/skills`.
