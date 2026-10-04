@@ -69,7 +69,7 @@ Look for anything only one runtime understands and swap it for the capability:
 | Found in the skill | Becomes |
 |---|---|
 | `chrome:control-chrome`, "Chrome plugin", Claude in Chrome tool names | the **logged-in browser** |
-| `browser:control-in-app-browser`, "built-in/in-app browser" | **interact with a public page** (and read it with `defuddle` first) |
+| `browser:control-in-app-browser`, "built-in/in-app browser" | **interact with a public page** |
 | `$name` handoffs | "invoke the `name` skill" |
 | a gate on the literal `$name` text | a gate on the skill being invoked, in any runtime's syntax |
 | a handoff from a global skill to a repo-local skill | a pointer naming the repo: "the `name` skill in <Repo>" |
@@ -78,6 +78,8 @@ Look for anything only one runtime understands and swap it for the capability:
 | "bundled workspace Python" or runtime-specific interpreters | `uv run --with <pkg>` |
 
 Website rules, guardrails and domain knowledge stay in the skill. Only the runtime mechanics move out.
+
+Name the capability only. How it's done (e.g. `defuddle` before a browser) belongs to the Capability Map; copying it into a skill duplicates the map and goes stale when the map changes.
 
 ### When no map row fits
 
