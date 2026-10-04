@@ -11,13 +11,13 @@ Prepare verified interview logistics and a reply that Flo can review and send.
 
 ## 🎯 Invocation and scope
 
-- A clear natural-language request such as “help me arrange this call” is sufficient. Flo need not name `$coordinate-interview`.
+- A clear natural-language request such as “help me arrange this call” is sufficient. Flo need not invoke this skill by name.
 - Start from the available email, task, pasted exchange, calendar event, existing draft, or Flo's current request. An OmniFocus task is optional context, never an upstream requirement.
 - A passing interview mention does not authorize coordination or app inspection. During an active Daily Review, stay in the review unless Flo clearly requests the detour; any reminder capture follows the review's own rules.
 - Run only the parts needed for the requested logistics. A link-only request or a small revision does not require completing every step. Do not decide whether Flo wants the job, whether an exploratory call is worthwhile, or how he should prepare.
 - Never send, book, RSVP, or post a LinkedIn message as part of this workflow.
 
-Never chain automatically into `$plan-interview-prep`. Mention it only when preparation planning is a distinct next action.
+Never chain automatically into the `plan-interview-prep` skill in Daily-Review. Mention it only when preparation planning is a distinct next action.
 
 ## 1. 🔎 Recover context and resume
 
@@ -108,7 +108,7 @@ Keep the causal meaning: the request through Flo's link immediately reserves the
 
 Once Flo approves the wording and any link has completed review:
 
-- Search for an existing draft before creating one. Prefer Fastmail MCP and save one reply draft in the correct thread with the approved recipients and copy.
+- Search for an existing draft before creating one. Use the email tool and save one reply draft in the correct thread with the approved recipients and copy.
 - Check current tool capabilities rather than assuming draft-body editing is supported. Reuse or safely update an existing draft when possible. If no safe update is available, preserve it and return the revised copy, clearly labelled as unsaved; do not create a duplicate or silently delete/recreate it.
 - Re-open the saved draft and verify recipients, thread, body, URL, and unsent state. Hand it back for Flo's final review and sending.
 - For LinkedIn, return plain copy with the raw booking URL. Never post it.
@@ -118,7 +118,7 @@ Once Flo approves the wording and any link has completed review:
 ### OmniFocus, when useful
 
 - Use an existing coordination task when available. Offer a new follow-up task when useful; create it only when Flo requests it or accepts the offer. Task creation is not a condition for proceeding or finishing.
-- Prefer OmniFocus Operator MCP. Apply approved updates under the owning project and applicable Daily Review rules; put an explicitly requested inbox reminder in the inbox.
+- Use the tasks tool. Apply approved updates under the owning project and applicable Daily Review rules; put an explicitly requested inbox reminder in the inbox.
 - Keep notes clean, current, and navigable. Obtain approval for destructive note replacement; preserve Review-family tags and flag every mutation.
 - Change only approved dates and re-read the changed task. Never complete a task before Flo actually sends or books, and do not infer either action from a task's existence.
 - Record `awaiting Flo to send/book` while the reply is unsent; use `waiting on recruiter` only when supported by the actual external state.
