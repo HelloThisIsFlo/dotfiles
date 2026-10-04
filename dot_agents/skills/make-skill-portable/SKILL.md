@@ -81,6 +81,8 @@ Website rules, guardrails and domain knowledge stay in the skill. Only the runti
 
 Name the capability only. How it's done (e.g. `defuddle` before a browser) belongs to the Capability Map; copying it into a skill duplicates the map and goes stale when the map changes.
 
+Use the map's capability names verbatim ("interact with a public page", not "public-page browser"), so a search for a capability finds every skill that relies on it.
+
 ### When no map row fits
 
 - Lean toward proposing a **new Capability Map row**, even when only one skill needs it today. Ask: is this the first of many? A row keeps every future skill portable for free.
