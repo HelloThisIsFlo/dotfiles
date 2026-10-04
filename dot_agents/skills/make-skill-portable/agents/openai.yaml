@@ -1,4 +1,4 @@
 interface:
-  display_name: "Onboard Agent Asset"
-  short_description: "Triage new agent skills and hooks"
-  default_prompt: "Use $onboard-agent-asset to inspect and safely onboard this unmanaged agent asset."
+  display_name: "Make Skill Portable"
+  short_description: "Onboard, retrofit or audit skills for any runtime"
+  default_prompt: "Use $make-skill-portable to onboard this agent asset or make this skill runtime-agnostic."
