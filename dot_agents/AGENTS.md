@@ -72,10 +72,33 @@ Voice transcription ~99% of input — phrases garbled: cut short, merged words, 
 
 Bar = "weird _and_ matters," not "minor error."
 
-### Preferred App Access
+### Capability Map
 
-- For email and calendar work, prefer the Fastmail MCP over computer use.
-- For task management, prefer the OmniFocus Operator MCP over computer use.
+Skills and instructions name a **capability**, never a runtime tool. Each runtime resolves it here.
+
+| Capability | Claude Code | Codex |
+|---|---|---|
+| 📖 Read a public page | `defuddle` skill | `defuddle` skill |
+| 🌐 Interact with a public page (or `defuddle` failed) | Built-in Browser pane (Desktop app); in the CLI, Claude in Chrome | In-app browser (`browser` plugin) |
+| 🔐 Logged-in browser | Claude in Chrome | Chrome (`chrome` plugin) |
+| 📧 Email | Fastmail connector | Fastmail app |
+| 📅 Calendar | Fastmail connector | Fastmail app |
+| ✅ Tasks | OmniFocus Operator MCP | OmniFocus Operator MCP |
+| 🗃️ Obsidian vault | `obsidian-cli` skill | `obsidian-cli` skill |
+| 📚 Library docs | Context7 | Context7 plugin |
+| 🖱️ Native Mac apps | Computer use | Computer use (`computer-use` plugin) |
+| 🤝 Fresh-context sub-agent | Agent tool | `fork_turns="none"` when the tool supports it |
+
+- Read public pages with `defuddle` first. It returns the exact page text, unlike WebFetch, which summarises.
+- Switch to a browser when you need to click or navigate, or when `defuddle` fails (JS-heavy or bot-blocked pages, e.g. Amazon).
+- Use the logged-in browser for authenticated or automated site work.
+- Prefer the email, calendar and task tools over computer use for those apps.
+- 📅 **Calendars**
+  - Create events in **Main (Fastmail)**.
+  - **🍦 Flo & Mari** = shared plans → Flo is busy.
+  - **🍦 Mari only (for awareness)** = Mari's plans, shared for awareness → Flo is **not** busy.
+  - **🍦 Flo only (for awareness)** = an automated mirror of Main → ignore it; never create events there.
+- Run Python scripts with missing dependencies via `uv run --with <pkg>`, in either runtime.
 
 ### Home Directory Context
 
@@ -187,10 +210,6 @@ Use `AskUserQuestion` when it saves Flo time; skip it when it doesn't.
 - `~/.claude/skills` is an adapter surface, usually symlinks to `~/.agents/skills`.
 
 ## Codex-Specific Guidance
-
-### Subagent Context
-
-To start a subagent without the parent's conversation history, use `fork_turns="none"` when the tool supports that argument.
 
 ### Agent Asset Ownership
 
