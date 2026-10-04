@@ -15,7 +15,7 @@ The vault is the source of truth. This skill defines how to discover and apply t
 - Use `obsidian-markdown` for Obsidian-valid candidate notes.
 - Use `obsidian-bases` to inspect the live schema and verify the resulting Base view.
 - Use `apply-style` as the presentation contract inside the managed decision block. This skill's frontmatter, marker, and preservation boundaries remain authoritative.
-- Use the public-page browser for role and application inspection.
+- Use the **read a public page** and **interact with a public page** capabilities for role and application inspection.
 - Use the logged-in browser when an existing session may expose otherwise gated information.
 - The Capability Map decides which browser each runtime uses.
 

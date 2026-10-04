@@ -12,7 +12,7 @@ Turn one vacancy into the strongest truthful application text Flo can review qui
 - Use `onboard-job-application` when the matching candidate record is missing, its role or application audit is stale, or its application requirements are unverified. Onboarding does not maintain Decision Context.
 - Use `obsidian-cli` for vault retrieval and approved candidate-note writes.
 - Use `obsidian-markdown` when saving approved text into the candidate note.
-- Use the public-page browser for official role, company, and application research.
+- Use the **read a public page** and **interact with a public page** capabilities for official role, company, and application research.
 - Use the logged-in browser when it may expose otherwise gated application requirements.
 - Offer `render-cover-letter` only after the body is approved and the application needs a PDF upload.
 - Mention the `create-cv` skill in SecretAgents only when Flo wants material CV suggestions implemented as a tailored CV package.

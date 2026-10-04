@@ -10,7 +10,7 @@ Turn a job source or supplied role set into a compact, durable journal shortlist
 ## Required Companion Skills
 
 - Use the logged-in browser for Welcome to the Jungle or LinkedIn work.
-- Use the public-page browser for company careers sites and official-role verification when appropriate.
+- Use the **read a public page** and **interact with a public page** capabilities for company careers sites and official-role verification when appropriate.
 - Use `obsidian-cli` for vault discovery, reads, writes, and verification.
 - Use `obsidian-markdown` for valid journal formatting and wikilinks.
 - Follow each companion skill's setup and safety rules.
