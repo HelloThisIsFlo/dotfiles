@@ -15,9 +15,9 @@ The vault is the source of truth. This skill defines how to discover and apply t
 - Use `obsidian-markdown` for Obsidian-valid candidate notes.
 - Use `obsidian-bases` to inspect the live schema and verify the resulting Base view.
 - Use `apply-style` as the presentation contract inside the managed decision block. This skill's frontmatter, marker, and preservation boundaries remain authoritative.
-- Use `browser:control-in-app-browser` for public role and application inspection.
-- Use `chrome:control-chrome` when an existing logged-in Chrome session may expose otherwise gated information.
-- Follow those browser skills' surface-selection and setup rules exactly.
+- Use the public-page browser for role and application inspection.
+- Use the logged-in browser when an existing session may expose otherwise gated information.
+- The Capability Map decides which browser each runtime uses.
 
 ## Fixed Safety Boundaries
 
@@ -29,7 +29,7 @@ The vault is the source of truth. This skill defines how to discover and apply t
 - Never treat the job advert as evidence that Flo has a skill or experience.
 - Never reconstruct, refresh, or edit `Decision Context.md` as part of onboarding.
 - Never edit historical fit-ranking reports.
-- Never invoke the repo-specific `apply-to-job` CV-tailoring skill automatically.
+- Never invoke the `create-cv` skill in SecretAgents automatically.
 - Never add `created` or `modified` frontmatter; Obsidian owns those properties.
 - Never change `added_on` after creation. Update `last_checked_on` only after inspecting the live advert or application flow.
 
@@ -66,7 +66,7 @@ A rerun after an interruption is safe: duplicate detection finds the already-wri
 
 Keep application onboarding separate from CV production.
 
-- If a role deserves tailored CV work, mention `$apply-to-job` as an optional next step.
+- If a role deserves tailored CV work, mention the `create-cv` skill in SecretAgents as an optional next step.
 - Do not create CV application workspaces, render PDFs, or tailor claims in this skill.
 
 ## Final Response
@@ -78,6 +78,6 @@ Keep it short and decision-first:
 - application lane and required work
 - candidate-note link
 - exact blocker and user action when gated
-- optional `$apply-to-job` handoff only when useful
+- optional `create-cv` handoff (SecretAgents) only when useful
 
 For multiple roles, report each one after its record is verified, then give one final summary after all roles are complete.

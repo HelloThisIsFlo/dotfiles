@@ -37,7 +37,7 @@ The job advert is a relevance signal, not a claim source. Candidate Fit must be 
 
 ## 3. Resolve review-journal handoffs
 
-When Flo refers to roles from `$review-job-opportunities`, use the journal entry as the durable handoff rather than asking him to paste every URL again.
+When Flo refers to roles from the `review-job-opportunities` skill, use the journal entry as the durable handoff rather than asking him to paste every URL again.
 
 Resolve the entry in this order:
 
@@ -335,4 +335,4 @@ For a legacy record without markers:
    - application lane and remaining work
    - clickable candidate-note link
    - blockers and the exact user action needed
-   - optional `$apply-to-job` handoff only when tailored CV work is worthwhile
+   - optional `create-cv` handoff (SecretAgents) only when tailored CV work is worthwhile
