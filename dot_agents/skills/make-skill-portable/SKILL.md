@@ -72,6 +72,7 @@ Look for anything only one runtime understands and swap it for the capability:
 | `browser:control-in-app-browser`, "built-in/in-app browser" | **interact with a public page** (and read it with `defuddle` first) |
 | `$name` handoffs | "invoke the `name` skill" |
 | a gate on the literal `$name` text | a gate on the skill being invoked, in any runtime's syntax |
+| a manual-only gate ("run only when the user explicitly invokes `$name`") | runtime metadata: Claude frontmatter `disable-model-invocation: true` + Codex `policy.allow_implicit_invocation: false` in `agents/openai.yaml`; the text just says "manual only" |
 | `mcp__…` names, Skill tool, Agent tool, `fork_turns`, WebFetch | the map's capability (tasks, email, calendar, fresh-context sub-agent, read a public page…) |
 | "bundled workspace Python" or runtime-specific interpreters | `uv run --with <pkg>` |
 
@@ -86,6 +87,10 @@ Website rules, guardrails and domain knowledge stay in the skill. Only the runti
 ## Audit
 
 - Scan `~/.agents/skills`, `~/.claude/skills` (non-symlinks = Claude-only skills), `~/.codex/skills` (outside ignored built-ins), and any repo the user names.
+- Before reporting a handoff as dangling, also look for the target in repos under `~/Work` (`<repo>/.agents/skills/<name>`). Classify it:
+  - ✅ **global**: fine
+  - 📁 **repo-local**: name the repo; a global skill pointing at it only works inside that repo, so flag it for a decision
+  - ❌ **missing**: really gone
 - Report per skill: placement gaps (missing adapter, Claude-only location, repo without `CLAUDE.md → AGENTS.md` or `.claude/skills` link) and wording offenders with file:line.
 - Skip intentional exceptions listed in `~/.agents/AGENTS.md` (e.g. Codex-only skills).
 - Suggest an order (smallest or most-used first). Edit nothing.
