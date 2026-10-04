@@ -21,8 +21,7 @@ Ask one compact question for anything missing. Accept body text only. Add the co
 
 1. Save the approved body to a temporary UTF-8 text file without shell interpolation.
 2. Run `scripts/render_cover_letter.py` with `--body-file`, `--company`, and `--role`.
-   - Use the bundled workspace Python when it provides `reportlab`, `pdfplumber`, and `pypdf`.
-   - Otherwise use `uv run --with reportlab --with pdfplumber --with pypdf python`.
+   - Use `uv run --with reportlab --with pdfplumber --with pypdf python`.
    - Omit `--output` to use `/Users/flo/Downloads/Flo_Kempenich_<Company>_Cover_Letter.pdf`.
    - Leave `--layout` unset for adaptive layout selection.
    - Use `--layout relaxed`, `balanced`, or `compact` only when Flo asks to iterate on the presentation.
