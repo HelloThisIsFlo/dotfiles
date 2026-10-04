@@ -4,7 +4,7 @@ Use this playbook only for Welcome to the Jungle recommendations. The shared cla
 
 ## Browser Surface
 
-- Use `chrome:control-chrome` in Flo's logged-in Chrome or Vivaldi session.
+- Use the logged-in browser in Flo's Chrome or Vivaldi session.
 - Start every review in a **brand-new tab**.
 - Never claim or reuse an existing WTTJ tab, even when it already shows a relevant job.
 - Open `https://app.welcometothejungle.com/`.

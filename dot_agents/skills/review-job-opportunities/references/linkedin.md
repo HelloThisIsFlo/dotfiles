@@ -4,7 +4,7 @@ Use this playbook only for LinkedIn searches or postings. The shared classificat
 
 ## Browser Surface and Scope
 
-- Use `chrome:control-chrome` in Flo's logged-in Chrome session.
+- Use the logged-in browser in Flo's Chrome session.
 - Start an active search in a new tab rather than claiming an unrelated LinkedIn tab.
 - An explicit query, company, location, remote filter, or supplied search URL wins.
 - When Flo leaves logistics implicit, use the eligible locations and work shape in `Decision Context.md`.

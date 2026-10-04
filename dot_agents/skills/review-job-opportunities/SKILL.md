@@ -9,8 +9,8 @@ Turn a job source or supplied role set into a compact, durable journal shortlist
 
 ## Required Companion Skills
 
-- Use `chrome:control-chrome` for logged-in Welcome to the Jungle or LinkedIn work.
-- Use `browser:control-in-app-browser` for public company careers sites and official-role verification when appropriate.
+- Use the logged-in browser for Welcome to the Jungle or LinkedIn work.
+- Use the public-page browser for company careers sites and official-role verification when appropriate.
 - Use `obsidian-cli` for vault discovery, reads, writes, and verification.
 - Use `obsidian-markdown` for valid journal formatting and wikilinks.
 - Follow each companion skill's setup and safety rules.
@@ -216,6 +216,6 @@ Keep it short:
 - authentication, availability, Save, or evidence limitations
 - exact `Potentially interesting` and `Not sure` counts
 
-When either selected group is non-empty, explicitly offer to onboard all roles in both groups with `$onboard-job-application`. Include tracked and possible-duplicate roles in the offer. Never start onboarding automatically.
+When either selected group is non-empty, explicitly offer to onboard all roles in both groups with the `onboard-job-application` skill. Include tracked and possible-duplicate roles in the offer. Never start onboarding automatically.
 
 When both groups are empty, say there is nothing from this review to onboard.
