@@ -28,7 +28,7 @@ Reuse the candidate note when its role analysis and application audit are curren
 
 Before invoking onboarding, load and validate Decision Context under section 2. If it is missing or unusable, stop without changing the candidate record.
 
-When no clear current record exists, use `$onboard-job-application` to create or refresh it. That role audit may write automatically under its own contract. It must not write application prose or maintain Decision Context. Resume this workflow after onboarding instead of repeating its role analysis.
+When no clear current record exists, use the `onboard-job-application` skill to create or refresh it. That role audit may write automatically under its own contract. It must not write application prose or maintain Decision Context. Resume this workflow after onboarding instead of repeating its role analysis.
 
 Invocation means Flo has decided to apply. Existing fit scores, gaps, and `why` inform evidence selection and claim safety; they are not a reason to debate, refuse, or reopen the application decision. Never change the candidate's shortlist or status merely because this skill was invoked.
 
@@ -201,7 +201,7 @@ Recommend no change when the relevant evidence is already prominent enough. Othe
 - accurately adopting the vacancy's terminology for work Flo has genuinely done
 - moving the most relevant project or evidence earlier
 
-Do not rewrite every bullet, keyword-stuff, alter titles or dates, apply a proposed summary, or implement the changes. Name the exact evidence to promote and why it changes the application. Offer `$apply-to-job` only if Flo wants an actual tailored artifact.
+Do not rewrite every bullet, keyword-stuff, alter titles or dates, apply a proposed summary, or implement the changes. Name the exact evidence to promote and why it changes the application. Offer the `create-cv` skill in SecretAgents only if Flo wants an actual tailored artifact.
 
 ## 9. Default Chat Output
 
@@ -260,7 +260,7 @@ If the same section already has text, do not overwrite it. Ask whether Flo wants
 
 After saving:
 
-- offer `$render-cover-letter` only when the form supports or requires a cover-letter PDF
+- offer the `render-cover-letter` skill only when the form supports or requires a cover-letter PDF
 - pass company, role, and the exact approved body to the renderer
 - do not render or overwrite a PDF without Flo's request
 - do not suggest rendering for ordinary free-text fields

@@ -12,12 +12,12 @@ Turn one vacancy into the strongest truthful application text Flo can review qui
 - Use `onboard-job-application` when the matching candidate record is missing, its role or application audit is stale, or its application requirements are unverified. Onboarding does not maintain Decision Context.
 - Use `obsidian-cli` for vault retrieval and approved candidate-note writes.
 - Use `obsidian-markdown` when saving approved text into the candidate note.
-- Use `browser:control-in-app-browser` for official public role, company, and application research.
-- Use `chrome:control-chrome` when a logged-in browser may expose otherwise gated application requirements.
+- Use the public-page browser for official role, company, and application research.
+- Use the logged-in browser when it may expose otherwise gated application requirements.
 - Offer `render-cover-letter` only after the body is approved and the application needs a PDF upload.
-- Mention the repo-local `apply-to-job` workflow only when Flo wants material CV suggestions implemented as a tailored CV package.
+- Mention the `create-cv` skill in SecretAgents only when Flo wants material CV suggestions implemented as a tailored CV package.
 
-Follow each companion skill's safety and surface-selection rules.
+Follow each companion skill's safety rules. The Capability Map decides which browser each runtime uses.
 
 ## Fixed Boundaries
 
@@ -27,7 +27,7 @@ Follow each companion skill's safety and surface-selection rules.
 - Respect every claim boundary in the live Decision Context and deeper canonical sources.
 - Never silently upgrade a pilot or internal beta to production, imply a past Staff title or formal management, claim years of production LLM ownership, or inflate ML-lifecycle, Kubernetes, Terraform, GPU-serving, or adjacent experience.
 - Draft in chat first. Do not write application prose to Obsidian until Flo explicitly approves the wording or asks to save it.
-- Never modify the CV, create a CV workspace, render a PDF, or invoke another production workflow automatically, except the explicit `$onboard-job-application` handoff for a missing or stale candidate audit.
+- Never modify the CV, create a CV workspace, render a PDF, or invoke another production workflow automatically, except the explicit `onboard-job-application` handoff for a missing or stale candidate audit.
 - Never change shortlist, status, fit scores, dates, or the onboarding managed block while saving approved prose.
 
 ## Workflow
@@ -59,5 +59,5 @@ Follow each companion skill's safety and surface-selection rules.
 - Clear approval of the wording authorizes saving that exact text to the matching candidate note.
 - If the same field already contains user-authored or previously approved text, stop and ask whether to replace it or append a new version.
 - Save only the approved application prose. Keep evidence, claim checks, and CV advice in chat.
-- When a PDF upload is required or useful, offer `$render-cover-letter` after saving. Do not invoke it without Flo's request.
-- When a CV change is material, describe it precisely and offer `$apply-to-job`; otherwise say `No change recommended.`
+- When a PDF upload is required or useful, offer the `render-cover-letter` skill after saving. Do not invoke it without Flo's request.
+- When a CV change is material, describe it precisely and offer the `create-cv` skill in SecretAgents; otherwise say `No change recommended.`
