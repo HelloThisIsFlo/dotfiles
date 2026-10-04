@@ -1,0 +1,4 @@
+interface:
+  display_name: "Make Agents Portable"
+  short_description: "Onboard, retrofit, migrate or audit agent assets for any runtime"
+  default_prompt: "Use $make-agents-portable to make this skill, instruction file, or repo's agent setup work in both runtimes."

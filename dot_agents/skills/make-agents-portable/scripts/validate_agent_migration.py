@@ -83,8 +83,12 @@ def git_status(root: Path) -> list[str]:
 def iter_repo_files(root: Path) -> list[Path]:
     paths: list[Path] = []
     for current_root, dirnames, filenames in os.walk(root):
-        dirnames[:] = [name for name in dirnames if name not in SKIP_DIRS]
         base = Path(current_root)
+        # Nested repos and worktrees (own .git entry) belong to their own audit.
+        dirnames[:] = [
+            name for name in dirnames
+            if name not in SKIP_DIRS and not (base / name / ".git").exists()
+        ]
         for filename in filenames:
             paths.append(base / filename)
     return paths
@@ -229,6 +233,24 @@ def verify(root: Path, tracked: set[str], is_git_repo: bool) -> list[Check]:
     else:
         checks.append(Check("INFO", "Instruction adapters", "no tracked Claude instruction adapters detected"))
 
+    # Every instruction folder needs both names: AGENTS.md (canonical) and CLAUDE.md linking to it.
+    instruction_dirs: dict[Path, dict[str, Path]] = {}
+    for path in iter_repo_files(root):
+        lower = path.name.lower()
+        if lower in {"agents.md", "claude.md"}:
+            instruction_dirs.setdefault(path.parent, {})[lower] = path
+    for folder, files in sorted(instruction_dirs.items()):
+        where = rel(root, folder) or "."
+        agents, claude = files.get("agents.md"), files.get("claude.md")
+        if agents and not claude:
+            checks.append(Check("WARN", "Claude instruction adapter", f"{where}: AGENTS.md without a CLAUDE.md symlink"))
+        elif claude and not agents:
+            checks.append(Check("WARN", "Codex instruction file", f"{where}: {claude.name} without AGENTS.md"))
+        elif claude and claude.is_symlink() and Path(os.readlink(claude)).name.lower() != "agents.md":
+            checks.append(Check("WARN", "Claude instruction adapter", f"{where}: {claude.name} links to {os.readlink(claude)}"))
+        elif claude and is_regular_file(claude) and rel(root, claude) not in tracked:
+            checks.append(Check("WARN", "Claude instruction adapter", f"{where}: untracked regular {claude.name}; ask before replacing"))
+
     codex_skills = root / ".codex" / "skills"
     checks.append(
         Check(
@@ -245,7 +267,7 @@ def verify(root: Path, tracked: set[str], is_git_repo: bool) -> list[Check]:
             Check(
                 "PASS" if claude_skills.is_symlink() else "WARN",
                 "Claude skills adapter",
-                ".claude/skills is a symlink" if claude_skills.is_symlink() else ".claude/skills exists but is not a symlink",
+                ".claude/skills is a symlink" if claude_skills.is_symlink() else ".claude/skills exists but is not a folder symlink to .agents/skills",
             )
         )
     elif shared_skills.exists():

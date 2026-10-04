@@ -1,4 +1,0 @@
-interface:
-  display_name: "Make Skill Portable"
-  short_description: "Onboard, retrofit or audit skills for any runtime"
-  default_prompt: "Use $make-skill-portable to onboard this agent asset or make this skill runtime-agnostic."
