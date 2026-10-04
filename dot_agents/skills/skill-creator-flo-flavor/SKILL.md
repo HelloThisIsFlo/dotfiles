@@ -1,11 +1,11 @@
 ---
-name: flos-flavor-skill-agent-design
-description: Apply Flo's creative direction when creating or substantially refining skills, global or repository AGENTS.md instructions, and nested agent guidance. Use automatically to shape the user experience, turn workflow feedback into durable guidance without overfitting, or decide whether guidance belongs in a skill or an instruction file.
+name: skill-creator-flo-flavor
+description: Flo's creative direction for skills and agent guidance. Use whenever `skill-creator` is used, and whenever creating or substantially refining skills, global or repository AGENTS.md instructions, or nested agent guidance. Use automatically to shape the user experience, turn workflow feedback into durable guidance without overfitting, or decide whether guidance belongs in a skill, an instruction file, or a Capability Map row.
 ---
 
-# Flo's Flavor · Skill & Agent Design
+# Skill Creator · Flo's Flavor
 
-Flo's creative-direction layer for durable agent guidance. Route the guidance first, then apply the relevant mode.
+Flo's creative-direction layer on top of the official `skill-creator`, for skills and other durable agent guidance. Route the guidance first, then apply the relevant mode.
 
 ## Choose the narrowest durable home
 
@@ -13,6 +13,7 @@ Flo's creative-direction layer for durable agent guidance. Route the guidance fi
 - Use a nested `AGENTS.md` for stable behaviour limited to one subtree.
 - Use the repository-root `AGENTS.md` for stable behaviour spanning that repository.
 - Suggest the global `AGENTS.md` only for a rare preference that clearly applies across unrelated projects and ordinary agent work.
+- Use a Capability Map row in the global `AGENTS.md` when the guidance is which tool each runtime uses for a capability.
 - Never move guidance between layers silently. Discuss the change when its destination or blast radius is consequentially uncertain.
 
 ## When designing a skill
@@ -23,6 +24,8 @@ Flo's creative-direction layer for durable agent guidance. Route the guidance fi
 - Front-load required user actions, irreversible operations, and expected pauses before a long-running workflow begins.
 - Keep independent safe work moving. Never let a workflow wait silently on an undisclosed user action halfway through.
 - Do not introduce fixed templates, mandatory subagents, or worktree management unless the task genuinely requires them or Flo explicitly requests them.
+- Name capabilities from the Capability Map, never one runtime's tools, so the skill runs in Claude Code and Codex alike.
+- Finish by invoking the `make-skill-portable` skill on the result. It places the skill under chezmoi, adds the runtime adapters, and checks the wording.
 
 ## When designing AGENTS.md guidance
 
@@ -32,7 +35,7 @@ Flo's creative-direction layer for durable agent guidance. Route the guidance fi
 - Ask when scope or behavioural impact remains consequentially ambiguous.
 - Write the smallest directional rule that changes future decisions. Place it beside the closest existing guidance.
 - Avoid incident transcripts, narrow procedures, duplication, and constraints on unrelated work.
-- Reuse existing global mechanics, including chezmoi handling, instead of copying them into another instruction layer.
+- Reuse existing global mechanics instead of copying them into another instruction layer: chezmoi handling and the Capability Map live in the global `AGENTS.md`; skill placement and portability live in `make-skill-portable`.
 - Check realistic triggering and non-triggering requests before finishing.
 
 ## Iterate from evidence

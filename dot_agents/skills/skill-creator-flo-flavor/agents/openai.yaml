@@ -1,7 +1,7 @@
 interface:
-  display_name: "Flo's Flavor · Skill & Agent Design"
+  display_name: "Skill Creator · Flo's Flavor"
   short_description: "Add Flo's direction to skills and AGENTS.md"
-  default_prompt: "Use $flos-flavor-skill-agent-design to create or refine this skill or AGENTS.md guidance with my preferred scope and user experience."
+  default_prompt: "Use $skill-creator-flo-flavor to create or refine this skill or AGENTS.md guidance with my preferred scope and user experience."
 
 policy:
   allow_implicit_invocation: true
