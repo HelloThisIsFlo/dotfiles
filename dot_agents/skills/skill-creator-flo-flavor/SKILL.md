@@ -25,7 +25,7 @@ Flo's creative-direction layer on top of the official `skill-creator`, for skill
 - Keep independent safe work moving. Never let a workflow wait silently on an undisclosed user action halfway through.
 - Do not introduce fixed templates, mandatory subagents, or worktree management unless the task genuinely requires them or Flo explicitly requests them.
 - Name capabilities from the Capability Map, never one runtime's tools, so the skill runs in Claude Code and Codex alike.
-- Finish by invoking the `make-skill-portable` skill on the result. It places the skill under chezmoi, adds the runtime adapters, and checks the wording.
+- Finish by invoking the `make-agents-portable` skill on the result. It places the skill under chezmoi, adds the runtime adapters, and checks the wording.
 
 ## When designing AGENTS.md guidance
 
@@ -35,8 +35,9 @@ Flo's creative-direction layer on top of the official `skill-creator`, for skill
 - Ask when scope or behavioural impact remains consequentially ambiguous.
 - Write the smallest directional rule that changes future decisions. Place it beside the closest existing guidance.
 - Avoid incident transcripts, narrow procedures, duplication, and constraints on unrelated work.
-- Reuse existing global mechanics instead of copying them into another instruction layer: chezmoi handling and the Capability Map live in the global `AGENTS.md`; skill placement and portability live in `make-skill-portable`.
+- Reuse existing global mechanics instead of copying them into another instruction layer: chezmoi handling and the Capability Map live in the global `AGENTS.md`; placement, runtime wiring, and portable wording live in `make-agents-portable`.
 - Check realistic triggering and non-triggering requests before finishing.
+- Finish by invoking the `make-agents-portable` skill on the changed file. It wires `CLAUDE.md` to `AGENTS.md` and checks the wording.
 
 ## Iterate from evidence
 
